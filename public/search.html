@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem('eo-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search — Ezra Ogombo</title>
+<meta name="description" content="Search across Ezra Ogombo's blog, content, writing, and study materials.">
+<meta data-seo-extra name="author" content="Ezra Ogombo">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<link rel="alternate" type="application/rss+xml" title="Ezra Ogombo — blog" href="/feed.xml">
+<link rel="canonical" href="https://ezra-ogombo.web.app/search">
+<meta name="theme-color" content="#0a0e0c">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/icon-16.png">
+<link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<script type="application/ld+json" data-seo>{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ezra-ogombo.web.app/"}, {"@type": "ListItem", "position": 2, "name": "Search", "item": "https://ezra-ogombo.web.app/search"}]}</script>
+</head>
+<body data-page="search">
+
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="/">ezraogombo</a>
+    <nav class="site-nav"><a href="/">home</a><a href="/about">about</a><a href="/content">content</a><a href="/blog">blog</a><a href="/writing">writing</a><a href="/materials">materials</a><a href="/contact">contact</a></nav>
+    <button id="theme-toggle" data-theme-toggle type="button">☀ light</button>
+    <a id="search-link" href="/search" title="Search" aria-label="Search" style="color:var(--ink-dim); text-decoration:none; font-size:1rem; margin-left:0.3rem;">🔍</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <section class="hero">
+      <span class="kicker" data-pg="kicker">SEARCH.EXE</span>
+      <h1 data-pg="heading">Find something.</h1>
+      <p data-pg="intro" class="lede">Searches across blog posts, content, writing projects, and study materials.</p>
+
+      <div class="crt-window">
+        <div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label">query</span></div>
+        <div class="body">
+          <input type="search" id="search-input" placeholder="Try 'anatomy', 'cyber café', 'faith'…"
+            style="width:100%; padding:0.6rem 0.7rem; background:var(--bg); border:1px solid var(--panel-border); border-radius:3px; color:var(--ink); font-family:'Share Tech Mono', monospace; font-size:1rem; box-sizing:border-box;">
+        </div>
+      </div>
+    </section>
+    <div data-pg="body"></div>
+
+    <section class="block">
+      <div id="search-status" class="mono" style="margin-bottom:1rem;"></div>
+      <div class="stack" id="search-results"></div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>© <span data-year></span> Ezra Ogombo (@ezraogombo).</p>
+    <p>Nairobi &amp; Matunda, Kenya</p>
+  </div>
+</footer>
+
+<script src="/js/firebase-config.js"></script>
+<script src="/js/db.js"></script>
+<script src="/js/vendor/qrcode.js"></script>
+<script src="/js/qr.js"></script>
+<script src="/js/site.js"></script>
+<script src="/js/ads.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/chatbot.js"></script>
+<script src="/js/support.js"></script>
+<script src="/js/analytics.js"></script>
+<script>
+(async () => {
+  const input = document.getElementById("search-input");
+  const status = document.getElementById("search-status");
+  const results = document.getElementById("search-results");
+
+  status.textContent = "loading index…";
+  const index = await EO_SEARCH.buildIndex();
+  status.textContent = `index ready — ${index.length} items searchable`;
+
+  function render(query) {
+    if (!query.trim()) {
+      results.innerHTML = "";
+      status.textContent = `index ready — ${index.length} items searchable`;
+      return;
+    }
+    const matches = EO_SEARCH.search(index, query);
+    status.textContent = `${matches.length} result${matches.length === 1 ? "" : "s"} for "${query}"${matches.length > 60 ? " (showing the first 60: add a word to narrow it)" : ""}`;
+    clearTimeout(window.__st); window.__st = setTimeout(() => { if (window.EO_TRACK) window.EO_TRACK.search(query, matches.length); }, 1500);
+    results.innerHTML = matches.slice(0, 60).map((m) => `
+      <div class="entry">
+        <span class="status">${m.type.toUpperCase()}</span>
+        <a class="title" href="${m.url}"><h3>${m.title}</h3></a>
+        <p>${m.snippet}</p>
+      </div>
+    `).join("") || "<p>No matches — try a different word.</p>";
+    if (matches.length && window.EO_ADS) EO_ADS.placeSearch(results);
+  }
+
+  // Support ?q=... in the URL so search results can be linked/shared directly.
+  const params = new URLSearchParams(window.location.search);
+  const initial = params.get("q") || "";
+  if (initial) input.value = initial;
+  render(initial);
+
+  input.addEventListener("input", () => render(input.value));
+})();
+</script>
+</body>
+</html>

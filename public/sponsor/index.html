@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My ads — Sponsor portal</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+<link rel="stylesheet" href="/sponsor/sponsor.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">SPONSOR.EXE</span><h1>Your ads</h1></section>
+<div id="tabs"></div><div id="pane"></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/ads.js"></script>
+<script src="/sponsor/sponsor.js"></script>
+<script>
+(async () => {
+  const me = await S.guard("index");
+  const E = S.esc, $ = S.$, pane = $("#pane");
+  const today = S.today();
+
+  async function ads() {
+    pane.innerHTML = `<p class="hint">Loading…</p>`;
+    // a sponsor can't list the whole requests node, so we keep a small index of their own request ids
+    let ids = {};
+    try { ids = (await S.get(`sponsors/${me.uid}/requests`)) || {}; } catch {}
+    const got = await Promise.all(Object.keys(ids).map((k) => S.get("sponsor_requests/" + k).then((v) => (v ? Object.assign({ _key: k }, v) : null)).catch(() => null)));
+    const rows = got.filter(Boolean);
+    rows.sort((a, b) => (b.created || 0) - (a.created || 0));
+    const stats = await Promise.all(rows.map((r) => (r.ad_id ? S.get("ad_stats/" + r.ad_id).catch(() => ({})) : Promise.resolve(null))));
+    let live = 0, V = 0, C = 0, spent = 0;
+    rows.forEach((r, i) => {
+      const sm = stats[i] ? EO_ADS.summarize(stats[i]) : { v: 0, c: 0 };
+      r._v = sm.v; r._c = sm.c; V += sm.v; C += sm.c;
+      r._shown = r.status === "live" && r.end && r.end < today ? "expired" : r.status;
+      if (r._shown === "live" || r._shown === "edit_submitted") live++;
+      if (r.payment && r.payment.status === "verified") spent += Number(r.price) || 0;
+    });
+    const todo = rows.filter((r) => r.status === "awaiting_payment").length;
+    pane.innerHTML = `<div class="cards"><div class="stat"><b>${live}</b><span>Live ads</span></div><div class="stat"><b>${V}</b><span>Views</span></div><div class="stat"><b>${C}</b><span>Clicks</span></div><div class="stat"><b>${V ? (C / V * 100).toFixed(2) : "0.00"}%</b><span>Click rate</span></div><div class="stat"><b>${S.kes(spent)}</b><span>Paid &amp; verified</span></div></div>
+      ${todo ? `<div class="note">${todo} request(s) waiting for your payment. Open them to see how to pay.</div>` : ""}
+      <div class="toolbar"><a class="btn primary" href="/sponsor/new">+ New ad request</a></div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Ad</th><th>Package</th><th>Status</th><th>Dates</th><th>Views</th><th>Clicks</th><th></th></tr></thead><tbody>${rows.map((r) => `<tr><td><strong>${E((r.ad && r.ad.headline) || "—")}</strong></td><td>${E(r.package_name || r.package)}<br><span class="hint">${S.kes(r.price)}</span></td><td>${S.pill(r._shown)}${r.payment && r.payment.status === "rejected" ? '<br><span class="hint">payment not accepted</span>' : ""}</td><td>${r.start ? E(r.start) + " → " + E(r.end) : '<span class="hint">not started</span>'}</td><td>${r._v}</td><td>${r._c}</td><td class="act"><a class="btn sm" href="/sponsor/request?id=${E(r._key)}">Open</a></td></tr>`).join("") || `<tr><td colspan="7" class="hint">No ads yet. Start with “New ad request”.</td></tr>`}</tbody></table></div>`;
+  }
+
+  function account() {
+    const p = me.profile;
+    pane.innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">account</span></div><div class="body"><form id="af" class="grid2">
+      <div class="field"><label>Name *</label><input name="name" maxlength="80" required value="${E(p.name)}"></div>
+      <div class="field"><label>Business / brand</label><input name="company" maxlength="100" value="${E(p.company || "")}"></div>
+      <div class="field"><label>Phone (WhatsApp)</label><input name="phone" maxlength="30" value="${E(p.phone || "")}"></div>
+      <div class="field"><label>Email</label><input value="${E(me.email)}" disabled></div>
+      <div style="grid-column:1/-1"><h3 style="margin:.4rem 0 0">Saved ad details</h3><p class="hint" style="margin:.2rem 0">Pre-filled whenever you start a new ad.</p></div>
+      <div class="field"><label>Default link</label><input name="dlink" maxlength="300" value="${E(p.default_link || "")}" placeholder="https://…"></div>
+      <div class="field"><label>Default button text</label><input name="dcta" maxlength="24" value="${E(p.default_cta || "")}"></div>
+      <div class="field"><label>Default small label</label><input name="dlabel" maxlength="30" value="${E(p.default_label || "")}" placeholder="Sponsored"></div>
+      <div class="field"><label>Default colour</label><select name="daccent">${["green", "amber", "magenta"].map((c) => `<option ${(p.default_accent || "green") === c ? "selected" : ""}>${c}</option>`).join("")}</select></div>
+      <div style="grid-column:1/-1"><button class="btn primary" type="submit">Save</button> <button class="btn" type="button" id="pw">Email me a password reset link</button> <span class="form-status mono" id="am"></span></div></form></div></div>`;
+    $("#af").onsubmit = async (e) => {
+      e.preventDefault(); const f = e.target;
+      try { await S.update(`sponsors/${me.uid}`, { name: f.name.value.trim(), company: f.company.value.trim(), phone: f.phone.value.trim(), default_link: f.dlink.value.trim(), default_cta: f.dcta.value.trim(), default_label: f.dlabel.value.trim(), default_accent: f.daccent.value }); Object.assign(me.profile, { name: f.name.value.trim(), company: f.company.value.trim(), phone: f.phone.value.trim(), default_link: f.dlink.value.trim(), default_cta: f.dcta.value.trim(), default_label: f.dlabel.value.trim(), default_accent: f.daccent.value }); $("#am").textContent = "Saved ✓"; } catch (er) { $("#am").textContent = er.message; }
+    };
+    $("#pw").onclick = async () => {
+      await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${window.EO_FIREBASE_CONFIG.apiKey}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ requestType: "PASSWORD_RESET", email: me.email }) }).catch(() => {});
+      $("#am").textContent = "Reset link sent to " + me.email;
+    };
+  }
+  S.tabs($("#tabs"), [["ads", "My ads"], ["account", "Account"]], (k) => (k === "account" ? account() : ads()));
+})();
+</script>
+</body>
+</html>

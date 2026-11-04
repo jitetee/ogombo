@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad report</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<style>.wrap2{max-width:860px;margin:0 auto;padding:1.2rem 16px 3rem}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin:1rem 0}.stat{border:1px solid var(--panel-border);padding:.7rem;text-align:center}.stat b{display:block;font-size:1.5rem}.tbl{width:100%;border-collapse:collapse}.tbl td,.tbl th{border-bottom:1px solid var(--panel-border);padding:.35rem .5rem;text-align:left}</style>
+</head>
+<body>
+<main><div class="wrap2">
+<span class="kicker">AD.REPORT</span><h1 id="ttl">Ad report</h1>
+<div id="out"><p>Loading…</p></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script>
+(async () => {
+  const E = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const out = document.getElementById("out"), t = (new URLSearchParams(location.search).get("t") || "").replace(/[^a-z0-9]/gi, "");
+  let d = null;
+  try { if (t) { const r = await fetch(`${window.EO_FIREBASE_CONFIG.databaseURL}/ad_share/${t}.json`); d = await r.json(); } } catch {}
+  if (!d) { out.innerHTML = "<p>This report link isn't active. Ask the site owner for a new one.</p>"; return; }
+  document.getElementById("ttl").textContent = "Ad report" + (d.sponsor ? " — " + d.sponsor : "");
+  const days = Array.isArray(d.byDay) ? d.byDay : [], max = Math.max(1, ...days.map((x) => x.v || 0)), W = 640, H = 150, pad = 22, n = days.length || 1, bw = Math.max(2, (W - pad * 2) / n - 2);
+  const bars = days.map((x, i) => { const h = ((x.v || 0) / max) * (H - pad * 2), ch = ((x.c || 0) / max) * (H - pad * 2), X = pad + i * ((W - pad * 2) / n); return `<g><title>${E(x.d)}: ${x.v} views, ${x.c} clicks</title><rect x="${X}" y="${H - pad - h}" width="${bw}" height="${Math.max(h, x.v ? 1 : 0)}" fill="#1f7a4c"/><rect x="${X}" y="${H - pad - ch}" width="${bw}" height="${Math.max(ch, x.c ? 1 : 0)}" fill="#ffb703"/></g>`; }).join("");
+  const pl = Object.entries(d.byPl || {});
+  out.innerHTML = `<p>${E(d.package || "")} · ${E(d.start || "")} → ${E(d.end || "")}</p>
+    <div class="cards"><div class="stat"><b>${d.v || 0}</b>Views</div><div class="stat"><b>${d.c || 0}</b>Clicks</div><div class="stat"><b>${Number(d.ctr || 0).toFixed(2)}%</b>Click rate</div><div class="stat"><b>${d.u || 0}</b>Unique viewers</div>${d.ld ? `<div class="stat"><b>${d.ld}</b>WhatsApp chats</div>` : ""}</div>
+    <svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Views and clicks per day">${bars}</svg><p class="hint">Green = views, amber = clicks.</p>
+    ${pl.length ? `<h3>Where it showed</h3><table class="tbl"><thead><tr><th>Spot</th><th>Views</th><th>Clicks</th></tr></thead><tbody>${pl.map(([k, v]) => `<tr><td>${E(k.replace(/_/g, " "))}</td><td>${v.v}</td><td>${v.c}</td></tr>`).join("")}</tbody></table>` : ""}
+    ${(d.ads || []).length > 1 ? `<h3>Each ad</h3><table class="tbl"><thead><tr><th>Ad</th><th>Views</th><th>Clicks</th></tr></thead><tbody>${d.ads.map((a) => `<tr><td>${E(a.h)}</td><td>${a.v}</td><td>${a.c}</td></tr>`).join("")}</tbody></table>` : ""}
+    <p class="hint">Updated ${E(d.updated || "")}. A view is counted when at least half the ad is on screen for one second.</p><p><button class="btn" onclick="print()">Print / Save as PDF</button></p>`;
+})();
+</script>
+</body>
+</html>

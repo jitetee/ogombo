@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New ad request — Sponsor portal</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+<link rel="stylesheet" href="/sponsor/sponsor.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">ADS.NEW</span><h1 id="ttl">New ad request</h1></section>
+<div id="stage"><p class="hint">Loading…</p></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/ads.js"></script>
+<script src="/sponsor/sponsor.js"></script>
+<script>
+(async () => {
+  const me = await S.guard("new");
+  const E = S.esc, $ = S.$, stage = $("#stage");
+  const qs = new URLSearchParams(location.search), editId = qs.get("id"), copyId = qs.get("copy");
+  const TYPES = EO_ADS.TYPES, tl = (k) => (TYPES.find((t) => t.key === k) || { label: k }).label;
+  const [pk, st, av] = await Promise.all([S.pub("ad_packages"), S.pub("ad_settings"), S.pub("ad_availability").catch(() => null)]);
+  const on = (t) => !st || (st.enabled !== false && (st.types || {})[t] !== false);
+
+  let req = null;
+  const src = editId || copyId;
+  if (src) { try { req = await S.get("sponsor_requests/" + src); } catch {} if (req && editId && req.owner !== me.uid) req = null; }
+  if (editId && !req) { stage.innerHTML = `<p>That request wasn't found. <a href="/sponsor/">Back to my ads</a></p>`; return; }
+  if (editId && ["paused", "expired", "rejected"].includes(req.status)) { stage.innerHTML = `<p>This ad is ${E(req.status)} and can't be edited. <a href="/sponsor/request?id=${E(editId)}">View it</a> or <a href="/sponsor/new?copy=${E(editId)}">start a new request from it</a>.</p>`; return; }
+  if (editId) $("#ttl").textContent = "Edit ad";
+
+  let packages = Object.entries(pk || {}).map(([k, v]) => Object.assign({ _key: k }, v)).filter((p) => p.active === true).sort((a, b) => (a.order || 0) - (b.order || 0));
+  if (editId || copyId) { const cur = (pk || {})[req.package]; if (cur && cur.active === true && !packages.find((p) => p._key === req.package)) packages.push(Object.assign({ _key: req.package }, cur)); }
+  if (editId) packages = [Object.assign({ _key: req.package }, (pk || {})[req.package] || { name: req.package_name, price: req.price, days: req.days, placements: req.placements, max_ads: req.max_ads, socials: req.socials, description: "" })];
+  if (!packages.length) { stage.innerHTML = `<div class="crt-window"><div class="body"><p>No ad packages are open for booking right now. Please check back soon${""}.</p><p id="help"></p></div></div>`; S.help().then((u) => { if (u) $("#help").innerHTML = `<a class="btn" href="${E(u)}" target="_blank" rel="noopener">Ask on WhatsApp</a>`; }); return; }
+
+  const SOC = { facebook: "Facebook", instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" };
+  const socOf = (p) => String(p.socials || "").split(",").map((x) => x.trim()).filter(Boolean);
+  const keyOf = (n) => "a" + n;
+  // creatives: index 0 = request.ad, others = request.more_ads.a2..a15
+  let list = [];
+  if (req) { list.push(req.ad || {}); for (let n = 2; n <= 15; n++) { const c = (req.more_ads || {})[keyOf(n)]; if (c) list.push(c); } }
+  const PF = me.profile || {};
+  if (!list.length) list = [{ link: PF.default_link || "", cta: PF.default_cta || "Learn more", accent: PF.default_accent || "green" }];
+  let chosen = (req && req.package) || (qs.get("package")) || packages[0]._key;
+  if (!packages.find((p) => p._key === chosen)) chosen = packages[0]._key;
+  const pkOf = () => packages.find((p) => p._key === chosen);
+  const maxOf = (p) => Math.max(1, Math.min(15, Number(p.max_ads) || 1));
+  const placesOf = (p) => String(p.placements || "").split(",").map((s) => s.trim()).filter(Boolean);
+  let cur = 0;      // creative being previewed
+
+  stage.innerHTML = `
+    <div class="crt-window"><div class="titlebar"><span class="label">1-choose-package</span></div><div class="body"><div class="pk-grid" id="pks"></div><div id="addons"></div>
+      <div class="grid2" style="margin-top:.8rem;align-items:end"><div class="field"><label>Coupon code (optional)</label><input id="f_coupon" maxlength="30" autocomplete="off" style="text-transform:uppercase" value="${E((req && req.coupon) || "")}" ${editId ? "disabled" : ""}></div>${editId ? "" : `<div><button type="button" class="btn sm" id="applycp">Apply</button> <span class="hint" id="cpmsg"></span></div>`}</div></div></div>
+    <div class="crt-window"><div class="titlebar"><span class="label">2-your-ads</span></div><div class="body">
+      <p class="hint" id="cnt" style="margin-top:0"></p>
+      <div class="row-links" id="tabs"></div>
+      <div id="form"></div>
+      <div class="grid2" style="margin-top:.6rem">
+        <div class="field"><label>Small label on every ad</label><input id="f_sponsor" maxlength="30" value="${E((list[0] && list[0].sponsor) || PF.default_label || "Sponsored")}"><small>e.g. "Sponsored".</small></div>
+        <div class="field"><label>Preferred start date</label><input id="f_start" type="date" min="${S.today()}" value="${E((req && req.preferred_start) || S.today())}"><small>We confirm the exact dates when your payment is verified.</small><small id="avail"></small></div>
+      </div>
+    </div></div>
+    <div class="crt-window"><div class="titlebar"><span class="label">3-images-via-whatsapp</span></div><div class="body">
+      <p style="margin-top:0">Pictures are <strong>not uploaded here</strong>. After you save, send your pictures to our WhatsApp with your request number. We add them to your ads once your payment is verified.</p>
+      <div class="field"><label>Which picture for which ad? (optional)</label><textarea id="f_wa" rows="2" maxlength="300" placeholder="e.g. Ad 1 = logo.png, Ad 2 = poster.jpg">${E((req && req.wa_note) || "")}</textarea></div>
+      <div class="field"><label>Check my picture before sending (stays on your device)</label><input type="file" id="chk" accept="image/*"><div id="chkout" class="hint"></div></div>
+      <p class="hint" style="margin-bottom:0">Ads go live within <strong>24 hours</strong> after your payment is verified. Ads without a picture still run as text.</p>
+    </div></div>
+    <div class="crt-window"><div class="titlebar"><span class="label">4-preview</span></div><div class="body"><p class="hint">Layout preview (your picture is added by us).</p><div id="prev"></div><div id="qual"></div></div></div>
+    <div class="crt-window"><div class="titlebar"><span class="label">5-rules</span></div><div class="body"><p id="rules" class="hint"></p>${editId ? "" : `<label style="display:block;margin-bottom:.4rem"><input type="checkbox" id="remember" style="width:auto" checked> Remember my link, button text, colour and label for next time</label>`}<label><input type="checkbox" id="agree" style="width:auto"> I confirm my ads are honest and follow these rules.</label></div></div>
+    <p class="form-status mono" id="msg"></p>
+    <div class="row-links" id="actions"></div>`;
+  if (qs.get("coupon") && !editId && $("#f_coupon")) { $("#f_coupon").value = qs.get("coupon").toUpperCase().replace(/[^A-Z0-9_-]/g, ""); }
+  $("#rules").textContent = (st && st.rules) || "Ads must be honest and legal. We may edit or refuse any ad.";
+
+  // ---- coupon ----
+  let coupon = null;                     // {code, percent, off}
+  const addons = new Set();            // ticked add-on keys (a1..a5)
+  const addonList = (p) => Object.entries(p.addons || {}).filter(([k, x]) => /^a[1-5]$/.test(k) && x && x.label).map(([k, x]) => Object.assign({ k }, x));
+  const addonSum = (p) => addonList(p).filter((x) => addons.has(x.k)).reduce((n, x) => n + (Number(x.price) || 0), 0);
+  const priceOf = (p) => { const base = Number(p.price) || 0, add = editId ? 0 : addonSum(p); if (!coupon) return base + add; return Math.max(0, Math.round(base * (100 - (coupon.percent || 0)) / 100 - (coupon.off || 0))) + add; };
+  const priceHTML = (p) => coupon && priceOf(p) !== Number(p.price) ? `<s style="opacity:.6">${S.kes(p.price)}</s> ${S.kes(priceOf(p))}` : S.kes(p.price);
+  async function applyCoupon() {
+    const code = ($("#f_coupon").value || "").trim().toUpperCase().replace(/[^A-Z0-9_-]/g, ""), m = $("#cpmsg"); coupon = null;
+    if (!code) { m.textContent = ""; paintPackages(); return; }
+    let c = null; try { c = await S.pub("ad_coupons/" + code); } catch {}
+    const t = S.today();
+    if (!c || c.active !== true || (c.expires && c.expires < t) || (c.max_uses && (c.used || 0) >= c.max_uses)) { m.textContent = "That code isn't valid."; paintPackages(); return; }
+    coupon = { code, percent: Number(c.percent) || 0, off: Number(c.off) || 0 };
+    m.textContent = coupon.percent ? `${coupon.percent}% off applied ✓` : `KES ${coupon.off} off applied ✓`; paintPackages();
+  }
+  // ---- slots ----
+  const limits = (st && st.limits) || {};
+  function slotCheck() {
+    const el = $("#avail"); if (!el) return null;
+    const p = pkOf(), start = val("f_start") || S.today(); if (editId) { el.textContent = ""; return null; }
+    const bad = EO_ADS.clash(av, limits, placesOf(p), start, Number(p.days) || 1);
+    if (!bad.length) { el.textContent = ""; return null; }
+    const ff = EO_ADS.firstFree(av, limits, placesOf(p), start, Number(p.days) || 1);
+    el.innerHTML = `<span style="color:var(--amber)">Fully booked from that date for: ${bad.map((t) => E(tl(t))).join(", ")}.</span> ${ff ? `Earliest free start: <strong>${E(ff)}</strong> <button type="button" class="btn sm" id="usefree">Use it</button>` : "Please pick a later date."}`;
+    const b = $("#usefree"); if (b) b.onclick = () => { $("#f_start").value = ff; slotCheck(); };
+    return { bad, ff };
+  }
+  const banned = String((st && st.banned) || "").toLowerCase().split(/[\n,;]+/).map((x) => x.trim()).filter(Boolean);
+  const bannedHit = (txt) => banned.find((w) => txt.toLowerCase().includes(w));
+  function paintPackages() {
+    $("#pks").innerHTML = packages.map((p) => {
+      const pl = placesOf(p), offAll = pl.length && pl.every((t) => !on(t));
+      return `<label class="pk${p._key === chosen ? " on" : ""}${offAll ? " off" : ""}"><input type="radio" name="pk" value="${E(p._key)}" ${p._key === chosen ? "checked" : ""} ${editId || offAll ? "disabled" : ""}>
+        <strong>${E(p.name)}</strong><span class="pk-price">${priceHTML(p)} <small>· ${E(p.days)} days</small></span>
+        <span class="hint">${E(p.description || "")}</span>
+        <span class="pk-chips"><span class="chip">${maxOf(p)} ads</span><span class="chip">${pl.length} website spots</span>${socOf(p).map((k) => `<span class="chip">${E(SOC[k] || k)} post</span>`).join("")}</span>
+        <span class="pk-chips">${pl.map((t) => `<span class="chip${on(t) ? "" : " dim"}" title="${on(t) ? "" : "Currently switched off on the site"}">${E(tl(t))}${on(t) ? "" : " (off)"}</span>`).join("")}</span></label>`;
+    }).join("");
+    const ao = !editId ? addonList(pkOf()) : [];
+    $("#addons").innerHTML = ao.length ? `<h3 style="margin:.9rem 0 .3rem">Optional add-ons</h3>${ao.map((x) => `<label style="display:block;margin:.2rem 0"><input type="checkbox" data-ao="${x.k}" style="width:auto" ${addons.has(x.k) ? "checked" : ""}> ${E(x.label)} — <strong>+ ${S.kes(x.price)}</strong>${x.effect === "pin" ? ' <span class="hint">(your ad is shown first)</span>' : ""}</label>`).join("")}<p class="hint">Total to pay: <strong>${S.kes(priceOf(pkOf()))}</strong></p>` : "";
+    $("#addons").querySelectorAll("[data-ao]").forEach((c) => (c.onchange = () => { c.checked ? addons.add(c.dataset.ao) : addons.delete(c.dataset.ao); paintPackages(); }));
+    $("#pks").querySelectorAll("input").forEach((r) => (r.onchange = () => { saveCur(); chosen = r.value; addons.clear(); if (list.length > maxOf(pkOf())) list.length = maxOf(pkOf()); cur = Math.min(cur, list.length - 1); paintPackages(); paintAll(); slotCheck(); }));
+  }
+  const clip = (t, n) => String(t || "").slice(0, n);
+  const val = (id) => ($("#" + id) ? $("#" + id).value.trim() : "");
+  function saveCur() {
+    if (!$("#f_headline")) return;
+    list[cur] = { headline: val("f_headline"), body: val("f_body"), cta: val("f_cta") || "Learn more", link: val("f_link"), accent: val("f_accent") || "green", wa: val("f_wa").replace(/[^\d+]/g, "").slice(0, 20) };
+  }
+  function paintForm() {
+    const a = list[cur] || {};
+    $("#form").innerHTML = `<div class="grid2">
+      <div class="field" style="grid-column:1/-1"><label>Headline * <small id="hc"></small></label><input id="f_headline" maxlength="80" value="${E(a.headline || "")}" placeholder="e.g. Study health sciences with us"></div>
+      <div class="field" style="grid-column:1/-1"><label>Text <small id="bc"></small></label><textarea id="f_body" rows="3" maxlength="220" placeholder="One or two short sentences (optional for text links).">${E(a.body || "")}</textarea></div>
+      <div class="field"><label>Button text</label><input id="f_cta" maxlength="24" value="${E(a.cta || "Learn more")}"></div>
+      <div class="field"><label>Link * (where a click goes)</label><input id="f_link" maxlength="300" value="${E(a.link || "")}" placeholder="https://…"></div>
+      <div class="field"><label>WhatsApp number for enquiries (optional)</label><input id="f_wa" maxlength="20" inputmode="tel" value="${E(a.wa || "")}" placeholder="07xx xxx xxx"><small>If you add it, the ad button opens a WhatsApp chat with you and we report how many people tapped it.</small></div>
+      <div class="field"><label>Colour</label><select id="f_accent">${["green", "amber", "magenta"].map((c) => `<option ${a.accent === c ? "selected" : ""}>${c}</option>`).join("")}</select></div>
+    </div>`;
+  }
+  function paintTabs() {
+    const mx = maxOf(pkOf());
+    $("#cnt").textContent = `Your package includes up to ${mx} ads. You have ${list.length}. More ads = more variety in the rotation.`;
+    $("#tabs").innerHTML = list.map((a, i) => `<button type="button" class="btn sm${i === cur ? " primary" : ""}" data-i="${i}">Ad ${i + 1}${a.headline ? " · " + E(a.headline.slice(0, 14)) : ""}</button>`).join("")
+      + (list.length < mx ? `<button type="button" class="btn sm" id="addad">+ Add another ad</button>` : "")
+      + (list.length > 1 ? `<button type="button" class="btn sm danger" id="rmad">Remove this ad</button>` : "");
+    $("#tabs").querySelectorAll("[data-i]").forEach((b) => (b.onclick = () => { saveCur(); cur = Number(b.dataset.i); paintAll(); }));
+    const ad = $("#addad"); if (ad) ad.onclick = () => { saveCur(); list.push(Object.assign({}, list[cur], { headline: "" })); cur = list.length - 1; paintAll(); };
+    const rm = $("#rmad"); if (rm) rm.onclick = () => { list.splice(cur, 1); cur = Math.max(0, cur - 1); paintAll(); };
+  }
+  function paintPreview() {
+    if (!$("#f_headline")) return;
+    const p = pkOf(), a = Object.assign({}, { headline: val("f_headline"), body: val("f_body"), cta: val("f_cta") || "Learn more", link: val("f_link"), accent: val("f_accent"), sponsor: val("f_sponsor") || "Sponsored", image: "", lead_wa: val("f_wa") }), seen = new Set(), parts = [];
+    placesOf(p).forEach((t) => { const f = (TYPES.find((x) => x.key === t) || {}).fmt; if (!f || seen.has(f)) return; seen.add(f); parts.push(`<div class="prev-box"><span class="hint">${E(tl(t))}</span>${EO_ADS.previewHTML(a, t)}</div>`); });
+    $("#prev").innerHTML = parts.length ? `<div class="phone"><div class="phone-bar"></div><div class="phone-in">${parts.join("")}</div></div>` : "<p class='hint'>Pick a package.</p>";
+    const q = EO_ADS.quality(a, { banned });
+    $("#qual").innerHTML = `<h3 style="margin:.8rem 0 .3rem">Ad quality: <span class="qs ${q.score >= 80 ? "good" : q.score >= 55 ? "mid" : "low"}">${q.score}/100</span></h3><ul class="qlist">${q.checks.map((c) => `<li class="${c.ok ? "ok" : "no"}">${c.ok ? "✓" : "✗"} ${E(c.label)}</li>`).join("")}</ul>`;
+    $("#hc").textContent = `${a.headline.length}/80`; $("#bc").textContent = `${a.body.length}/220`;
+  }
+  function paintAll() { paintTabs(); paintForm(); paintPreview(); }
+  paintPackages(); paintAll(); slotCheck();
+  stage.addEventListener("input", paintPreview);
+  stage.addEventListener("change", (e) => {
+    if (e.target.id !== "chk" || !e.target.files[0]) return;
+    const f = e.target.files[0], out = $("#chkout"), url = URL.createObjectURL(f), im = new Image();
+    im.onerror = () => { out.textContent = "That file isn't a picture we can read."; URL.revokeObjectURL(url); };
+    im.onload = () => {
+      const w = im.naturalWidth, h = im.naturalHeight, kb = Math.round(f.size / 1024), r = w / h, bad = [];
+      if (w < 800) bad.push(`Too small (${w}px wide) — use at least 800 px wide so it stays sharp.`);
+      if (kb > 600) bad.push(`Heavy (${kb} KB) — under 600 KB loads faster for visitors on mobile data.`);
+      if (r < 1.2 || r > 2.4) bad.push(`Odd shape (${r.toFixed(2)}:1) — a wide picture around 16:9 or 1.9:1 fits best.`);
+      if (!/jpe?g|png|webp/i.test(f.type)) bad.push("Use a JPG, PNG or WebP file.");
+      out.innerHTML = `<strong>${w}×${h}px · ${kb} KB</strong><br>` + (bad.length ? bad.map((b) => `<span style="color:var(--amber)">⚠ ${E(b)}</span>`).join("<br>") : `<span style="color:var(--crt-green)">✓ Looks good — send it on WhatsApp.</span>`);
+      URL.revokeObjectURL(url);
+    };
+    im.src = url;
+  });
+  stage.addEventListener("change", (e) => { if (e.target.id === "f_start") slotCheck(); });
+  if ($("#applycp")) $("#applycp").onclick = applyCoupon;
+
+  async function save(submit) {
+    const msg = $("#msg"); msg.textContent = "";
+    saveCur();
+    const p = pkOf(), label = val("f_sponsor") || "Sponsored";
+    for (let i = 0; i < list.length; i++) {
+      if (!list[i].headline) return (msg.textContent = `Ad ${i + 1}: please write a headline.`);
+      if (!/^https?:\/\/\S+\.\S+/i.test(list[i].link || "")) return (msg.textContent = `Ad ${i + 1}: the link must start with https:// (or http://).`);
+    }
+    if (list.length > maxOf(p)) return (msg.textContent = `This package allows ${maxOf(p)} ads.`);
+    for (let i = 0; i < list.length; i++) { const hit = bannedHit([list[i].headline, list[i].body, list[i].link, list[i].cta].join(" ")); if (hit) return (msg.textContent = `Ad ${i + 1} contains "${hit}", which isn't allowed. Please change it.`); }
+    if (!editId && submit && slotCheck()) return (msg.textContent = "Those dates are fully booked for this package. Please pick a free start date.");
+    if (!editId && $("#f_coupon").value.trim() && !coupon) await applyCoupon();
+    if (!editId && $("#f_coupon").value.trim() && !coupon) return (msg.textContent = "The coupon code isn't valid. Clear it or fix it.");
+    if (submit && !$("#agree").checked) return (msg.textContent = "Please tick the box to confirm the ad rules.");
+    const btns = [...document.querySelectorAll("#actions button")]; btns.forEach((b) => (b.disabled = true));
+    try {
+      const now = Date.now(), start = val("f_start") || S.today();
+      const clean = (c) => { const o = { headline: c.headline, cta: c.cta || "Learn more", link: c.link, accent: c.accent || "green", sponsor: label, body: c.body || "" }; if (c.wa && c.wa.replace(/\D/g, "").length >= 9) o.wa = c.wa.replace(/[^\d+]/g, "").slice(0, 20); return o; };
+      const ad = clean(list[0]), more = {};
+      list.slice(1).forEach((c, i) => (more["a" + (i + 2)] = clean(c)));
+      const wa = val("f_wa");
+      let rid = editId, status;
+      if (!editId) {
+        rid = "r" + now.toString(36) + Math.random().toString(36).slice(2, 6);
+        status = submit ? "awaiting_payment" : "draft";
+        await S.set(`sponsors/${me.uid}/requests/${rid}`, true);
+        const rec = { owner: me.uid, sponsor_name: me.profile.name || "", sponsor_email: me.email, sponsor_phone: me.profile.phone || "", status, package: p._key, package_name: p.name, price: priceOf(p), days: Number(p.days), placements: p.placements, preferred_start: start, ad, created: now, updated: now };
+        if (coupon) rec.coupon = coupon.code;
+        if (p.max_ads != null) rec.max_ads = Number(p.max_ads);
+        if (p.socials != null) rec.socials = p.socials;
+        if (Object.keys(more).length) rec.more_ads = more;
+        if (wa) rec.wa_note = wa;
+        if (addons.size) { rec.addons = {}; addons.forEach((k) => (rec.addons[k] = true)); }
+        await S.set("sponsor_requests/" + rid, rec);
+        if ($("#remember") && $("#remember").checked) { const c0 = list[0], d = { default_link: clip(c0.link, 300), default_cta: clip(c0.cta || "Learn more", 24), default_label: clip(label, 30), default_accent: c0.accent || "green" }; try { await S.update("sponsors/" + me.uid, d); } catch {} }
+      } else {
+        status = ["live", "edit_submitted"].includes(req.status) ? "edit_submitted" : req.status === "draft" ? (submit ? "awaiting_payment" : "draft") : req.status;
+        await S.update("sponsor_requests/" + rid, { status, preferred_start: start, ad, more_ads: Object.keys(more).length ? more : null, wa_note: wa || null, updated: now });
+      }
+      S.toast(submit ? "Saved ✓" : "Draft saved ✓");
+      location.href = submit || editId ? "/sponsor/request?id=" + rid : "/sponsor/";
+    } catch (er) { msg.textContent = "Could not save: " + er.message; btns.forEach((b) => (b.disabled = false)); }
+  }
+  const act = $("#actions");
+  const mk = (l, c, f) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn " + c; b.textContent = l; b.onclick = f; act.appendChild(b); };
+  if (editId && ["live", "edit_submitted"].includes(req.status)) mk("Send changes for approval", "primary", () => save(true));
+  else if (editId && req.status !== "draft") mk("Save changes", "primary", () => save(true));
+  else { mk("Save & go to payment →", "primary", () => save(true)); mk("Save as draft", "", () => save(false)); }
+  const back = document.createElement("a"); back.className = "btn"; back.href = editId ? "/sponsor/request?id=" + editId : "/sponsor/"; back.textContent = "Cancel"; act.appendChild(back);
+})();
+</script>
+</body>
+</html>

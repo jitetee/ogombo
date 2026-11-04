@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad request — Sponsor portal</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+<link rel="stylesheet" href="/sponsor/sponsor.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">ADS.REQUEST</span><h1 id="ttl">Ad request</h1></section>
+<div id="stage"><p class="hint">Loading…</p></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/ads.js"></script>
+<script src="/sponsor/sponsor.js"></script>
+<script>
+(async () => {
+  const me = await S.guard("index");
+  const E = S.esc, $ = S.$, stage = $("#stage");
+  const id = new URLSearchParams(location.search).get("id");
+  const TYPES = EO_ADS.TYPES, tl = (k) => (TYPES.find((t) => t.key === k) || { label: k }).label;
+  let req = null;
+  try { req = id ? await S.get("sponsor_requests/" + id) : null; } catch {}
+  if (!req || req.owner !== me.uid) { stage.innerHTML = `<p>That request wasn't found. <a href="/sponsor/">Back to my ads</a></p>`; return; }
+  const [pay, helpUrl, ful, aud, cfg, pz] = await Promise.all([S.pub("payment"), S.help(), S.get("sponsor_fulfil/" + id).catch(() => null), S.pub("ad_audience").catch(() => null), S.pub("ad_settings").catch(() => null), S.pub("ad_pause/" + id).catch(() => null)]);
+  const waImg = await S.help(`Hello, I am sending the pictures for my ad request ${id} (${(req.ad && req.ad.headline) || ""}).`);
+  const F = ful || {}, imgs = F.images || {}, soc = F.socials || {};
+  const SOC = { facebook: "Facebook", instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" };
+  const creatives = [req.ad].concat(Array.from({ length: 14 }, (_, i) => (req.more_ads || {})["a" + (i + 2)])).filter(Boolean);
+  const adIds = creatives.map((_, i) => (i === 0 ? req.ad_id : req.ad_id ? req.ad_id + "-" + (i + 1) : "")).filter(Boolean);
+  const mp = (pay && pay.mpesa) || {};
+  const today = S.today();
+  const st = req.status, verified = req.payment && req.payment.status === "verified";
+  const shown = st === "live" && req.end && req.end < today ? "expired" : st;
+  $("#ttl").textContent = (req.ad && req.ad.headline) || "Ad request";
+
+  const done = (n) => ({ 1: true, 2: !!req.payment, 3: verified, 4: shown === "expired" }[n]);
+  const nowStep = shown === "draft" || shown === "awaiting_payment" ? 2 : shown === "payment_submitted" ? 3 : shown === "live" || shown === "edit_submitted" ? 4 : 0;
+  const adObj = Object.assign({}, req.ad, { image: imgs.a1 || "" });
+  const places = String(req.placements || "").split(",").filter(Boolean);
+
+  const steps = [["Request sent", 1], ["Payment sent to us", 2], ["Payment verified — ad is live", 3], ["Campaign finished", 4]];
+  let h = `<div class="grid2"><div class="crt-window"><div class="titlebar"><span class="label">status</span></div><div class="body">
+      <p style="margin-top:0">${S.pill(shown)} <strong>${E(req.package_name || req.package)}</strong> · ${S.kes(req.price)} · ${E(req.days)} days</p>
+      <ul class="steps">${steps.map(([l, n]) => `<li class="${done(n) ? "done" : n === nowStep ? "now" : ""}">${E(l)}</li>`).join("")}</ul>
+      ${req.start ? `<p class="hint" style="margin-bottom:0">Runs <strong>${E(req.start)}</strong> to <strong>${E(req.end)}</strong>${shown === "live" ? ` · ${Math.max(0, Math.round((new Date(req.end) - new Date(today)) / 864e5))} day(s) left` : ""}</p>` : `<p class="hint" style="margin-bottom:0">Preferred start: ${E(req.preferred_start || "—")}</p>`}
+      ${req.admin_note ? `<div class="note ${shown === "paused" || (req.payment && req.payment.status === "rejected") ? "bad" : ""}"><strong>Message from us:</strong> ${E(req.admin_note)}</div>` : ""}
+      ${st === "edit_submitted" ? `<div class="note">Your changes are waiting for approval. The version already running stays live until then.</div>` : ""}
+      ${shown === "paused" ? `<div class="note bad">This ad is paused. Contact us if you think this is a mistake.</div>` : ""}
+    </div></div>
+    <div class="crt-window"><div class="titlebar"><span class="label">your-ad</span></div><div class="body">
+      ${places.map((t) => `<div class="prev-box"><span class="hint">${E(tl(t))}</span>${EO_ADS.previewHTML(adObj, t)}</div>`).slice(0, 3).join("")}
+      <p class="hint">Shown in: ${places.map((t) => E(tl(t))).join(", ")}</p>
+      <p class="hint"><strong>${creatives.length}</strong> of ${E(req.max_ads || creatives.length)} ads · pictures added: <strong>${creatives.filter((_, i) => imgs["a" + (i + 1)]).length}</strong>/${creatives.length}</p>
+      <div class="row-links" id="acts"></div>
+    </div></div></div>`;
+
+  const needPay = ["awaiting_payment"].includes(st) || (req.payment && req.payment.status === "rejected" && st === "awaiting_payment");
+  if (st === "draft") h += `<div class="crt-window"><div class="titlebar"><span class="label">next</span></div><div class="body"><p>This is still a draft. Finish the ad and send it to see payment details.</p><a class="btn primary" href="/sponsor/new?id=${E(id)}">Finish the ad →</a></div></div>`;
+  if (needPay) h += `<div class="crt-window"><div class="titlebar"><span class="label">pay</span></div><div class="body">
+      <p style="margin-top:0">Pay <strong>${S.kes(req.price)}</strong>, then tell us the payment details. We check it and switch your ad on.</p>
+      <div class="paybox"><ol style="margin:0;padding-left:1.2rem"><li>Open M-Pesa → <strong>Lipa na M-Pesa</strong> → <strong>${E(mp.type || "Buy Goods")}</strong>.</li>
+        <li>Till number: <span class="big">${E(mp.till_number || "—")}</span> ${mp.business_name ? `(${E(mp.business_name)})` : ""}</li>
+        <li>Amount: <strong>${S.kes(req.price)}</strong>, enter your PIN.</li>
+        <li>Copy the transaction code from the M-Pesa message (e.g. <span class="mono">SGH7X2ABCD</span>) and send it below.</li></ol>
+        <p class="hint" style="margin-bottom:0">Paying another way (bank or cash)? Choose that below or message us on WhatsApp.</p></div>
+      <form id="payf" class="grid2">
+        <div class="field"><label>Payment method</label><select name="method"><option>M-Pesa</option><option>Bank transfer</option><option>Cash</option></select></div>
+        <div class="field"><label>Transaction code / reference *</label><input name="code" maxlength="40" required placeholder="e.g. SGH7X2ABCD"></div>
+        <div class="field"><label>Amount paid (KES) *</label><input name="amount" type="number" min="1" required value="${E(req.price)}"></div>
+        <div class="field"><label>Phone you paid from</label><input name="phone" maxlength="30" value="${E(me.profile.phone || "")}"></div>
+        <div class="field" style="grid-column:1/-1"><label>Note (optional)</label><input name="note" maxlength="300"></div>
+        <div style="grid-column:1/-1"><button class="btn primary" type="submit">I have paid — send for verification</button> <span class="form-status mono" id="pmsg"></span></div>
+      </form></div></div>`;
+  if (st === "payment_submitted") h += `<div class="crt-window"><div class="titlebar"><span class="label">payment</span></div><div class="body"><p style="margin:0">Thank you. We received your payment details (${E(req.payment.method)} · <span class="mono">${E(req.payment.code)}</span> · ${S.kes(req.payment.amount)}) on ${S.fmt(req.payment.submitted)}. We'll verify it and switch your ad on. Ads go live within 24 hours of verification.</p></div></div>`;
+  const socList = String(req.socials || "").split(",").map((x) => x.trim()).filter(Boolean);
+  if (socList.length) h += `<div class="crt-window"><div class="titlebar"><span class="label">social-posts</span></div><div class="body"><p style="margin-top:0">Your package includes a post on: </p><ul class="steps">${socList.map((k) => `<li class="${soc[k] ? "done" : ""}">${E(SOC[k] || k)} ${soc[k] ? (/^https?:/.test(soc[k]) ? `— <a href="${E(soc[k])}" target="_blank" rel="noopener noreferrer">view post</a>` : "— posted") : "— will be posted after your payment is verified"}</li>`).join("")}</ul></div></div>`;
+  if (!["rejected", "expired"].includes(shown)) h += `<div class="crt-window"><div class="titlebar"><span class="label">pictures</span></div><div class="body"><p style="margin-top:0">Send the pictures for your ad${creatives.length > 1 ? "s" : ""} to our WhatsApp and quote your request number <strong class="mono">${E(id)}</strong>. We add them to your ads — no upload needed here.${req.wa_note ? ` <span class="hint">(Your note: ${E(req.wa_note)})</span>` : ""}</p>${waImg ? `<a class="btn primary" href="${E(waImg)}" target="_blank" rel="noopener">Send pictures on WhatsApp</a>` : ""}<p class="hint" style="margin-bottom:0">Ads go live within <strong>24 hours</strong> after your payment is verified.</p></div></div>`;
+  if (req.ad_id) h += `<div class="crt-window"><div class="titlebar"><span class="label">results</span></div><div class="body" id="stats"><p class="hint">Loading results…</p></div></div>`;
+  if (helpUrl) h += `<p class="hint">Questions? <a href="${E(helpUrl)}" target="_blank" rel="noopener">Message us on WhatsApp</a>.</p>`;
+  // renewal reminder, pause, share link
+  const daysLeft = req.end ? Math.round((new Date(req.end) - new Date(today)) / 864e5) : null;
+  const renewN = Number((cfg && cfg.renew_days) || 3), rcode = ((cfg && cfg.renew_coupon) || "").toUpperCase();
+  let banner = "";
+  if (shown === "live" && daysLeft != null && daysLeft <= renewN) banner = `<div class="note"><strong>Your campaign ends ${daysLeft <= 0 ? "today" : "in " + daysLeft + " day(s)"}.</strong> Keep your ads running without a gap: <a class="btn sm primary" href="/sponsor/new?copy=${E(id)}${rcode ? "&coupon=" + encodeURIComponent(rcode) : ""}">Renew now${rcode ? " (code " + E(rcode) + " applied)" : ""}</a></div>`;
+  if (shown === "expired") banner = `<div class="note">This campaign has finished. <a class="btn sm primary" href="/sponsor/new?copy=${E(id)}${rcode ? "&coupon=" + encodeURIComponent(rcode) : ""}">Book it again${rcode ? " with code " + E(rcode) : ""}</a></div>`;
+  const maxPause = Number(cfg && cfg.max_pause_days != null ? cfg.max_pause_days : 7) || 0, nowMs = Date.now();
+  const pausedNow = pz && nowMs >= pz.from_ms && nowMs < pz.until_ms, pauseDone = pz && (pz.applied || nowMs >= pz.until_ms);
+  let pausePanel = "";
+  if (shown === "live" && maxPause > 0) {
+    pausePanel = `<div class="crt-window"><div class="titlebar"><span class="label">pause</span></div><div class="body">${pausedNow
+      ? `<p style="margin-top:0">Your ads are <strong>paused until ${S.fmt(pz.until_ms)}</strong>. The paused days are added to the end of your campaign.</p><button class="btn" id="resume" type="button">Resume now</button>`
+      : pauseDone ? `<p class="hint" style="margin:0">You already used your pause for this campaign${pz.days ? " (" + E(pz.days) + " day(s) added)" : ""}.</p>`
+      : `<p style="margin-top:0">Going on holiday or out of stock? Pause your ads for up to <strong>${maxPause}</strong> day(s) — once per campaign. The days are added to the end.</p><select id="pdays">${Array.from({ length: maxPause }, (_, i) => `<option value="${i + 1}">${i + 1} day${i ? "s" : ""}</option>`).join("")}</select> <button class="btn" id="pause" type="button">Pause my ads</button>`}<span class="form-status mono" id="pmsg2"></span></div></div>`;
+  }
+  h = (banner || "") + h + pausePanel;
+  if (F.share) h += `<div class="crt-window"><div class="titlebar"><span class="label">share-report</span></div><div class="body"><p style="margin-top:0">A link anyone can open without logging in — handy for your boss or partner. It updates automatically.</p><button class="btn" id="sharecopy" type="button">Copy report link</button></div></div>`;
+  stage.innerHTML = h;
+  const shareBtn = $("#sharecopy"); if (shareBtn) shareBtn.onclick = () => { const u = location.origin + "/report.html?t=" + F.share; (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => S.toast("Link copied ✓"), () => prompt("Copy this link:", u)); };
+  const pb = $("#pause"), rb = $("#resume");
+  if (pb) pb.onclick = async () => { const d = Number($("#pdays").value), from = Date.now(); try { await S.set("ad_pause/" + id, { from_ms: from, until_ms: from + d * 864e5 - 120000 }); S.toast("Paused ✓"); location.reload(); } catch (er) { $("#pmsg2").textContent = " " + er.message; } };
+  if (rb) rb.onclick = async () => { try { await S.set("ad_pause/" + id, { from_ms: pz.from_ms, until_ms: Math.min(pz.until_ms, Date.now()) }); S.toast("Resumed ✓"); location.reload(); } catch (er) { $("#pmsg2").textContent = " " + er.message; } };
+
+  const acts = $("#acts");
+  const link = (l, href, cls) => { const a = document.createElement("a"); a.className = "btn sm " + (cls || ""); a.href = href; a.textContent = l; acts.appendChild(a); };
+  if (["draft", "awaiting_payment", "payment_submitted", "live", "edit_submitted"].includes(st)) link("Edit ad", "/sponsor/new?id=" + id);
+  link("Book again", "/sponsor/new?copy=" + id);
+  if (["draft", "awaiting_payment"].includes(st)) { const b = document.createElement("button"); b.className = "btn sm danger"; b.type = "button"; b.textContent = "Delete request"; b.onclick = async () => { if (!confirm("Delete this request?")) return; try { await S.del("sponsor_requests/" + id); await S.del(`sponsors/${me.uid}/requests/${id}`).catch(() => {}); location.href = "/sponsor/"; } catch (e) { S.toast(e.message, true); } }; acts.appendChild(b); }
+
+  const pf = $("#payf");
+  if (pf) pf.onsubmit = async (e) => {
+    e.preventDefault(); const m = $("#pmsg"); m.textContent = "Sending…";
+    const f = pf;
+    if (f.code.value.trim().length < 5) { m.textContent = "That code looks too short."; return; }
+    try {
+      await S.update("sponsor_requests/" + id, { payment: { method: f.method.value, code: f.code.value.trim().toUpperCase(), amount: Number(f.amount.value), phone: f.phone.value.trim(), note: f.note.value.trim(), submitted: Date.now(), status: "unverified" }, status: "payment_submitted", updated: Date.now() });
+      location.reload();
+    } catch (er) { m.textContent = "Could not send: " + er.message; }
+  };
+
+  // ---- results ----
+  if (req.ad_id) {
+    const box = $("#stats");
+    let days = {}, pages = {}, perAd = [];
+    try {
+      const got = await Promise.all(adIds.map((x) => Promise.all([S.get("ad_stats/" + x).catch(() => null), S.get("ad_pages/" + x).catch(() => null)])));
+      perAd = got.map(([d]) => d || {});
+      got.forEach(([d, pg]) => {
+        Object.entries(d || {}).forEach(([day, o]) => { days[day] = days[day] || {}; Object.entries(o).forEach(([k, n]) => (days[day][k] = (days[day][k] || 0) + (Number(n) || 0))); });
+        Object.entries(pg || {}).forEach(([page, o]) => { pages[page] = pages[page] || {}; Object.entries(o).forEach(([k, n]) => (pages[page][k] = (pages[page][k] || 0) + (Number(n) || 0))); });
+      });
+    } catch {}
+    days = days || {}; pages = pages || {};
+    const start = req.start || today, endCap = req.end && req.end < today ? req.end : today;
+    const draw = (from) => {
+      const sm = EO_ADS.summarize(days, from, endCap);
+      const row = (k, v) => `<tr><td>${E(k)}</td><td>${v.v}</td><td>${v.c}</td><td>${v.v ? (v.c / v.v * 100).toFixed(2) : "0.00"}%</td></tr>`;
+      const pg = Object.entries(pages).sort((a, b) => (b[1].v || 0) - (a[1].v || 0)).slice(0, 10).map(([k, v]) => [k === "home" ? "/" : k.replace(/^(blog|content|materials|writing|search|about|contact)(_|$)/, "/$1/").replace(/_/g, "-").replace(/\/-/g, "/"), v]);
+      box.innerHTML = `<div class="toolbar"><select id="rng"><option value="${E(start)}">Whole campaign</option><option value="${S.addDays(today, -6)}">Last 7 days</option><option value="${S.addDays(today, -13)}">Last 14 days</option></select><span style="flex:1"></span><button class="btn sm" id="csv" type="button">Download CSV</button></div>
+        <div class="cards"><div class="stat"><b>${sm.v}</b><span>Views (seen on screen)</span></div><div class="stat"><b>${sm.c}</b><span>Clicks</span></div><div class="stat"><b>${sm.ctr.toFixed(2)}%</b><span>Click rate</span></div><div class="stat"><b>${sm.u}</b><span>Unique viewers (per day, added up)</span></div>${sm.ld ? `<div class="stat"><b>${sm.ld}</b><span>WhatsApp chats started</span></div>` : ""}</div>
+        ${EO_ADS.chartSVG(sm.byDay)}
+        <div class="grid2"><div><h3>Where it showed</h3><table class="tbl"><thead><tr><th>Spot</th><th>Views</th><th>Clicks</th><th>CTR</th></tr></thead><tbody>${Object.entries(sm.byPl).map(([k, v]) => row(tl(k), v)).join("") || '<tr><td colspan="4" class="hint">No data yet.</td></tr>'}</tbody></table></div>
+          <div><h3>Devices</h3><table class="tbl"><thead><tr><th>Device</th><th>Views</th><th>Clicks</th><th>CTR</th></tr></thead><tbody>${row("Phone", sm.byDev.m)}${row("Computer / tablet", sm.byDev.d)}</tbody></table>
+          <h3>Top pages</h3><table class="tbl"><tbody>${pg.map(([k, v]) => `<tr><td class="mono">${E(k)}</td><td>${v.v || 0} views</td><td>${v.c || 0} clicks</td></tr>`).join("") || '<tr><td class="hint">No data yet.</td></tr>'}</tbody></table></div></div>
+        ${aud && aud.avg_ctr != null ? `<p>Your click rate: <strong>${sm.ctr.toFixed(2)}%</strong> · site average: <strong>${Number(aud.avg_ctr).toFixed(2)}%</strong> — ${sm.v < 100 ? "not enough views yet to compare." : sm.ctr >= aud.avg_ctr ? "you are above average 🎉" : "below average: try a clearer headline or button text."}</p>` : ""}
+        ${creatives.length > 1 ? (() => { const rk = creatives.map((c, i) => { const x = EO_ADS.summarize(perAd[i] || {}, from, endCap); return { h: c.headline, v: x.v, c: x.c, ctr: x.ctr }; }).sort((a, b) => b.ctr - a.ctr); const worst = rk.filter((x) => x.v >= 100).slice(-1)[0]; return `<h3>Your ads ranked</h3><table class="tbl"><thead><tr><th>Ad</th><th>Views</th><th>Clicks</th><th>CTR</th></tr></thead><tbody>${rk.map((x, i) => `<tr><td>${i === 0 && x.v >= 100 ? "⭐ " : ""}${E(x.h)}</td><td>${x.v}</td><td>${x.c}</td><td>${x.ctr.toFixed(2)}%</td></tr>`).join("")}</tbody></table>${worst && rk.length > 1 && worst !== rk[0] ? `<p class="hint">Tip: "${E(worst.h)}" gets the fewest clicks — edit it to copy what works in "${E(rk[0].h)}".</p>` : ""}`; })() : ""}
+        <p class="hint">A "view" is counted when at least half the ad is on screen for one second. Numbers can lag by a few seconds.</p>`;
+      $("#rng").value = from;
+      $("#rng").onchange = (e) => draw(e.target.value);
+      $("#csv").onclick = () => S.csv(`ad-${req.ad_id}-results.csv`, [["date", "views", "clicks"]].concat(sm.byDay.map((d) => [d.d, d.v, d.c])));
+    };
+    draw(start);
+    const mkBtn = (label, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn sm"; b.textContent = label; b.onclick = fn; acts.appendChild(b); };
+    const reportOpts = (receipt) => {
+      const sm = EO_ADS.summarize(days, start, endCap);
+      return { title: receipt ? "Receipt — " + (req.package_name || "") : "Ad report — " + ((req.ad && req.ad.headline) || ""), site: (window.EO_SITE && EO_SITE.settings && EO_SITE.settings.site_name) || "", sponsor: req.sponsor_name, pkg: `${req.package_name || req.package} · ${creatives.length} ad(s)`, start: req.start, end: req.end, id, summary: receipt ? null : sm,
+        byPl: receipt ? [] : Object.entries(sm.byPl).map(([k, v]) => ({ label: tl(k), v: v.v, c: v.c })), byDay: receipt ? [] : sm.byDay,
+        socials: socList.map((k) => ({ name: SOC[k] || k, url: soc[k] })),
+        receipt: receipt ? { name: req.sponsor_name, amount: req.payment.amount, method: req.payment.method, code: req.payment.code, date: S.fmt(req.verified_at || req.updated) } : null };
+    };
+    mkBtn("Print report", () => EO_ADS.openReport(reportOpts(false)));
+    if (verified && req.payment) mkBtn("Print receipt", () => EO_ADS.openReport(reportOpts(true)));
+  }
+  if (helpUrl && ["live", "edit_submitted"].includes(st) && req.end) {
+    const ext = await S.help(`Hello, I would like to extend my ad (request ${id}, ends ${req.end}). Please send the price.`);
+    const a = document.createElement("a"); a.className = "btn sm"; a.href = ext; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Ask to extend"; acts.appendChild(a);
+  }
+})();
+</script>
+</body>
+</html>

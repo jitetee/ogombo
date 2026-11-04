@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem('eo-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order a material — Ezra Ogombo</title>
+<meta name="description" content="Order a premium study material: pay by M-Pesa, paste the confirmation message and receive the download link on WhatsApp, SMS or email.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://ezra-ogombo.web.app/order">
+<meta name="theme-color" content="#0a0e0c">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/icon-16.png">
+<link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ezra Ogombo">
+<meta property="og:locale" content="en_KE">
+<meta property="og:title" content="Order a material — Ezra Ogombo">
+<meta property="og:description" content="Order a premium study material: pay by M-Pesa, paste the confirmation message and receive the download link on WhatsApp, SMS or email.">
+<meta property="og:image" content="https://ezra-ogombo.web.app/assets/icons/icon-512.png">
+<meta property="og:url" content="https://ezra-ogombo.web.app/order">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Order a material — Ezra Ogombo">
+<meta name="twitter:description" content="Order a premium study material: pay by M-Pesa, paste the confirmation message and receive the download link on WhatsApp, SMS or email.">
+<meta name="twitter:image" content="https://ezra-ogombo.web.app/assets/icons/icon-512.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+</head>
+<body >
+
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="/">ezraogombo</a>
+    <nav class="site-nav"><a href="/">home</a><a href="/about">about</a><a href="/content">content</a><a href="/blog">blog</a><a href="/writing">writing</a><a href="/materials">materials</a><a href="/contact">contact</a></nav>
+    <button id="theme-toggle" data-theme-toggle type="button">☀ light</button>
+    <a id="search-link" href="/search" title="Search" aria-label="Search" style="color:var(--ink-dim); text-decoration:none; font-size:1rem; margin-left:0.3rem;">🔍</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/materials">Materials</a> / <a id="o-back" href="/materials">item</a> / order</nav>
+    <section class="hero">
+      <span class="kicker">ORDER.EXE</span>
+      <h1>Order: <span id="o-title">…</span></h1>
+      <p class="lede">Price: <strong id="o-price"></strong>. Pay offline with M-Pesa, paste the confirmation message, and your download link is sent to you.</p>
+    </section>
+    <div id="order-box">
+      <div class="crt-window"><div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label">1-pay.txt</span></div><div class="body" id="o-pay"></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label">2-order.txt</span></div><div class="body">
+        <form id="order-form" novalidate>
+          <div class="field"><label>Your name</label><input name="name" required maxlength="100" autocomplete="name"></div>
+          <div class="field"><label>Phone number (the one you paid with)</label><input name="phone" type="tel" required maxlength="30" inputmode="tel" autocomplete="tel"></div>
+          <div class="field"><label>Email (optional)</label><input name="email" type="email" maxlength="150" autocomplete="email"></div>
+          <div class="field"><label>Send my download link via</label><select name="deliver_via"><option value="whatsapp">WhatsApp</option><option value="sms">SMS</option><option value="email">Email</option></select></div>
+          <div class="field"><label id="to-label">Where to send the link</label><input name="deliver_to" required maxlength="150"></div>
+          <div class="field"><label>Discount code (optional)</label><div style="display:flex;gap:.4rem"><input name="coupon" id="o-coupon" maxlength="30" autocomplete="off" style="text-transform:uppercase"><button class="btn sm" type="button" id="o-apply">Apply</button></div><small id="o-cpmsg"></small></div>
+          <div id="o-mp">
+          <div class="field"><label>Paste the M-Pesa confirmation message</label><textarea name="mpesa" required maxlength="1500" placeholder="e.g. UBA1X2Y3Z4 Confirmed. Ksh100.00 paid to EZRA OGOMBO on 9/10/26 …"></textarea><small>Paste the whole SMS so the transaction code can be verified.</small></div>
+          </div>
+          <input name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+          <button class="btn primary" type="submit">Submit order</button>
+          <p id="o-status" class="form-status mono"></p>
+        </form>
+        <div id="o-done" hidden>
+          <h2 style="margin-top:0">Order received ✓</h2>
+          <p>Your reference: <strong class="mono" id="o-ref"></strong></p>
+          <p>Once the payment is verified, the download link will be sent to <strong id="o-where"></strong>.</p>
+          <p id="o-verdict" class="verdict" hidden style="padding:.6rem .8rem;border:1px solid var(--line,#444);border-radius:6px"></p>
+          <p id="o-note"></p>
+          <div id="o-receipt"></div>
+          <p><a class="btn" id="o-wa" data-whatsapp href="#">Message us on WhatsApp</a> <a class="btn" href="/receipt">My receipts</a> <a class="btn" href="/materials">Back to materials</a></p>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>© <span data-year></span> <span data-site-name>Ezra Ogombo</span>.</p>
+    <p>Nairobi &amp; Matunda, Kenya</p>
+  </div>
+</footer>
+
+<script src="/js/firebase-config.js"></script>
+<script src="/js/db.js"></script>
+<script src="/js/vendor/qrcode.js"></script>
+<script src="/js/qr.js"></script>
+<script src="/js/site.js"></script>
+<script src="/js/receipt.js"></script>
+<script src="/js/ads.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/chatbot.js"></script>
+<script src="/js/support.js"></script>
+<script src="/js/analytics.js"></script>
+<script src="/js/mpesa-verify.js"></script>
+<script src="/js/pages/order.js"></script>
+
+</body>
+</html>

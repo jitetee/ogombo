@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem('eo-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing &amp; Books by Ezra Ogombo (@ezraogombo)</title>
+<meta name="description" content="Books in progress by Ezra Ogombo: a memoir, a theatre-training account, a study companion, and more. All unfinished, all real.">
+<meta name="keywords" content="ezraogombo, Ezra Ogombo, Ogombo, @ezraogombo, Ezra Ogombo content creator, Kenyan content creator, medical education content, perioperative theatre technology, theatre technologist Kenya, anatomy mnemonics">
+<meta data-seo-extra name="author" content="Ezra Ogombo">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<link rel="alternate" type="application/rss+xml" title="Ezra Ogombo — blog" href="/feed.xml">
+<link rel="canonical" href="https://ezra-ogombo.web.app/writing">
+<meta name="theme-color" content="#0a0e0c">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/icon-16.png">
+<link rel="apple-touch-icon" href="/assets/icons/icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ezra Ogombo">
+<meta property="og:title" content="Writing &amp; Books by Ezra Ogombo (@ezraogombo)">
+<meta property="og:description" content="Books in progress by Ezra Ogombo: a memoir, a theatre-training account, a study companion, and more. All unfinished, all real.">
+<meta property="og:image" content="https://ezra-ogombo.web.app/assets/icons/icon-512.png">
+<meta property="og:url" content="https://ezra-ogombo.web.app/writing">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Writing &amp; Books by Ezra Ogombo (@ezraogombo)">
+<meta name="twitter:description" content="Books in progress by Ezra Ogombo: a memoir, a theatre-training account, a study companion, and more. All unfinished, all real.">
+<meta name="twitter:image" content="https://ezra-ogombo.web.app/assets/icons/icon-512.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<script type="application/ld+json" data-seo>{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ezra-ogombo.web.app/"}, {"@type": "ListItem", "position": 2, "name": "Writing", "item": "https://ezra-ogombo.web.app/writing"}]}</script>
+</head>
+<body data-page="writing">
+
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="/">ezraogombo</a>
+    <nav class="site-nav"><a href="/">home</a><a href="/about">about</a><a href="/content">content</a><a href="/blog">blog</a><a href="/writing">writing</a><a href="/materials">materials</a><a href="/contact">contact</a></nav>
+    <button id="theme-toggle" data-theme-toggle type="button">☀ light</button>
+    <a id="search-link" href="/search" title="Search" aria-label="Search" style="color:var(--ink-dim); text-decoration:none; font-size:1rem; margin-left:0.3rem;">🔍</a>
+  </div>
+</header>
+
+<div class="ticker"><span id="status-ticker">loading status…</span></div>
+
+<main>
+  <div class="wrap">
+
+    <section class="hero">
+      <span class="kicker" data-pg="kicker">DRAFTS.DIR</span>
+      <h1 data-pg="heading">Books in progress.</h1>
+      <p data-pg="intro">Nothing published yet. All of it real, all of it slow. Five manuscripts at once — see the <a href="/blog/writing-five-books-at-once">blog post</a> for why that's not as chaotic as it sounds.</p>
+    </section>
+    <div data-pg="body"></div>
+
+    <div id="writing-list"></div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--seo-archive--><section class="seo-archive wrap"><details><summary>Browse all 5 books and projects (A–Z)</summary><ul><li><a href="/writing/books/a-life-becoming">A Life Becoming</a></li><li><a href="/writing/books/correction">Correction</a></li><li><a href="/writing/books/notes-from-the-sterile-field">Notes from the Sterile Field</a></li><li><a href="/writing/books/the-smooth-sailing">The Smooth Sailing</a></li><li><a href="/writing/books/the-theatre-companion">The Theatre Companion</a></li></ul></details></section><!--/seo-archive-->
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>© <span data-year></span> Ezra Ogombo (@ezraogombo).</p>
+    <p>Nairobi &amp; Matunda, Kenya</p>
+  </div>
+</footer>
+
+<script src="/js/firebase-config.js"></script>
+<script src="/js/db.js"></script>
+<script src="/js/vendor/qrcode.js"></script>
+<script src="/js/qr.js"></script>
+<script src="/js/site.js"></script>
+<script src="/js/ads.js"></script>
+<script src="/js/theme.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/chatbot.js"></script>
+<script src="/js/support.js"></script>
+<script src="/js/analytics.js"></script>
+<script>
+(async () => {
+  const { status, writing_projects } = await EO_DB.getNodes(["status", "writing_projects"]);
+  if (status) document.getElementById("status-ticker").textContent = `STATUS: ${status.note || "building"}  ·  last updated ${status.updated || "recently"}`;
+
+  const list = document.getElementById("writing-list");
+  if (!writing_projects || writing_projects.length === 0) {
+    list.innerHTML = `<p>Nothing here yet — the live database hasn't been seeded with these yet. Check back soon.</p>`;
+  } else {
+    writing_projects.filter((w) => w && w.slug && w.title && w.status).forEach((w) => {
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.innerHTML = `
+        <span class="status">${w.status.toUpperCase()}</span>
+        <a class="title" href="/writing/books/${w.slug}"><h3>${w.title}</h3></a>
+        <p>${w.summary}</p>
+        ${w.excerpt ? `<a href="/writing/books/${w.slug}" style="text-decoration:none;"><p class="mono" style="color:var(--amber); border-left:2px solid var(--panel-border); padding-left:0.7rem; margin-top:0.5rem;">${w.excerpt}</p></a>` : ""}
+      `;
+      list.appendChild(div);
+    });
+  }
+})();
+</script>
+</body>
+</html>

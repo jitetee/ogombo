@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /sponsor/
+Disallow: /tools/
+Disallow: /materials/order/
+Disallow: /receipt
+Disallow: /report
+Disallow: /read$
+Disallow: /read.html
+Disallow: /material$
+Disallow: /material.html
+Disallow: /search?
+
+Sitemap: https://ezra-ogombo.web.app/sitemap.xml
