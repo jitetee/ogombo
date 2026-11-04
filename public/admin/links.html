@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Short links — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">LINKS.EXE</span><h1>Short links &amp; QR codes</h1><p class="hint">A short link looks like <b id="ex"></b>. It opens the page you choose and counts the clicks. Each one can also be a QR code with your logo in the middle.</p></section>
+<div class="crt-window"><div class="titlebar"><span class="label">new short link</span></div><div class="body">
+<form id="nf" class="grid2">
+  <div class="field" style="grid-column:1/-1"><label>Where should it go? * <span class="hint">(a full https:// address, or a page of this site like /blog/my-post)</span></label><input name="url" maxlength="600" required placeholder="https://… or /content/…"></div>
+  <div class="field"><label>Short code <span class="hint">(3–20 letters or numbers; leave empty for a random 6-letter one)</span></label><input name="code" maxlength="20" placeholder="e.g. ghtyui" autocapitalize="off"></div>
+  <div class="field"><label>Note (only you see it)</label><input name="title" maxlength="120" placeholder="e.g. Facebook bio"></div>
+  <div style="grid-column:1/-1"><button class="btn primary" type="submit">Create short link</button> <span class="form-status mono" id="ns"></span></div>
+</form></div></div>
+<div class="toolbar" style="margin-top:1rem"><input id="q" placeholder="Search links…" style="max-width:260px"><span class="hint" id="cnt"></span><button class="btn sm" type="button" id="sync" title="Make a short link for every blog post, content card and material that doesn't have one">Create missing links</button> <span class="hint" id="syn"></span></div>
+<div id="list"></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/vendor/qrcode.js"></script>
+<script src="/js/qr.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("links");
+  const E = A.esc, ORIGIN = location.origin;
+  document.getElementById("ex").textContent = ORIGIN.replace(/^https?:\/\//, "") + "/ghtyui";
+  const RESERVED = new Set(["about", "admin", "blog", "report", "search", "sponsor", "writing", "assets", "content", "contact", "privacy", "order", "receipt", "materials", "subscribe", "advertise"]);
+  let data = {};
+  const rnd = () => { const L = "abcdefghjkmnpqrstuvwxyz"; return [...crypto.getRandomValues(new Uint8Array(6))].map((x) => L[x % L.length]).join(""); };
+  const shortUrl = (c) => `${ORIGIN}/${c}`;
+
+  function qrModal(code) {
+    const url = shortUrl(code), c = document.createElement("canvas");
+    EO_QR.drawQR(c, url, 480);
+    c.style.cssText = "width:240px;height:240px;display:block;margin:0 auto;background:#fff;border-radius:6px";
+    const wrap = document.createElement("div"); wrap.append(c);
+    const p = document.createElement("p"); p.className = "mono"; p.style.textAlign = "center"; p.textContent = url; wrap.append(p);
+    const dl = A.btn("Download PNG", "primary", () => { setTimeout(() => { const a = document.createElement("a"); a.download = `qr-${code}.png`; a.href = c.toDataURL("image/png"); a.click(); }, 300); });
+    A.modal("QR code", wrap, [dl]);
+  }
+
+  function paint() {
+    const q = document.getElementById("q").value.trim().toLowerCase();
+    const rows = Object.entries(data).filter(([k, v]) => !q || (k + " " + (v.url || "") + " " + (v.title || "")).toLowerCase().includes(q)).sort((a, b) => (b[1].created || 0) - (a[1].created || 0));
+    document.getElementById("cnt").textContent = `${rows.length} link${rows.length === 1 ? "" : "s"} · ${rows.reduce((n, [, v]) => n + (v.clicks || 0), 0)} clicks`;
+    const box = document.getElementById("list"); box.innerHTML = "";
+    if (!rows.length) { box.innerHTML = `<p class="hint">No short links yet.</p>`; return; }
+    const t = document.createElement("table"); t.className = "adm-table";
+    t.innerHTML = `<thead><tr><th>Short link</th><th>Goes to</th><th>Clicks</th><th></th></tr></thead>`;
+    const tb = document.createElement("tbody");
+    rows.forEach(([code, v]) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td class="mono"><b>/${E(code)}</b>${v.title ? `<br><span class="hint">${E(v.title)}</span>` : ""}</td><td style="word-break:break-all;max-width:340px">${E(v.url)}</td><td>${v.clicks || 0}</td><td class="act"></td>`;
+      const act = tr.querySelector(".act");
+      act.append(
+        A.btn("Copy code", "sm primary", async (e) => { try { await navigator.clipboard.writeText(code); e.target.textContent = "Copied ✓"; } catch { prompt("Copy:", code); } }),
+        A.btn("Copy link", "sm", async (e) => { try { await navigator.clipboard.writeText(shortUrl(code)); e.target.textContent = "Copied ✓"; } catch { prompt("Copy:", shortUrl(code)); } }),
+        A.btn("QR", "sm", () => qrModal(code)),
+        A.btn("Edit", "sm", async () => { const u = prompt("New destination:", v.url); if (!u || u === v.url) return; if (!/^(\/(?!\/)|https?:\/\/)/i.test(u)) return A.toast("Use a full https:// address or a /page of this site", true); await A.update(`short_links/${code}`, { url: u.trim() }); data[code].url = u.trim(); paint(); }),
+        A.btn("Delete", "sm danger", async () => { if (await A.confirm(`Delete /${code}? Printed QR codes and shared links will stop working.`)) { await A.del(`short_links/${code}`); delete data[code]; paint(); } })
+      );
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); box.appendChild(t);
+  }
+
+  document.getElementById("nf").onsubmit = async (e) => {
+    e.preventDefault(); const f = e.target, st = document.getElementById("ns");
+    try {
+      let url = f.url.value.trim(); if (!/^(\/(?!\/)|https?:\/\/)/i.test(url)) { if (/^[\w-]+\.[\w.-]+/.test(url)) url = "https://" + url; else throw new Error("Use a full https:// address or a /page of this site"); }
+      let code = f.code.value.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (code && (code.length < 3 || code.length > 20)) throw new Error("The code must be 3 to 20 letters or numbers.");
+      if (code && (RESERVED.has(code) || data[code])) throw new Error(RESERVED.has(code) ? "That word is used by the site itself." : "That code is already taken.");
+      if (!code) { do { code = rnd(); } while (data[code] || RESERVED.has(code)); }
+      st.textContent = "Saving…";
+      const rec = { url, created: Date.now() }; if (f.title.value.trim()) rec.title = f.title.value.trim().slice(0, 120);
+      await A.set(`short_links/${code}`, rec); data[code] = rec; f.reset(); st.textContent = "Created " + shortUrl(code); paint();
+      try { await navigator.clipboard.writeText(code); st.textContent += " (code copied)"; } catch {}
+    } catch (er) { st.textContent = er.message; }
+  };
+  document.getElementById("q").oninput = paint;
+  document.getElementById("sync").onclick = async () => {
+    const st = document.getElementById("syn"); st.textContent = "Checking…";
+    try {
+      const have = new Set(Object.values(data).map((v) => v.url)), add = {};
+      for (const [node, base] of Object.entries(A.SHORT.BASE)) {
+        const keys = Object.keys((await A.get(node, true)) || {});
+        keys.filter((k) => !have.has(base + k)).forEach((k) => { let c; do { c = rnd(); } while (data[c] || add[c] || RESERVED.has(c)); add[c] = { url: base + k, title: (A.SHORT.NAME[node] + ": " + k).slice(0, 120), created: Date.now() }; });
+      }
+      const ks = Object.keys(add); if (!ks.length) { st.textContent = "Every item already has a short link ✓"; return; }
+      for (let i = 0; i < ks.length; i += 300) { const u = {}; ks.slice(i, i + 300).forEach((c) => (u["short_links/" + c] = add[c])); await A.patchRoot(u); }
+      Object.assign(data, add); st.textContent = `Created ${ks.length} new link${ks.length === 1 ? "" : "s"} ✓`; paint();
+    } catch (e) { st.textContent = e.message; }
+  };
+  try { data = (await A.get("short_links")) || {}; } catch (e) { document.getElementById("list").innerHTML = `<p class="hint">Couldn't load: ${E(e.message)}</p>`; }
+  paint();
+})();
+</script>
+</body>
+</html>

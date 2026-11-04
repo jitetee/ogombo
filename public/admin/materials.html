@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/js/receipt.js"></script>
+<script src="/js/mpesa-verify.js"></script>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materials — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">MATERIALS.EXE</span><h1>Materials, categories &amp; orders</h1>
+<p class="hint">Paste Google Drive <b>share links</b> (set the file to "Anyone with the link"). Free items link straight to Drive. For paid items, the link goes in the <b>private link</b> field — it is stored where visitors can't read it, and you send it to the buyer from the Orders tab.</p></section>
+<div id="tabs"></div><div id="pane"></div>
+
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("materials");
+  let files = {}, cats = [];
+  const loadCats = async () => { cats = Object.keys((await A.get("material_categories")) || {}); };
+  await loadCats();
+
+  const mats = {
+    node: "materials", title: "material", keyField: "slug", slugFrom: "title", search: ["title", "slug", "description", "unit"],
+    sort: (a, b) => (a.order || 0) - (b.order || 0),
+    columns: [{ key: "title", label: "Title" }, { key: "category", label: "Section" }, { key: "access", label: "Access", badge: true }, { key: "price", label: "KES" }, { key: "status", label: "Status", badge: true },
+      { key: "drive_url", label: "Drive link", render: (it) => (it.drive_url || files[it._key] ? "✓" : '<span class="hint">missing</span>') }],
+    defaults: () => ({ status: "draft", access: "free", price: 0, category: cats[0] || "notes", file_type: "pdf", order: 0, created: A.today() }),
+    view: (it) => `/materials/item/${it._key}`,
+    decorate: async (d) => { files = (await A.get("material_files")) || {}; Object.keys(d).forEach((k) => { d[k]._private_link = (files[k] || {}).drive_url || ""; }); const min = Math.min(0, ...Object.values(d).map((x) => x.order || 0)); mats.defaults = ((f) => () => Object.assign(f(), { order: min - 1 }))(mats._d || (mats._d = mats.defaults)); },
+    fields: [
+      { key: "title", label: "Title", type: "text", required: true, wide: true }, { key: "slug", label: "URL slug", type: "text", required: true },
+      { key: "category", label: "Section (key)", type: "select", options: cats.length ? cats : ["notes"] },
+      { key: "access", label: "Access", type: "select", options: ["free", "paid"] }, { key: "price", label: "Price (KES, paid only)", type: "number" },
+      { key: "status", label: "Status", type: "select", options: ["published", "draft"] }, { key: "file_type", label: "File type", type: "select", options: ["pdf", "docx", "xlsx", "pptx", "zip", "image", "other"] },
+      { key: "drive_url", label: "FREE file — Drive share link", type: "text", wide: true, placeholder: "https://drive.google.com/file/d/…/view" },
+      { key: "_private_link", label: "PAID file — private Drive link (never shown publicly)", type: "text", wide: true },
+      { key: "description", label: "Description", type: "textarea", rows: 3, required: true, wide: true },
+      { key: "unit", label: "Unit / course", type: "text" }, { key: "year", label: "Year (past papers)", type: "text" }, { key: "level", label: "Level / exam body", type: "text" },
+      { key: "pages", label: "Pages", type: "number" }, { key: "size", label: "File size label (e.g. 1.2 MB)", type: "text" },
+      { key: "cover", label: "Cover image (path in /assets or Drive link)", type: "text" }, { key: "tags", label: "Tags", type: "tags" }, { key: "order", label: "Order (lowest first)", type: "number" },
+      { key: "includes", label: "What's inside (one point per line)", type: "lines", wide: true },
+      { key: "preview_url", label: "Free preview (Drive link or image path) — shown on paid items", type: "text", wide: true },
+      { key: "featured", label: "Feature on home page?", type: "select", options: ["no", "yes"] },
+      { key: "source_file", label: "Original file name (note to self)", type: "text" },
+    ],
+    beforeSave: (out) => { if (out.access === "paid" && !(out.price > 0)) { A.toast("Paid items need a price", true); return false; } mats._pl = out._private_link || ""; delete out._private_link; if (out.cover) out.cover = A.driveImg(out.cover); out.created = out.created || A.today(); },
+    afterSave: async (out, key) => { if (mats._pl) await A.set(`material_files/${key}`, { drive_url: mats._pl, updated: Date.now() }); else await A.del(`material_files/${key}`).catch(() => {}); },
+  };
+  const bunCfg = {
+    node: "material_bundles", title: "bundle", keyField: "key", slugFrom: "title", search: ["title", "key"],
+    columns: [{ key: "title", label: "Bundle" }, { key: "code", label: "Discount code" }, { key: "status", label: "Status" }, { key: "order", label: "Order" }],
+    defaults: () => ({ status: "published", order: 1 }),
+    fields: [
+      { key: "title", label: "Title (e.g. Anatomy exam pack)", type: "text", required: true, wide: true }, { key: "key", label: "Key", type: "text", required: true },
+      { key: "slugs", label: "Materials in the bundle (their URL slugs, comma separated)", type: "tags", wide: true },
+      { key: "code", label: "Discount code buyers use (create it under Discount codes)", type: "text" }, { key: "status", label: "Status", type: "select", options: ["published", "draft"] },
+      { key: "description", label: "Offer text (e.g. Buy all 3 and save 25% with the code)", type: "textarea", rows: 3, wide: true }, { key: "order", label: "Order", type: "number" },
+    ],
+  };
+  const catCfg = {
+    node: "material_categories", title: "section", keyField: "key", slugFrom: "label", search: ["label", "key"],
+    columns: [{ key: "key", label: "Key" }, { key: "label", label: "Name" }, { key: "description", label: "Description" }, { key: "order", label: "Order" }],
+    defaults: () => ({ order: 9, icon: "FILE" }), view: (it) => `/materials/${it._key}`,
+    fields: [{ key: "label", label: "Name", type: "text", required: true }, { key: "key", label: "URL key", type: "text", required: true, help: "Becomes /materials/<key>" }, { key: "icon", label: "Icon text", type: "text" }, { key: "order", label: "Order", type: "number" }, { key: "description", label: "Description", type: "textarea", wide: true }],
+    afterSave: loadCats,
+  };
+
+  function orders(host) {
+    host.innerHTML = `<div class="toolbar"><select id="o-f"><option value="">All orders</option><option>pending</option><option>verified</option><option>delivered</option><option>rejected</option><option value="auto-pass">auto-pass (check passed)</option><option value="flagged">flagged (wait for approval)</option></select><button class="btn sm" id="o-stmt" type="button">Check against till statement…</button><input id="o-q" type="search" placeholder="Search name, phone, code, ref…"><span class="hint" id="o-n"></span></div><div id="o-list"></div>`;
+    let data = {}, matFiles = {}, mats = {}, pay = {}, stmt = {};
+    async function load() { [data, matFiles, mats, pay] = await Promise.all([A.get("material_orders"), A.get("material_files"), A.get("materials"), A.get("payment")]).then((r) => r.map((x) => x || {})); paint(); }
+    // the checker is re-run here on the stored message and the order time, so a verdict typed in by a buyer's browser is never trusted
+    const chk = (o) => o.mpesa_message && !/^FREE-WITH-CODE/.test(o.mpesa_message) ? window.EO_MPESA.check(o.mpesa_message, { price: o.price, pay, now: o.ts }) : null;
+    function paint() {
+      const f = document.getElementById("o-f").value, q = document.getElementById("o-q").value.toLowerCase();
+      const all = A.rows(data).sort((a, b) => b.ts - a.ts);
+      const codes = {}; all.forEach((o) => { if (o.mpesa_code) codes[o.mpesa_code] = (codes[o.mpesa_code] || 0) + 1; });
+      all.forEach((o) => { o._chk = chk(o); const st2 = stmt[o.mpesa_code]; o._st = st2 ? (st2.nums.some((n) => Math.abs(n - Number(o.price)) < 0.01) ? "ok" : "amount") : (Object.keys(stmt).length ? "missing" : ""); });
+      const list = all.filter((o) => (!f || (f === "auto-pass" ? o._chk && o._chk.verdict === "pass" && o.status === "pending" : f === "flagged" ? o._chk && o._chk.verdict !== "pass" && o.status === "pending" : o.status === f)) && (!q || JSON.stringify({ ...o, _chk: 0 }).toLowerCase().includes(q)));
+      document.getElementById("o-n").textContent = `${list.length} of ${all.length}`;
+      document.getElementById("o-list").innerHTML = list.map((o) => `<div class="crt-window" data-id="${A.esc(o._key)}"><div class="titlebar"><span class="label">${A.esc(o.ref)} · ${A.fmt(o.ts)}</span></div><div class="body">
+        <p style="margin:0 0 .4rem"><strong>${A.esc(o.material_title)}</strong> · KES ${A.esc(o.price)}${o.coupon ? ` <span class="pill live">code ${A.esc(o.coupon)} −KES ${A.esc(o.discount || 0)}</span>` : ""} ${A.pill(o.status)} ${codes[o.mpesa_code] > 1 ? '<span class="pill hidden">duplicate M-Pesa code</span>' : ""} ${o._chk ? (o._chk.verdict === "pass" ? '<span class="pill live" title="Format, amount, shop, code and freshness all match">AUTO-PASS ' + o._chk.score + '</span>' : '<span class="pill hidden" title="' + A.esc(o._chk.reasons.join("; ")) + '">' + (o._chk.verdict === "reject" ? "FAILED CHECK" : "FLAGGED") + " " + o._chk.score + '</span>') : ""} ${o._st === "ok" ? '<span class="pill live">IN STATEMENT ✓</span>' : o._st === "amount" ? '<span class="pill hidden">in statement, amount differs</span>' : o._st === "missing" ? '<span class="pill hidden">not in statement</span>' : ""}</p>${o._chk && o._chk.verdict !== "pass" ? `<p class="hint" style="margin:0 0 .4rem;color:#d19a1e">Why flagged: ${A.esc(o._chk.reasons.join("; "))}</p>` : ""}
+        <p class="hint" style="margin:0 0 .4rem">${A.esc(o.name)} · ${A.esc(o.phone)} ${o.email ? "· " + A.esc(o.email) : ""}<br>Send via <b>${A.esc(o.deliver_via)}</b> → <b>${A.esc(o.deliver_to)}</b><br>Code <b>${A.esc(o.mpesa_code)}</b> · amount ${A.esc(o.mpesa_amount == null ? "?" : o.mpesa_amount)}</p>
+        <pre class="json" style="max-height:7rem;white-space:pre-wrap">${A.esc(o.mpesa_message)}</pre>
+        ${o.delivered_link ? `<p class="hint">Delivered ${A.fmt(o.delivered_at)} · ${A.esc(o.delivered_link)}</p>` : ""}${o.note ? `<p class="hint">Note: ${A.esc(o.note)}</p>` : ""}
+        <div class="row-links" data-act></div></div></div>`).join("") || "<p>No orders yet.</p>";
+      document.querySelectorAll("#o-list [data-id]").forEach((el) => {
+        const id = el.dataset.id, o = data[id], act = el.querySelector("[data-act]");
+        act.append(A.btn("Verify", "sm", () => setStatus(id, "verified")), A.btn("Send link…", "sm primary", () => sendLink(id)), A.btn("Receipt…", "sm", () => sendReceipt(id)), A.btn("Reject", "sm danger", () => setStatus(id, "rejected")), A.btn("Note", "sm", async () => { const n = prompt("Internal note", o.note || ""); if (n != null) { await A.update(`material_orders/${id}`, { note: n }); load(); } }), A.btn("Delete", "sm danger", async () => { if (await A.confirm("Delete this order?")) { await A.del(`material_orders/${id}`); load(); } }));
+      });
+    }
+    const sha = async (code, phone) => { let n = String(phone || "").replace(/\D/g, ""); if (n.startsWith("0")) n = "254" + n.slice(1); const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(code + "|" + n)); return Array.from(new Uint8Array(b)).map((x) => x.toString(16).padStart(2, "0")).join("").slice(0, 20); };
+    async function setStatus(id, st) {
+      try {
+        const o = data[id];
+        await A.update(`material_orders/${id}`, { status: st });
+        // a rejected order gives its place on the discount code back, so the buyer can try again
+        if (st === "rejected" && o.coupon && o.status !== "rejected") {
+          const c = await A.get("material_coupons/" + o.coupon).catch(() => null);
+          if (c && Number(c.used) > 0) await A.update("material_coupons/" + o.coupon, { used: Number(c.used) - 1 });
+          await A.del(`material_coupon_uses/${o.coupon}/${await sha(o.coupon, o.phone)}`).catch(() => {});
+        }
+        A.toast("Marked " + st); load();
+      } catch (e) { A.toast(e.message, true); }
+    }
+    function sendLink(id) {
+      const o = data[id], m = mats[o.material_slug] || {};
+      const link = (matFiles[o.material_slug] || {}).drive_url || m.drive_url || "";
+      const dl = link ? window.EO_DRIVE_DL(link) : "";
+      const form = document.createElement("div");
+      form.innerHTML = `<div class="field"><label>Download link</label><input id="sl" value="${A.esc(dl)}" placeholder="Paste the Drive link"><small>Taken from the private link of this material. Make sure the Drive file is shared "Anyone with the link".</small></div>
+        <div class="field"><label>Message</label><textarea id="sm" rows="5"></textarea></div>`;
+      const msg = () => `Hello ${o.name}, thank you for your order (${o.ref}). Here is your download link for "${o.material_title}":\n${form.querySelector("#sl").value}\n\n— Ezra Ogombo`;
+      const ta = form.querySelector("#sm"); ta.value = msg(); form.querySelector("#sl").oninput = () => (ta.value = msg());
+      const num = (o.deliver_via === "email" ? "" : o.deliver_to).replace(/\D/g, "").replace(/^0/, "254");
+      const done = async (via) => { await A.update(`material_orders/${id}`, { status: "delivered", delivered_at: Date.now(), delivered_link: form.querySelector("#sl").value }); m2.close(); A.toast("Marked delivered ✓"); load(); };
+      const b = [];
+      if (o.deliver_via === "email") b.push(A.btn("Open email", "primary", () => { window.open(`mailto:${o.deliver_to}?subject=${encodeURIComponent("Your download: " + o.material_title)}&body=${encodeURIComponent(ta.value)}`); done(); }));
+      else { b.push(A.btn("Open WhatsApp", "primary", () => { window.open(`https://wa.me/${num}?text=${encodeURIComponent(ta.value)}`); done(); })); b.push(A.btn("Open SMS", "", () => { window.open(`sms:${o.deliver_to}?&body=${encodeURIComponent(ta.value)}`); done(); })); }
+      b.push(A.btn("Copy message", "", () => navigator.clipboard.writeText(ta.value).then(() => A.toast("Copied"))));
+      const m2 = A.modal(`Send link — ${o.ref}`, form, b);
+    }
+    async function sendReceipt(id) {
+      const o = data[id], [cfg, pay] = await Promise.all([A.get("site_settings"), A.get("payment")]);
+      const r = window.EO_RECEIPT.build(o, cfg || {}, pay || {});
+      const ta = document.createElement("textarea"); ta.rows = 12; ta.style.width = "100%"; ta.value = window.EO_RECEIPT.text(r, "wa");
+      const num = (o.deliver_via === "email" ? o.phone : o.deliver_to).replace(/\D/g, "").replace(/^0/, "254");
+      A.modal(`Receipt — ${o.ref}`, ta, [
+        A.btn("Open WhatsApp", "primary", () => window.open(`https://wa.me/${num}?text=${encodeURIComponent(ta.value)}`)),
+        A.btn("Open SMS", "", () => window.open(`sms:${o.phone}?&body=${encodeURIComponent(window.EO_RECEIPT.text(r, "sms"))}`)),
+        A.btn("Copy", "", () => navigator.clipboard.writeText(ta.value).then(() => A.toast("Copied")))]);
+    }
+    document.getElementById("o-f").onchange = paint; document.getElementById("o-q").oninput = paint;
+    // match pending orders against the real M-Pesa till statement (paste the CSV rows or text from the M-Pesa Business portal / statement)
+    document.getElementById("o-stmt").onclick = () => {
+      const wrap = document.createElement("div");
+      wrap.innerHTML = `<p class="hint">Paste your till statement (the rows with receipt numbers). Orders whose M-Pesa code is in the statement with the right amount get a green tick; you can then verify them all at once.</p><textarea id="st-t" rows="10" style="width:100%" placeholder="Receipt No, Completion Time, Details, Paid In…"></textarea>`;
+      const m3 = A.modal("Check against till statement", wrap, [
+        A.btn("Match", "primary", () => { stmt = window.EO_MPESA.parseStatement(wrap.querySelector("#st-t").value); m3.close(); paint(); A.toast(Object.keys(stmt).length + " receipts read from the statement"); }),
+        A.btn("Verify all matched", "", async () => {
+          stmt = window.EO_MPESA.parseStatement(wrap.querySelector("#st-t").value); paint();
+          const ok = A.rows(data).filter((o) => o.status === "pending" && stmt[o.mpesa_code] && stmt[o.mpesa_code].nums.some((n) => Math.abs(n - Number(o.price)) < 0.01));
+          for (const o of ok) await A.update(`material_orders/${o._key}`, { status: "verified", note: ((o.note || "") + " Matched till statement.").trim() });
+          m3.close(); A.toast(ok.length + " orders verified from the statement"); load();
+        }),
+        A.btn("Clear match", "", () => { stmt = {}; m3.close(); paint(); })]);
+    };
+    load();
+  }
+
+  // ---------- discount codes for paid materials (usage-limited) ----------
+  async function coupons(host) {
+    host.innerHTML = `<div class="toolbar"><span class="hint">Discount codes for paid materials. Set how many buyers may use a code; once the limit is reached the code stops working. A rejected order gives its use back.</span><span style="flex:1"></span><button class="btn primary" id="newcp" type="button">+ New code</button></div><div class="tbl-wrap" id="cpt"></div>`;
+    let cps = {}, ords = {}, mats = {};
+    const load = async () => { [cps, ords, mats] = (await Promise.all([A.get("material_coupons"), A.get("material_orders"), A.get("materials")])).map((x) => x || {}); paint(); };
+    const matList = () => A.rows(mats).filter((m) => m.slug && m.access === "paid");
+    function paint() {
+      const cnt = {}; Object.values(ords).forEach((o) => { if (o.coupon && o.status !== "rejected") cnt[o.coupon] = (cnt[o.coupon] || 0) + 1; });
+      const today = A.today();
+      document.getElementById("cpt").innerHTML = `<table class="tbl"><thead><tr><th>Code</th><th>Discount</th><th>Applies to</th><th>Used</th><th>Expires</th><th>Status</th><th></th></tr></thead><tbody>${Object.entries(cps).sort((a, b) => a[0].localeCompare(b[0])).map(([k, c]) => { const left = c.max_uses ? Number(c.max_uses) - (Number(c.used) || 0) : null, dead = c.active !== true ? "off" : (c.expires && c.expires < today) ? "expired" : left != null && left <= 0 ? "used up" : "on"; return `<tr><td class="mono"><strong>${A.esc(k)}</strong>${c.note ? `<br><span class="hint">${A.esc(c.note)}</span>` : ""}</td><td>${c.percent ? c.percent + "%" : ""}${c.percent && c.off ? " + " : ""}${c.off ? "KES " + c.off : ""}</td><td>${c.materials ? A.esc(c.materials) : "any paid material"}</td><td>${A.esc(c.used || 0)}${c.max_uses ? " / " + A.esc(c.max_uses) : " (no limit)"}<br><span class="hint">${cnt[k] || 0} order(s)</span></td><td>${A.esc(c.expires || "—")}</td><td>${A.pill(dead)}</td><td class="act"><button class="btn sm" data-e="${A.esc(k)}" type="button">Edit</button> <button class="btn sm danger" data-d="${A.esc(k)}" type="button">Delete</button></td></tr>`; }).join("") || `<tr><td colspan="7" class="hint">No codes yet.</td></tr>`}</tbody></table>`;
+      host.querySelectorAll("[data-e]").forEach((b) => (b.onclick = () => form(b.dataset.e)));
+      host.querySelectorAll("[data-d]").forEach((b) => (b.onclick = async () => { if (!confirm("Delete this code? Orders that already used it are kept.")) return; await A.del("material_coupons/" + b.dataset.d); await A.del("material_coupon_uses/" + b.dataset.d).catch(() => {}); load(); }));
+    }
+    function form(key) {
+      const c = Object.assign({ percent: 20, off: "", max_uses: 10, expires: "", active: true, once: true, materials: "", note: "" }, key ? cps[key] : {});
+      const sel = String(c.materials || "").split(",").map((x) => x.trim()).filter(Boolean);
+      const f = document.createElement("div");
+      f.innerHTML = `<div class="grid2">
+        <div class="field"><label>Code *</label><input id="c_code" maxlength="20" value="${A.esc(key || "")}" ${key ? "disabled" : ""} style="text-transform:uppercase" placeholder="KITALE20"></div>
+        <div class="field"><label>Active</label><select id="c_active"><option value="yes" ${c.active !== false ? "selected" : ""}>yes</option><option value="no" ${c.active === false ? "selected" : ""}>no</option></select></div>
+        <div class="field"><label>Percent off</label><input id="c_pct" type="number" min="0" max="100" value="${A.esc(c.percent || "")}"><small>100 = free (you still send the link yourself)</small></div>
+        <div class="field"><label>or KES off</label><input id="c_off" type="number" min="0" value="${A.esc(c.off || "")}"></div>
+        <div class="field"><label>How many buyers may use it? *</label><input id="c_max" type="number" min="1" value="${A.esc(c.max_uses || "")}"><small>Empty = no limit (not recommended).</small></div>
+        <div class="field"><label>Expires on (optional)</label><input id="c_exp" type="date" value="${A.esc(c.expires || "")}"></div>
+        <div class="field"><label>Each phone number once</label><select id="c_once"><option value="yes" ${c.once !== false ? "selected" : ""}>yes — one use per phone number</option><option value="no" ${c.once === false ? "selected" : ""}>no — same buyer can reuse it</option></select></div>
+        <div class="field"><label>Private note</label><input id="c_note" maxlength="80" value="${A.esc(c.note || "")}" placeholder="e.g. class of 2026"></div></div>
+        <label>Only for these materials (none ticked = any paid material)</label><div class="plgrid">${matList().map((m) => `<label><input type="checkbox" data-m="${A.esc(m.slug)}" ${sel.includes(m.slug) ? "checked" : ""}> ${A.esc(m.title)}</label>`).join("") || '<span class="hint">No paid materials yet.</span>'}</div>`;
+      const save = A.btn("Save", "primary"), cancel = A.btn("Cancel"), m = A.modal(key ? "Edit code" : "New code", f, [cancel, save], true); cancel.onclick = m.close;
+      save.onclick = async () => {
+        const code = (key || f.querySelector("#c_code").value).trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+        const pct = Math.max(0, Math.min(100, Number(f.querySelector("#c_pct").value) || 0)), off = Math.max(0, Number(f.querySelector("#c_off").value) || 0);
+        if (code.length < 3 || (!pct && !off)) return A.toast("Give a code (3+ characters) and a discount", true);
+        const rec = { active: f.querySelector("#c_active").value === "yes", once: f.querySelector("#c_once").value === "yes", used: Number((cps[code] || {}).used) || 0 };
+        if (pct) rec.percent = pct; if (off) rec.off = off;
+        const mx = Math.round(Number(f.querySelector("#c_max").value)); if (mx > 0) rec.max_uses = mx;
+        if (f.querySelector("#c_exp").value) rec.expires = f.querySelector("#c_exp").value;
+        const sl = [...f.querySelectorAll("[data-m]:checked")].map((x) => x.dataset.m); if (sl.length) rec.materials = sl.join(",");
+        const nt = f.querySelector("#c_note").value.trim(); if (nt) rec.note = nt;
+        try { await A.set("material_coupons/" + code, rec); m.close(); A.toast("Saved ✓"); load(); } catch (e) { A.toast(e.message, true); }
+      };
+    }
+    document.getElementById("newcp").onclick = () => form(null);
+    load();
+  }
+  window.EO_DRIVE_DL = (u) => { const m = String(u).match(/\/d\/([\w-]{10,})/) || String(u).match(/[?&]id=([\w-]{10,})/); return m ? `https://drive.google.com/file/d/${m[1]}/view?usp=sharing` : u; };
+  A.tabs(document.getElementById("tabs"), [["items", "Materials"], ["categories", "Sections"], ["orders", "Orders"], ["coupons", "Discount codes"], ["bundles", "Bundles"]], (k) => {
+    const pane = document.getElementById("pane");
+    if (k === "items") { mats.fields.find((f) => f.key === "category").options = cats.length ? cats : ["notes"]; A.crud(pane, mats); } else if (k === "categories") A.crud(pane, catCfg); else if (k === "coupons") coupons(pane); else if (k === "bundles") A.crud(pane, bunCfg); else orders(pane);
+  });
+})();
+</script>
+</body>
+</html>

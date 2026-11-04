@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">DASHBOARD.EXE</span><h1>Dashboard &amp; analytics</h1></section>
+<div class="range-bar" id="range"></div>
+<div class="cards" id="cards"></div>
+<div class="crt-window"><div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label" id="chart-label">views.svg</span></div><div class="body"><div id="chart"></div><p class="hint">Bars = page views · line = unique visitors per day. Hover a bar for the numbers.</p></div></div>
+<div class="grid2">
+  <div class="crt-window"><div class="titlebar"><span class="label">top-pages</span></div><div class="body"><div class="range-bar" id="sec-tabs"></div><div id="top"></div></div></div>
+  <div>
+    <div class="crt-window"><div class="titlebar"><span class="label">sections</span></div><div class="body" id="secs"></div></div>
+    <div class="crt-window"><div class="titlebar"><span class="label">referrers</span></div><div class="body" id="refs"></div></div>
+    <div class="crt-window"><div class="titlebar"><span class="label">devices &amp; visitors</span></div><div class="body" id="devs"></div></div>
+  </div>
+</div>
+<div class="grid2">
+  <div class="crt-window"><div class="titlebar"><span class="label">best-time-to-post</span></div><div class="body"><p class="hint" style="margin-top:0">Views by hour of day (Kenya time, all time)</p><div id="hours"></div><p class="hint">Views by weekday (selected range)</p><div id="wk"></div></div></div>
+  <div class="crt-window"><div class="titlebar"><span class="label">clicks</span></div><div class="body"><p class="hint" style="margin-top:0">What visitors click: WhatsApp, orders, support, socials, downloads (all time)</p><div id="events"></div></div></div>
+</div>
+<div class="grid2">
+  <div class="crt-window"><div class="titlebar"><span class="label">searches</span></div><div class="body"><p class="hint" style="margin-top:0">What visitors look for on the site</p><div id="searches"></div></div></div>
+  <div class="crt-window"><div class="titlebar"><span class="label">searches-with-no-results</span></div><div class="body"><p class="hint" style="margin-top:0">Gaps: topics people want that you do not have yet</p><div id="misses"></div></div></div>
+</div>
+<div class="crt-window"><div class="titlebar"><span class="label">orders-and-revenue</span></div><div class="body"><div id="rev-chart"></div><div class="grid2" style="margin-top:.8rem"><div id="rev-mat"></div><div id="rev-status"></div></div></div></div>
+<div class="grid2">
+  <div class="crt-window"><div class="titlebar"><span class="label">needs-attention</span></div><div class="body" id="todo"></div></div>
+  <div class="crt-window"><div class="titlebar"><span class="label">library</span></div><div class="body" id="lib"></div></div>
+</div>
+<div class="grid2">
+  <div class="crt-window"><div class="titlebar"><span class="label">top-downloads</span></div><div class="body" id="dls"></div></div>
+  <div class="crt-window"><div class="titlebar"><span class="label">export</span></div><div class="body"><p class="hint" style="margin-top:0">Download your data as spreadsheets (CSV).</p><div id="exports" class="row-links"></div></div></div>
+</div>
+
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/mpesa-verify.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("index");
+  const get = (p, shallow) => A.get(p, shallow).catch(() => null);
+  let [an, orders, msgs, subs, stats, comments, mats, pay, unans, blog] = await Promise.all([get("analytics"), get("material_orders"), get("contact_inbox"), get("newsletter"), get("material_stats"), get("comments"), get("materials"), get("payment"), get("chat_unanswered"), get("blog_posts")]) ;
+  an = an || {}; const daily = an.daily || {};
+  const E = A.esc, n0 = (v) => Number(v) || 0;
+  const ord = A.rows(orders), msgRows = A.rows(msgs), subRows = A.rows(subs);
+  const iso = (t) => new Date(t).toISOString().slice(0, 10);
+  const dayList = (end, len) => [...Array(len)].map((_, i) => iso(end - (len - 1 - i) * 864e5));
+  let RANGE = 30, SEC = "all";
+  const sec = (p) => { p = String(p || ""); return p === "/" || p === "" ? "home" : p.startsWith("/blog") ? "blog" : p.startsWith("/content") ? "content" : p.startsWith("/materials") ? "materials" : p.startsWith("/writing") ? "writing" : "other"; };
+  const delta = (cur, prev) => { if (!prev && !cur) return ""; if (!prev) return '<small class="up">new</small>'; const d = Math.round(((cur - prev) / prev) * 100); return `<small class="${d > 0 ? "up" : d < 0 ? "down" : "flat"}">${d > 0 ? "▲" : d < 0 ? "▼" : "•"} ${Math.abs(d)}% vs previous ${RANGE} days</small>`; };
+  const bars = (obj, fmtKey, cap) => { const e = Object.entries(obj || {}).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).slice(0, cap || 8); const m = Math.max(1, ...e.map((x) => x[1])); return e.map(([k, v]) => `<div class="bar-row"><span style="width:9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${E(k)}">${E(fmtKey ? fmtKey(k) : k)}</span><span class="bar" style="width:${Math.round((v / m) * 60)}%"></span><span>${v}</span></div>`).join("") || '<p class="hint">Nothing yet.</p>'; };
+  const miniBars = (vals, labels, titleFn) => { const m = Math.max(1, ...vals); return `<div class="mini-bars">${vals.map((v, i) => `<i style="height:${Math.max(2, Math.round((v / m) * 100))}%" title="${E(titleFn(i, v))}"></i>`).join("")}</div><div class="mini-lbl"><span>${E(labels[0])}</span><span>${E(labels[1])}</span><span>${E(labels[2])}</span></div>`; };
+
+  function paint() {
+    const end = Date.now(), days = dayList(end, RANGE), prev = dayList(end - RANGE * 864e5, RANGE);
+    const gv = (d, k) => n0((daily[d] || {})[k]);
+    const sum = (list, k) => list.reduce((n, d) => n + gv(d, k), 0);
+    const views = sum(days, "views"), pViews = sum(prev, "views"), vis = sum(days, "visitors"), pVis = sum(prev, "visitors");
+    const mob = sum(days, "mobile"), ret = sum(days, "returning"), fresh = sum(days, "fresh");
+    const inR = (o, list) => list.includes(iso(o.ts || 0)), inRange = ord.filter((o) => inR(o, days)), inPrev = ord.filter((o) => inR(o, prev));
+    const paid = (o) => o.status === "verified" || o.status === "delivered";
+    const rev = inRange.filter(paid).reduce((s, o) => s + n0(o.price), 0), pRev = inPrev.filter(paid).reduce((s, o) => s + n0(o.price), 0);
+    const pend = ord.filter((o) => o.status === "pending");
+    const totalViews = Object.values(daily).reduce((s, x) => s + n0(x.views), 0);
+    const today = days[days.length - 1], tv = gv(today, "views"), tu = gv(today, "visitors");
+    const subIn = subRows.filter((r) => inR({ ts: r.ts || r.created || r.date ? Date.parse(r.ts || r.created || r.date) || r.ts : 0 }, days)).length;
+    const dlTotal = Object.values(stats || {}).reduce((s, x) => s + n0(x.downloads), 0);
+    const cards = [
+      [views, `views · ${RANGE} days`, delta(views, pViews)], [vis, `visitors · ${RANGE} days`, delta(vis, pVis)], [tv, "views today", ""], [tu, "visitors today", ""],
+      [vis ? Math.round((views / vis) * 10) / 10 : 0, "views per visitor", ""], [fresh + ret ? Math.round((ret / (fresh + ret)) * 100) + "%" : "–", "returning visitors", fresh + ret ? `<small class="flat">${fresh} new · ${ret} returning</small>` : '<small class="flat">tracking since today</small>'],
+      [views ? Math.round((mob / Math.max(1, views)) * 100) + "%" : "–", "views on mobile", ""], [totalViews, "views · all time", ""],
+      [inRange.length, `orders · ${RANGE} days`, delta(inRange.length, inPrev.length)], ["KES " + rev, "paid orders", delta(rev, pRev)], [pend.length, "orders pending", ""], [subRows.length, "subscribers", `<small class="flat">+${subIn} in range</small>`],
+      [dlTotal, "free downloads", ""]];
+    document.getElementById("cards").innerHTML = cards.map(([n, l, d]) => `<div class="stat"><b>${E(n)}</b><span>${E(l)}</span>${d || ""}</div>`).join("");
+    document.getElementById("range").innerHTML = [7, 30, 90].map((r) => `<button type="button" data-r="${r}" class="${r === RANGE ? "on" : ""}">${r} days</button>`).join("") + `<span class="hint">updated just now</span>`;
+    document.querySelectorAll("#range [data-r]").forEach((b) => (b.onclick = () => { RANGE = +b.dataset.r; paint(); }));
+
+    // views + visitors chart
+    const pts = days.map((d) => ({ d, v: gv(d, "views"), u: gv(d, "visitors") }));
+    const W = 760, H = 180, bw = W / pts.length, max = Math.max(1, ...pts.map((x) => x.v), ...pts.map((x) => x.u));
+    const y = (v) => H - 20 - (v / max) * (H - 40);
+    document.getElementById("chart-label").textContent = `last-${RANGE}-days.svg`;
+    document.getElementById("chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="views per day">
+      ${pts.map((x, i) => `<rect x="${i * bw + 1}" y="${y(x.v)}" width="${Math.max(1, bw - 2)}" height="${H - 20 - y(x.v)}" fill="var(--crt-green-dim)"><title>${x.d}: ${x.v} views, ${x.u} visitors</title></rect>`).join("")}
+      <polyline fill="none" stroke="var(--amber)" stroke-width="2" points="${pts.map((x, i) => `${i * bw + bw / 2},${y(x.u)}`).join(" ")}"/>
+      <text x="0" y="${H - 4}" fill="var(--ink-dim)" font-size="10">${pts[0].d}</text><text x="${W}" y="${H - 4}" text-anchor="end" fill="var(--ink-dim)" font-size="10">${pts[pts.length - 1].d}</text><text x="0" y="10" fill="var(--ink-dim)" font-size="10">max ${max}</text></svg>`;
+
+    // sections + top pages (all time per page, filtered by section)
+    const tot = Object.values(an.totals || {});
+    const secSum = {}; tot.forEach((t) => { const k = sec(t.path); secSum[k] = (secSum[k] || 0) + n0(t.views); });
+    document.getElementById("secs").innerHTML = bars(secSum, (k) => ({ home: "Home", blog: "Blog", content: "Content cards", materials: "Materials", writing: "Writing", other: "Other pages" }[k] || k));
+    const secs = ["all", "blog", "content", "materials", "writing", "other"];
+    document.getElementById("sec-tabs").innerHTML = secs.map((k) => `<button type="button" data-s="${k}" class="${k === SEC ? "on" : ""}">${k}</button>`).join("");
+    document.querySelectorAll("#sec-tabs [data-s]").forEach((b) => (b.onclick = () => { SEC = b.dataset.s; paint(); }));
+    const tops = tot.filter((t) => SEC === "all" || sec(t.path) === SEC).sort((a, b) => n0(b.views) - n0(a.views)).slice(0, 15);
+    document.getElementById("top").innerHTML = `<table class="tbl"><tbody>${tops.map((t) => `<tr><td><a href="${E(t.path || "#")}" target="_blank" rel="noopener">${E((t.title || t.path || "").replace(/ — .*$/, ""))}</a><br><span class="hint">${E(t.path || "")}</span></td><td>${t.views}</td></tr>`).join("") || "<tr><td>No data yet.</td></tr>"}</tbody></table><p class="hint">All-time views per page.</p>`;
+    document.getElementById("refs").innerHTML = bars(an.referrers, (k) => k.replace(/_/g, "."));
+    document.getElementById("devs").innerHTML = bars(an.devices) + (fresh + ret ? `<p class="hint" style="margin:.5rem 0 0">Visitors in range: ${fresh} new, ${ret} returning</p>` : "");
+
+    // best time to post
+    const hv = [...Array(24)].map((_, h) => n0((an.hours || {})[h]));
+    document.getElementById("hours").innerHTML = hv.some(Boolean) ? miniBars(hv, ["00:00", "12:00", "23:00"], (i, v) => `${String(i).padStart(2, "0")}:00 · ${v} views`) + (() => { const b = hv.indexOf(Math.max(...hv)); return `<p class="hint">Busiest hour: <b>${String(b).padStart(2, "0")}:00</b>. Post a little before it.</p>`; })() : '<p class="hint">Collecting data: shows after the new tracking has run for a day or two.</p>';
+    const wd = [0, 0, 0, 0, 0, 0, 0], wc = [0, 0, 0, 0, 0, 0, 0];
+    days.forEach((d) => { const w = (new Date(d + "T00:00:00Z").getUTCDay() + 6) % 7; wd[w] += gv(d, "views"); wc[w]++; });
+    const wavg = wd.map((v, i) => (wc[i] ? Math.round(v / wc[i]) : 0));
+    document.getElementById("wk").innerHTML = miniBars(wavg, ["Mon", "Thu", "Sun"], (i, v) => `${["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][i]}: ${v} views on average`);
+
+    document.getElementById("events").innerHTML = bars(an.events, (k) => k.replace(/_/g, " "), 12);
+    document.getElementById("searches").innerHTML = bars(an.searches, (k) => k.replace(/_/g, " "), 10);
+    document.getElementById("misses").innerHTML = bars(an.searches_miss, (k) => k.replace(/_/g, " "), 10);
+
+    // orders and revenue
+    const rd = days.map((d) => ({ d, k: ord.filter((o) => iso(o.ts || 0) === d && paid(o)).reduce((s, o) => s + n0(o.price), 0), n: ord.filter((o) => iso(o.ts || 0) === d).length }));
+    const rmax = Math.max(1, ...rd.map((x) => x.k));
+    document.getElementById("rev-chart").innerHTML = `<p class="hint" style="margin-top:0">Paid order value per day (KES)</p>` + miniBars(rd.map((x) => x.k), [rd[0].d, "", rd[rd.length - 1].d], (i, v) => `${rd[i].d}: KES ${v} · ${rd[i].n} order(s)`);
+    const byMat = {}; inRange.forEach((o) => { const m = byMat[o.material_title || o.material_slug] = byMat[o.material_title || o.material_slug] || { n: 0, k: 0 }; m.n++; if (paid(o)) m.k += n0(o.price); });
+    document.getElementById("rev-mat").innerHTML = `<table class="tbl"><thead><tr><th>Material</th><th>Orders</th><th>Paid KES</th></tr></thead><tbody>${Object.entries(byMat).sort((a, b) => b[1].k - a[1].k || b[1].n - a[1].n).slice(0, 8).map(([k, v]) => `<tr><td>${E(k)}</td><td>${v.n}</td><td>${v.k}</td></tr>`).join("") || '<tr><td colspan="3">No orders in this range.</td></tr>'}</tbody></table>`;
+    const st = {}; ord.forEach((o) => (st[o.status] = (st[o.status] || 0) + 1));
+    const orderViews = n0((an.events || {}).order_click);
+    document.getElementById("rev-status").innerHTML = bars(st) + `<p class="hint">${orderViews ? `Order button clicks: ${orderViews} → ${ord.length} orders (${Math.round((ord.length / orderViews) * 100)}%)` : "Order-click tracking starts with the next visits."}</p>`;
+
+    // needs attention (flagged vs auto-pass from the M-Pesa check)
+    let pass = 0, flag = 0; pend.forEach((o) => { if (!o.mpesa_message || /^FREE-WITH/.test(o.mpesa_message)) return; const c = window.EO_MPESA.check(o.mpesa_message, { price: o.price, pay: pay || {}, now: o.ts }); if (c.verdict === "pass") pass++; else flag++; });
+    let nComments = 0, pendingC = 0;
+    Object.values(comments || {}).forEach((t) => Object.values(t || {}).forEach((x) => Object.values(x || {}).forEach((c) => { nComments++; if (c.status === "pending") pendingC++; })));
+    const newMsgs = msgRows.filter((m) => m.status === "new");
+    document.getElementById("todo").innerHTML = `<ul style="color:var(--ink)"><li><a href="/admin/materials#orders">${pend.length} pending order(s)</a>${pend.length ? ` · <b>${pass}</b> auto-pass · <b>${flag}</b> flagged` : ""}</li><li><a href="/admin/inbox#messages">${newMsgs.length} new message(s)</a></li><li><a href="/admin/inbox#comments">${pendingC} comment(s) awaiting approval</a></li><li>${Object.keys(unans || {}).length} chatbot question(s) it could not answer</li></ul>` + pend.slice(0, 5).map((o) => `<p class="hint" style="margin:.2rem 0">${E(o.ref)} · ${E(o.name)} · ${E(o.material_title)} · KES ${E(o.price)}</p>`).join("");
+    const bp = A.rows(blog), blogPub = bp.filter((p) => p.status !== "draft").length;
+    document.getElementById("lib").innerHTML = `<table class="tbl"><tbody><tr><td>Blog posts</td><td>${bp.length}</td><td class="hint">${blogPub} published</td></tr><tr><td>Study materials</td><td>${Object.keys(mats || {}).length}</td><td class="hint">${Object.values(mats || {}).filter((m) => m.access === "paid").length} paid</td></tr><tr><td>Subscribers</td><td>${subRows.length}</td><td></td></tr><tr><td>Comments</td><td>${nComments}</td><td class="hint">${pendingC} pending</td></tr></tbody></table><p class="hint"><a href="/admin/content">Open Content manager</a> for the card library.</p>`;
+    const matTitle = (s) => ((mats || {})[s] || {}).title || s;
+    document.getElementById("dls").innerHTML = bars(Object.fromEntries(Object.entries(stats || {}).map(([k, v]) => [k, n0(v.downloads)])), matTitle);
+  }
+  paint();
+
+  const ex = document.getElementById("exports");
+  ex.append(
+    A.btn("Daily stats CSV", "sm", () => A.csv("daily-stats.csv", [["date", "views", "visitors", "mobile views", "new visitors", "returning visitors"]].concat(Object.keys(daily).sort().map((d) => [d, daily[d].views || 0, daily[d].visitors || 0, daily[d].mobile || 0, daily[d].fresh || 0, daily[d].returning || 0])))),
+    A.btn("Orders CSV", "sm", () => A.csv("orders.csv", [["ref", "date", "material", "price", "status", "name", "phone", "deliver via", "deliver to", "mpesa code", "mpesa amount", "coupon"]].concat(ord.sort((a, b) => b.ts - a.ts).map((o) => [o.ref, o.ts ? new Date(o.ts).toISOString() : "", o.material_title, o.price, o.status, o.name, o.phone, o.deliver_via, o.deliver_to, o.mpesa_code, o.mpesa_amount, o.coupon || ""])))),
+    A.btn("Subscribers CSV", "sm", () => A.csv("subscribers.csv", [["email", "name", "joined"]].concat(subRows.map((r) => [r.email || r._v || "", r.name || "", r.ts || r.created || r.date || ""])))),
+    A.btn("Top pages CSV", "sm", () => A.csv("top-pages.csv", [["path", "title", "views"]].concat(Object.values(an.totals || {}).sort((a, b) => n0(b.views) - n0(a.views)).map((t) => [t.path, t.title, t.views])))),
+    A.btn("Searches CSV", "sm", () => A.csv("searches.csv", [["term", "count", "found"]].concat(Object.entries(an.searches || {}).map(([k, v]) => [k.replace(/_/g, " "), v, "yes"]), Object.entries(an.searches_miss || {}).map(([k, v]) => [k.replace(/_/g, " "), v, "no"])))));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support wall — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+<style>
+  .sw-switch{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+  .sw-big{font-size:1.1rem;font-weight:700}
+  .sw-state{padding:.2rem .7rem;border-radius:99px;font-weight:700}
+  .sw-on{background:#3ddc84;color:#04120a} .sw-off{background:#2a2f2c;color:#9aa8a1}
+  .sw-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem}
+  table.sw{width:100%;border-collapse:collapse;font-size:.9rem} table.sw th,table.sw td{padding:.35rem .5rem;border-bottom:1px solid var(--panel-border);text-align:left;vertical-align:top}
+  .sw-ok{color:#3ddc84} .sw-no{color:#ff7a9c}
+</style>
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">SUPPORT.EXE</span><h1>Support wall</h1>
+<p class="hint">After a reader opens a set number of different blog posts or content cards, the next one asks for a small M-Pesa donation. They pay your till, paste the confirmation SMS, and it unlocks on their device. Switch it off here at any time and everyone can read freely again at once.</p></section>
+
+<div class="crt-window"><div class="titlebar"><span class="label">wall settings</span></div><div class="body">
+  <div class="sw-switch"><label class="sw-big"><input type="checkbox" id="en"> Support wall is</label> <span id="st" class="sw-state sw-off">OFF</span></div>
+  <p class="hint">Tick the box and press Save to turn it on. Untick and Save to turn it off.</p>
+  <div class="sw-row" style="margin-top:.8rem">
+    <div class="field"><label>Free reads before the wall <span class="hint">(different posts/cards)</span></label><input id="th" type="number" min="1" max="100" value="5"></div>
+    <div class="field"><label>Minimum donation (KSh)</label><input id="mn" type="number" min="0" max="100000" value="50"></div>
+    <div class="field"><label>Unlock lasts (days)</label><input id="ud" type="number" min="1" max="3650" value="365"></div>
+    <div class="field"><label>Payment must be within (minutes)</label><input id="ma" type="number" min="1" max="1440" value="15"></div>
+  </div>
+  <div class="field"><label>Heading</label><input id="ti" maxlength="160"></div>
+  <div class="field"><label>Message</label><textarea id="me" rows="3" maxlength="800"></textarea></div>
+  <p class="hint">Till number and business name come from your <b>payment</b> settings (the same ones used by the shop). Change them in Data → payment.</p>
+  <button class="btn primary" id="save" type="button">Save</button> <span class="form-status mono" id="ss"></span>
+</div></div>
+
+<div class="crt-window" style="margin-top:1rem"><div class="titlebar"><span class="label">who has unlocked</span></div><div class="body">
+  <p class="hint">Each unlock is one M-Pesa code, usable once. To prove the money really arrived, paste your M-Pesa till statement below and press Check: every code is matched against it.</p>
+  <textarea id="stmt" rows="4" placeholder="Paste your M-Pesa statement here (text or CSV) to match the codes…" style="width:100%"></textarea>
+  <div style="margin:.5rem 0"><button class="btn sm" id="chk" type="button">Check against statement</button> <button class="btn sm" id="rl" type="button">Reload list</button> <span class="hint" id="cnt"></span></div>
+  <div style="overflow:auto"><table class="sw"><thead><tr><th>When (Kenya time)</th><th>M-Pesa code</th><th>Amount</th><th>Page</th><th>Statement</th></tr></thead><tbody id="tb"></tbody></table></div>
+</div></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/mpesa-verify.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("support-wall");
+  const $ = (id) => document.getElementById(id), E = A.esc;
+  const D = { enabled: false, threshold: 5, min_amount: 50, unlock_days: 365, max_age_min: 15,
+    title: "You've been reading a lot. Thank you!",
+    message: "This site is free to read. If it has helped you, please support it with a small M-Pesa donation and keep reading. It pays for hosting and for new episodes, notes and study cards." };
+  const paint = () => { const on = $("en").checked; $("st").textContent = on ? "ON" : "OFF"; $("st").className = "sw-state " + (on ? "sw-on" : "sw-off"); };
+  $("en").onchange = paint;
+  const cur = Object.assign({}, D, (await A.get("support_wall").catch(() => null)) || {});
+  $("en").checked = cur.enabled === true; $("th").value = cur.threshold; $("mn").value = cur.min_amount; $("ud").value = cur.unlock_days; $("ma").value = cur.max_age_min; $("ti").value = cur.title; $("me").value = cur.message; paint();
+
+  $("save").onclick = async () => {
+    const n = (id, lo, hi, d) => Math.max(lo, Math.min(hi, Number($(id).value) || d));
+    const out = { enabled: $("en").checked, threshold: n("th", 1, 100, 5), min_amount: n("mn", 0, 100000, 50), unlock_days: n("ud", 1, 3650, 365), max_age_min: n("ma", 1, 1440, 15),
+      title: $("ti").value.trim().slice(0, 160) || D.title, message: $("me").value.trim().slice(0, 800) || D.message };
+    $("ss").textContent = "Saving…";
+    try { await A.set("support_wall", out); $("ss").textContent = "Saved ✓ " + (out.enabled ? "The wall is ON." : "The wall is OFF."); A.toast("Saved"); }
+    catch (e) { $("ss").textContent = "Could not save: " + e.message; }
+  };
+
+  let rows = [];
+  const eat = (ts) => new Date(ts + 3 * 3600000).toISOString().replace("T", " ").slice(0, 16);
+  async function load() {
+    $("cnt").textContent = "Loading…";
+    const all = (await A.get("mpesa_codes").catch(() => null)) || {};
+    rows = Object.entries(all).filter(([, v]) => v && v.ref === "wall").map(([k, v]) => ({ code: k, ts: v.ts || 0, amt: v.amt, path: v.path || "" })).sort((a, b) => b.ts - a.ts);
+    $("cnt").textContent = rows.length + " unlock" + (rows.length === 1 ? "" : "s");
+    draw({});
+  }
+  function draw(st) {
+    $("tb").innerHTML = rows.slice(0, 300).map((r) => {
+      const s = st[r.code];
+      const cell = !s ? "" : s.found ? `<span class="sw-ok">✓ found${s.nums && s.nums.length ? " (" + s.nums.join(", ") + ")" : ""}</span>` : `<span class="sw-no">✗ not in statement</span>`;
+      return `<tr><td>${eat(r.ts)}</td><td><b>${E(r.code)}</b></td><td>${r.amt == null ? "—" : "KSh " + E(r.amt)}</td><td>${E(r.path)}</td><td>${cell}</td></tr>`;
+    }).join("") || `<tr><td colspan="5" class="hint">No unlocks yet.</td></tr>`;
+  }
+  $("rl").onclick = load;
+  $("chk").onclick = () => {
+    const t = $("stmt").value; if (!t.trim()) return A.toast("Paste a statement first", true);
+    const parsed = EO_MPESA.parseStatement(t), st = {};
+    rows.forEach((r) => { const m = parsed[r.code]; st[r.code] = m ? { found: true, nums: m.nums.slice(0, 2) } : { found: false }; });
+    draw(st); const bad = rows.filter((r) => !st[r.code].found).length; A.toast(bad ? bad + " code(s) not found in the statement" : "All codes found ✓", !!bad);
+  };
+  load();
+})();
+</script>
+</body>
+</html>

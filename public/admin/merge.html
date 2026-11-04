@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Import &amp; merge — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+<style>
+.mrg-n{border:1px solid var(--panel-border);border-radius:4px;margin:.5rem 0;padding:.6rem .8rem}
+.mrg-n.prot{opacity:.6}
+.mrg-n header{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.mrg-n .cnt span{margin-right:.7rem;font-size:.82rem}
+.new{color:var(--crt-green,#2ecc71)} .chg{color:var(--amber,#ffb703)} .del{color:#e5604f}
+.mrg-it{border-top:1px solid var(--panel-border);padding:.35rem 0}
+.mrg-it>div.r{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.mrg-it .nm{flex:1;min-width:10rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrg-it .fl{display:none;margin:.4rem 0 .2rem 1.6rem;font-family:monospace;font-size:.74rem}
+.mrg-it.open .fl{display:block}
+.mrg-it .fl div{padding:.15rem 0;border-bottom:1px dotted var(--panel-border);overflow-wrap:anywhere}
+.mrg-it .fl .side{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.mrg-pv{display:flex;gap:.6rem;border:1px solid var(--panel-border);border-radius:4px;padding:.4rem;margin:.3rem 0;font-family:inherit;font-size:.8rem}
+.mrg-pv img{width:70px;height:50px;object-fit:cover;border-radius:3px}
+.bdg{font-size:.68rem;border:1px solid var(--panel-border);border-radius:1rem;padding:0 .45rem}
+.bdg.warn{border-color:#e5604f;color:#e5604f} .bdg.mine{border-color:var(--amber,#ffb703);color:var(--amber,#ffb703)}
+.risk{display:inline-block;padding:.15rem .7rem;border-radius:1rem;font-weight:700;font-size:.8rem}
+.risk.low{background:rgba(46,204,113,.2);color:#2ecc71} .risk.medium{background:rgba(255,183,3,.2);color:#ffb703} .risk.high{background:rgba(229,96,79,.22);color:#e5604f}
+.tabsx{display:flex;gap:.4rem;flex-wrap:wrap;margin:1rem 0}
+.tabsx button.on{background:var(--crt-green);color:#000}
+.flt{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin:.6rem 0}
+.flt input[type=text],.flt select{width:auto}
+#drop{border:2px dashed var(--panel-border);padding:1rem;text-align:center;border-radius:6px}
+#drop.over{border-color:var(--crt-green)}
+.mrg-list{font-family:monospace;font-size:.74rem;max-height:14rem;overflow:auto;padding:.4rem;background:rgba(0,0,0,.25);border-radius:3px}
+</style>
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">IMPORT.EXE</span><h1>Import &amp; merge</h1>
+<p class="lede" style="max-width:62ch">Load an update, choose exactly what goes in, and merge it into your live database. <strong>Nothing you already have is lost</strong>: sponsors, orders, comments, messages, statistics and admin accounts are never touched. A backup is kept inside the database, so every import can be undone, even part of it.</p></section>
+<div class="tabsx" id="tabsx"><button class="btn on" data-t="imp" type="button">Import</button><button class="btn" data-t="his" type="button">History &amp; undo</button><button class="btn" data-t="exp" type="button">Export as patch</button><button class="btn" data-t="set" type="button">Settings &amp; approvals</button></div>
+
+<div id="p-imp">
+<div class="crt-window"><div class="titlebar"><span class="label">updates-shipped-with-the-site</span></div><div class="body" id="shipped"><p class="hint">Loading…</p></div></div>
+<div class="crt-window"><div class="titlebar"><span class="label">load-files · link · spreadsheet</span></div><div class="body">
+  <div id="drop"><p style="margin:0 0 .5rem">Drop one or more <code>.json</code> files here (updates, undo files, or a full backup), or</p><input type="file" id="file" accept=".json,application/json" multiple></div>
+  <div class="flt"><input type="text" id="url" placeholder="…or paste a link to a patch file (https://…)" style="flex:1;min-width:14rem"><button class="btn sm" id="useurl" type="button">Load link</button></div>
+  <details><summary class="hint">…or paste JSON</summary><textarea id="paste" rows="5" style="width:100%" placeholder='{ "_patch": { "id": "my-update" }, "blog_posts": { … } }'></textarea><button class="btn sm" id="usepaste" type="button">Review pasted JSON</button></details>
+  <details style="margin-top:.5rem"><summary class="hint">…or import a spreadsheet (CSV) of materials, FAQs, services…</summary><div id="csvbox"><input type="file" id="csvfile" accept=".csv,text/csv"><div id="csvmap"></div></div></details>
+  <div id="qbox"></div></div></div>
+<div id="review"></div><div id="done"></div>
+</div>
+
+<div id="p-his" hidden><div id="histbox"><p class="hint">Loading…</p></div></div>
+<div id="p-exp" hidden><div class="crt-window"><div class="titlebar"><span class="label">export-current-data-as-a-patch</span></div><div class="body">
+  <p class="hint" style="margin-top:0">Download your live content as a patch file. Use it as a backup, or load it on another copy of the site. Accounts, orders, messages and statistics are never included.</p>
+  <div id="expnodes"></div><div class="toolbar"><button class="btn" id="expall" type="button">Select all</button><button class="btn primary" id="expgo" type="button">⬇ Download patch</button></div></div></div></div>
+<div id="p-set" hidden><div id="setbox"></div></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/admin/admin.js"></script>
+<script src="/admin/dbmerge.js"></script>
+<script src="/admin/importrun.js"></script>
+<script>
+(async () => {
+  await A.guard("merge");
+  const E = A.esc, $ = (s) => document.querySelector(s), M = window.DBMerge, R = window.EO_IMPORT;
+  const short = (v, n) => { let t = v === undefined ? "∅" : typeof v === "string" ? '"' + v + '"' : JSON.stringify(v); t = String(t); n = n || 70; return t.length > n ? t.slice(0, n - 3) + "…" : t; };
+  const EXPORTABLE = ["profile", "status", "blog_posts", "content_highlights", "writing_projects", "materials", "material_categories", "chatbot_faq", "chatbot_config", "occasions", "jokes", "milestones", "interests", "cyber_cafe_services", "side_projects", "gallery", "ads", "ad_packages", "ad_settings", "payment", "content_generator", "site_settings", "pages"];
+  let settings = { protect: [], neverDelete: false, keepEdited: true, requireApproval: false };
+  const loadSettings = async () => { try { const x = await A.get("import_settings"); if (x) settings = Object.assign(settings, x, { protect: Array.isArray(x.protect) ? x.protect : Object.values(x.protect || {}) }); } catch {} };
+  await loadSettings();
+  let hist = (await A.get("import_history").catch(() => null)) || {};
+  let S = null, queue = [], auditEdited = null, nAdmins = 1;
+  try { const ad = await A.get("admins", true); nAdmins = ad ? Object.keys(ad).length : 1; } catch {}
+  const appliedBefore = (id) => id && (hist[id] || Object.values(hist).find((h) => h && h.patch === id));
+
+  // ---------- tabs
+  document.querySelectorAll("#tabsx button").forEach((b) => (b.onclick = () => {
+    document.querySelectorAll("#tabsx button").forEach((x) => x.classList.toggle("on", x === b));
+    ["imp", "his", "exp", "set"].forEach((k) => ($("#p-" + k).hidden = k !== b.dataset.t));
+    if (b.dataset.t === "his") drawHist(); if (b.dataset.t === "exp") drawExp(); if (b.dataset.t === "set") drawSet();
+  }));
+
+  // ---------- shipped updates
+  try {
+    const idx = await (await fetch("/data/patches/index.json", { cache: "no-store" })).json();
+    $("#shipped").innerHTML = (idx.patches || []).slice().reverse().map((p) => `<div class="mrg-n"><header><strong>${E(p.name)}</strong> <span class="hint">${E(p.date || "")}</span> ${appliedBefore(p.id) ? `<span class="pill live">applied ${E(A.fmt((appliedBefore(p.id) || {}).ts))}</span>` : '<span class="pill pending">not applied yet</span>'}<span style="flex:1"></span><button class="btn sm primary" data-p="${E(p.file)}" type="button">Review</button></header><p class="hint" style="margin:.3rem 0 0">${E(p.notes || "")}</p></div>`).join("") || '<p class="hint">No updates are shipped with this version.</p>';
+    document.querySelectorAll("[data-p]").forEach((b) => (b.onclick = async () => { try { enqueue([{ name: b.dataset.p, json: await (await fetch("/data/patches/" + b.dataset.p, { cache: "no-store" })).json() }]); } catch (e) { A.toast("Could not read that file: " + e.message, true); } }));
+  } catch { $("#shipped").innerHTML = '<p class="hint">No shipped updates found. Use a file below.</p>'; }
+
+  // ---------- loading sources: files (several), link, paste, csv
+  const readText = (f) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsText(f); });
+  async function readFiles(files) {
+    const out = [];
+    for (const f of files) { try { out.push({ name: f.name, json: JSON.parse(await readText(f)) }); } catch (e) { A.toast(`${f.name} isn't valid JSON: ${e.message}`, true); } }
+    if (out.length) enqueue(out);
+  }
+  $("#file").onchange = (e) => e.target.files.length && readFiles([...e.target.files]);
+  $("#usepaste").onclick = () => { try { enqueue([{ name: "pasted JSON", json: JSON.parse($("#paste").value) }]); } catch (e) { A.toast("That isn't valid JSON: " + e.message, true); } };
+  $("#useurl").onclick = async () => {
+    const u = $("#url").value.trim(); if (!/^https?:\/\//i.test(u)) return A.toast("Paste a full link starting with https://", true);
+    try { const r = await fetch(u, { cache: "no-store" }); if (!r.ok) throw new Error("HTTP " + r.status); enqueue([{ name: u.split("/").pop() || u, json: await r.json() }]); }
+    catch (e) { A.toast("Could not load that link (" + e.message + "). The other site must allow it (CORS); otherwise download the file and drop it here.", true); }
+  };
+  const drop = $("#drop");
+  ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", (e) => e.dataTransfer.files.length && readFiles([...e.dataTransfer.files]));
+
+  // CSV -> patch
+  let csvRows = null;
+  $("#csvfile").onchange = async (e) => {
+    const f = e.target.files[0]; if (!f) return; csvRows = M.parseCSV(await readText(f));
+    if (csvRows.length < 2) { $("#csvmap").innerHTML = '<p class="hint">That file has no data rows.</p>'; return; }
+    const head = csvRows[0], nodes = ["materials", "chatbot_faq", "cyber_cafe_services", "interests", "jokes", "blog_posts", "occasions"];
+    const guess = (h) => { const x = h.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_"); return x; };
+    $("#csvmap").innerHTML = `<div class="flt"><label>Import into <select id="cnode">${nodes.map((n) => `<option>${n}</option>`).join("")}</select></label><label>Id column <select id="cid"><option value="-1">(make from title)</option>${head.map((h, i) => `<option value="${i}" ${/^(id|slug)$/i.test(h.trim()) ? "selected" : ""}>${E(h)}</option>`).join("")}</select></label></div>
+      <table class="tbl"><thead><tr><th>Column</th><th>Field name</th><th>Type</th></tr></thead><tbody>${head.map((h, i) => `<tr><td>${E(h)}<br><span class="hint">${E((csvRows[1][i] || "").slice(0, 30))}</span></td><td><input type="text" data-cf="${i}" value="${E(guess(h))}"></td><td><select data-ct="${i}"><option value="text">text</option><option value="number" ${/price|amount|cost/i.test(h) ? "selected" : ""}>number</option><option value="list" ${/tags|keywords/i.test(h) ? "selected" : ""}>list (a; b; c)</option><option value="bool">yes/no</option><option value="skip">skip</option></select></td></tr>`).join("")}</tbody></table>
+      <button class="btn primary" id="csvgo" type="button">Review ${csvRows.length - 1} row(s)</button>`;
+    $("#csvgo").onclick = () => {
+      const cols = head.map((h, i) => ({ name: h, field: document.querySelector(`[data-cf="${i}"]`).value.trim(), type: document.querySelector(`[data-ct="${i}"]`).value }));
+      const r = M.csvToPatch(csvRows, $("#cnode").value, +$("#cid").value, cols);
+      if (r.errors.length) A.toast(r.errors.slice(0, 3).join(" · "), true);
+      enqueue([{ name: f.name, json: r.patch }]);
+    };
+  };
+
+  // ---------- queue
+  function enqueue(list) { queue.push(...list); drawQueue(); if (!S) next(); else if (S.plan) draw(); }
+  function drawQueue() {
+    $("#qbox").innerHTML = queue.length ? `<p class="hint" style="margin-bottom:.2rem"><b>Waiting in the queue (${queue.length}):</b> ${queue.map((q, i) => `${E(q.name)} <a href="#" data-qx="${i}">remove</a>`).join(" · ")}. They are reviewed in this order, one after another.</p>` : "";
+    document.querySelectorAll("[data-qx]").forEach((a) => (a.onclick = (e) => { e.preventDefault(); queue.splice(+a.dataset.qx, 1); drawQueue(); }));
+  }
+  function next() { S = null; drawQueue(); const q = queue.shift(); drawQueue(); if (q) load(q.json, q.name); else $("#review").innerHTML = ""; }
+
+  // ---------- review
+  async function sha(text) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)); return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join(""); }
+  async function load(json, name) {
+    $("#done").innerHTML = "";
+    if (json && json._undo && typeof json._undo === "object") return reviewUndo(json, name);
+    const v = M.validate(json);
+    if (v.errors.length) { $("#review").innerHTML = `<div class="note bad"><strong>Can't use ${E(name)}</strong><ul>${v.errors.slice(0, 10).map((x) => `<li>${E(x)}</li>`).join("")}</ul></div>${queue.length ? '<button class="btn" id="skipq" type="button">Next file</button>' : ""}`; if ($("#skipq")) $("#skipq").onclick = next; return; }
+    $("#review").innerHTML = '<p class="hint">Reading your current data…</p>';
+    const patch = json, nodes = Object.keys(patch).filter((k) => !k.startsWith("_") && !M.PROTECTED.includes(k)), cur = {};
+    await Promise.all(nodes.map(async (n) => { try { cur[n] = await A.get(n); } catch { cur[n] = undefined; } }));
+    nodes.forEach((n) => { if (cur[n] === null) cur[n] = undefined; });
+    if (!auditEdited) { try { const rows = A.rows(await A.get("audit_log", false, '&orderBy="$key"&limitToLast=600') || {}); auditEdited = M.editedPrefixes(rows, Date.now() - 90 * 864e5); } catch { auditEdited = new Set(); } }
+    let sig = "none"; const want = (patch._patch || {}).sha256;
+    if (want) { try { sig = (await sha(M.signedText(patch))) === want ? "ok" : "bad"; } catch { sig = "none"; } }
+    S = { name, patch, cur, modes: {}, manual: new Map(), warnings: v.warnings, sig, keepEdited: settings.keepEdited, neverDelete: settings.neverDelete, f: { q: "", kind: "all", node: "all" }, open: new Set(), lim: {}, ack: false, missing: new Set(), checked: false };
+    refresh(); checkAssets();
+  }
+  const titleFor = (n, it, plan) => { const cur = S.cur[n] && (M.norm(S.cur[n]) || {})[it.split("/")[1]]; const ch = plan.nodes[n].changes.find((c) => c.item === it && c.field === ""), inc = ch ? ch.new : (S.patch[n] && M.norm(S.patch[n])[it.split("/")[1]]); return M.titleOf(inc) || M.titleOf(cur) || ""; };
+  function refresh() {
+    S.plan = M.plan(S.patch, S.cur, S.modes, { protect: settings.protect });
+    S.dupes = M.duplicates(S.plan, S.cur); S.dupSet = new Set(S.dupes.map((d) => d.path));
+    S.schema = M.schemaIssues(S.plan, S.cur); S.schSet = new Set(S.schema.map((d) => d.path.split("/").slice(0, 2).join("/")));
+    S.refs = M.assetRefs(S.plan);
+    draw();
+  }
+  const defaultOut = (c) => (S.keepEdited && auditEdited && auditEdited.has(c.item) && c.kind !== "new") || (S.dupSet.has(c.path)) || (S.neverDelete && c.kind === "removed");
+  const included = (c) => (S.manual.has(c.path) ? S.manual.get(c.path) : !defaultOut(c));
+  function selection() { const ex = new Set(); Object.values(S.plan.nodes).forEach((n) => n.changes.forEach((c) => { if (!included(c)) ex.add(c.path); })); const sel = M.select(S.plan, ex, { neverDelete: S.neverDelete }); sel.risk = M.risk(sel.counts, S.plan.nodes); return sel; }
+  function preview(node, v) {
+    if (!v || typeof v !== "object") return "";
+    const t = M.titleOf(v), img = v.image || v.cover || v.thumbnail || v.img || "", d = v.description || v.excerpt || v.summary || v.desc || (typeof v.body === "string" ? v.body : "") || (typeof v.answer === "string" ? v.answer : "");
+    if (!t && !img) return ""; return `<div class="mrg-pv">${/^(\/|https?:)/.test(img) ? `<img src="${E(img)}" alt="" loading="lazy">` : ""}<div><strong>${E(t)}</strong>${v.price !== undefined ? ` <span class="bdg">${v.access === "free" || !v.price ? "free" : "KES " + E(v.price)}</span>` : ""}<br><span class="hint">${E(String(d).replace(/<[^>]+>/g, "").slice(0, 140))}</span></div></div>`;
+  }
+  function draw() {
+    const plan = S.plan, meta = plan.meta, sel = selection(), T = sel.counts, again = appliedBefore(meta.id), name = S.name;
+    const kept = Object.values(plan.nodes).reduce((n, x) => n + (x.kept || 0), 0), same = plan.totals.same, total = T.new + T.changed + T.removed;
+    const needAck = S.schema.length && !S.ack, mustApprove = settings.requireApproval && sel.risk.level === "high" && nAdmins > 1;
+    const cl = Array.isArray(meta.changelog) ? meta.changelog : Object.entries(meta.changelog || {}).map(([path, text]) => ({ path, text }));
+    $("#review").innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">review · ${E(name)}</span></div><div class="body">
+      <p style="margin-top:0"><strong>${E(meta.name || meta.id || name)}</strong>${meta.notes ? ` — ${E(meta.notes)}` : ""}</p>
+      ${S.sig === "ok" ? '<div class="note">✓ Checksum verified — this file is exactly as it was published.</div>' : S.sig === "bad" ? '<div class="note bad"><strong>Checksum does not match.</strong> The file was changed or damaged after it was published. Only continue if you made the changes yourself.</div>' : ""}
+      ${again ? `<div class="note">This update was already applied on ${E(A.fmt(again.ts))}. Applying it again is safe: it only changes what differs.</div>` : ""}
+      ${(S.warnings || []).map((w) => `<div class="note">${E(w)}</div>`).join("")}
+      ${S.schema.length ? `<div class="note bad"><strong>Check these (${S.schema.length}):</strong> ${S.schema.slice(0, 6).map((x) => `${E(x.path)} — ${E(x.msg)}`).join("; ")}${S.schema.length > 6 ? "…" : ""}<br><label><input type="checkbox" id="ack" ${S.ack ? "checked" : ""} style="width:auto"> I've looked at these and want to continue</label></div>` : ""}
+      ${S.dupes.length ? `<div class="note"><strong>Possible duplicates (${S.dupes.length}):</strong> ${S.dupes.slice(0, 4).map((d) => `“${E(d.title)}” looks like ${E(d.like)}`).join("; ")}${S.dupes.length > 4 ? "…" : ""}. They are left out until you tick them.</div>` : ""}
+      ${S.missing.size ? `<div class="note bad"><strong>Missing files (${S.missing.size}):</strong> ${[...S.missing].slice(0, 4).map(E).join(", ")}${S.missing.size > 4 ? "…" : ""} — these images/files are not on your site yet. Upload them (or deploy the new site files) first.</div>` : ""}
+      <div class="cards"><div class="stat"><b>${T.new}</b><span>New items</span></div><div class="stat"><b>${T.changed}</b><span>Values updated</span></div><div class="stat"><b>${T.removed}</b><span>Removed</span></div><div class="stat"><b>${kept}</b><span>Yours kept</span></div><div class="stat"><b>${same}</b><span>Already identical</span></div></div>
+      <p><span class="risk ${sel.risk.level}">${sel.risk.level.toUpperCase()} risk</span> <span class="hint">${sel.risk.why.length ? E(sel.risk.why.join(" · ")) : "only additions and small updates"}</span></p>
+      ${cl.length ? `<details><summary class="hint">What's in this update (${cl.length})</summary><input type="text" id="clq" placeholder="search the notes" style="width:100%"><div class="mrg-list" id="cll">${cl.map((c) => `<div data-t="${E(((c.path || "") + " " + (c.text || "")).toLowerCase())}">${c.path ? `<b>${E(c.path)}</b> — ` : ""}${E(c.text || "")}</div>`).join("")}</div></details>` : ""}
+      <p class="hint"><b>add</b> = only add what's missing · <b>merge</b> = add new, update differing values, keep the rest · <b>replace</b> = make the section exactly like the file (removes anything not in it). Tick or untick any item, or open it to choose single fields.</p>
+      <div class="flt"><input type="text" id="fq" placeholder="search items…" value="${E(S.f.q)}"><select id="fk"><option value="all">all changes</option><option value="new" ${S.f.kind === "new" ? "selected" : ""}>only new</option><option value="changed" ${S.f.kind === "changed" ? "selected" : ""}>only changed</option><option value="removed" ${S.f.kind === "removed" ? "selected" : ""}>only removed</option></select>
+        <select id="fn"><option value="all">all sections</option>${Object.values(plan.nodes).filter((n) => !n.protected).map((n) => `<option ${S.f.node === n.node ? "selected" : ""}>${E(n.node)}</option>`).join("")}</select>
+        <button class="btn sm" data-sel="all" type="button">Tick all shown</button><button class="btn sm" data-sel="none" type="button">Untick all shown</button><button class="btn sm" data-sel="new" type="button">Only new</button><button class="btn sm" data-sel="chg" type="button">Only changed</button></div>
+      <div class="flt"><label><input type="checkbox" id="ke" ${S.keepEdited ? "checked" : ""} style="width:auto"> leave out items I edited by hand (last 90 days)</label><label><input type="checkbox" id="nd" ${S.neverDelete ? "checked" : ""} style="width:auto"> never delete anything</label></div>
+      <div id="nodes"></div>
+      <div class="toolbar" style="margin-top:.8rem;flex-wrap:wrap"><label><input type="checkbox" id="bk" checked style="width:auto"> also download an undo file</label><label>Apply later: <input type="datetime-local" id="sched"></label><span style="flex:1"></span><button class="btn primary" id="apply" type="button" ${total && !needAck ? "" : "disabled"}>${!total ? "Nothing selected" : mustApprove ? `Ask another admin to approve (${total})` : `Apply ${total} change${total === 1 ? "" : "s"}`}</button>${queue.length ? '<button class="btn" id="skipq" type="button">Skip this file</button>' : ""}</div>
+      ${mustApprove ? '<p class="hint">This is a high-risk import and approvals are switched on, so a different admin must approve it (Settings &amp; approvals).</p>' : ""}</div></div>`;
+    drawNodes();
+    const rd = () => { S.f.q = $("#fq").value; S.f.kind = $("#fk").value; S.f.node = $("#fn").value; drawNodes(); };
+    $("#fq").oninput = rd; $("#fk").onchange = rd; $("#fn").onchange = rd;
+    document.querySelectorAll("[data-sel]").forEach((b) => (b.onclick = () => { const k = b.dataset.sel; visible().forEach((c) => S.manual.set(c.path, k === "all" ? true : k === "none" ? false : k === "new" ? c.kind === "new" : c.kind === "changed")); draw(); }));
+    $("#ke").onchange = () => { S.keepEdited = $("#ke").checked; S.manual.clear(); draw(); };
+    $("#nd").onchange = () => { S.neverDelete = $("#nd").checked; draw(); };
+    if ($("#ack")) $("#ack").onchange = () => { S.ack = $("#ack").checked; draw(); };
+    if ($("#clq")) $("#clq").oninput = () => { const q = $("#clq").value.toLowerCase(); document.querySelectorAll("#cll div").forEach((d) => (d.hidden = !!q && !d.dataset.t.includes(q))); };
+    if ($("#skipq")) $("#skipq").onclick = next;
+    $("#apply").onclick = () => apply(sel, mustApprove);
+  }
+  const passes = (c) => (S.f.kind === "all" || c.kind === S.f.kind) && (S.f.node === "all" || c.node === S.f.node) && (!S.f.q || (c.path + " " + titleFor(c.node, c.item, S.plan)).toLowerCase().includes(S.f.q.toLowerCase()));
+  const visible = () => Object.values(S.plan.nodes).flatMap((n) => (n.protected ? [] : n.changes.filter(passes)));
+  function drawNodes() {
+    const plan = S.plan;
+    $("#nodes").innerHTML = Object.values(plan.nodes).map((n) => {
+      if (n.protected) return `<div class="mrg-n prot"><header><strong>${E(n.node)}</strong><span class="pill hidden">protected — skipped</span><span class="hint">accounts, orders, messages, statistics and logs are never changed by an import</span></header></div>`;
+      const groups = new Map(); n.changes.filter(passes).forEach((c) => { (groups.get(c.item) || groups.set(c.item, []).get(c.item)).push(c); });
+      const lim = S.lim[n.node] || 60, keys = [...groups.keys()];
+      return `<div class="mrg-n"><header><strong>${E(n.node)}</strong>
+        <select data-mode="${E(n.node)}">${M.MODES.map((m) => `<option value="${m}" ${n.mode === m ? "selected" : ""}>${m}</option>`).join("")}</select>
+        <span class="cnt"><span class="new">+${n.new} new</span><span class="chg">~${n.changed} updated</span><span class="del">−${n.removed} removed</span><span class="hint">${n.kept} kept · ${n.same} same${n.protectedKept ? ` · ${n.protectedKept} protected fields` : ""}</span></span></header>
+        ${keys.slice(0, lim).map((it) => {
+          const cs = groups.get(it), inc = cs.filter(included).length, edited = auditEdited && auditEdited.has(it), isDup = cs.some((c) => S.dupSet.has(c.path)), miss = [...S.missing].some((m) => cs.some((c) => (S.refs[m] || []).some((p) => p === c.path || p.startsWith(c.path + "/"))));
+          const kinds = [...new Set(cs.map((c) => c.kind))], open = S.open.has(it), first = cs[0];
+          return `<div class="mrg-it ${open ? "open" : ""}"><div class="r"><input type="checkbox" data-item="${E(it)}" ${inc === cs.length ? "checked" : ""} style="width:auto"><span class="nm" title="${E(it)}">${E(it.split("/")[1] || it)} <span class="hint">${E(titleFor(n.node, it, plan))}</span></span>
+            ${kinds.map((k) => `<span class="${k === "new" ? "new" : k === "removed" ? "del" : "chg"}">${k === "new" ? "+new" : k === "removed" ? "−removed" : "~changed"}${cs.length > 1 ? " ×" + cs.filter((c) => c.kind === k).length : ""}</span>`).join(" ")}
+            ${edited ? '<span class="bdg mine" title="you edited this by hand lately">✎ you edited</span>' : ""}${isDup ? '<span class="bdg warn">possible duplicate</span>' : ""}${miss ? '<span class="bdg warn">file missing</span>' : ""}${S.schSet.has(it) ? '<span class="bdg warn">check</span>' : ""}
+            <button class="btn sm" data-open="${E(it)}" type="button">${open ? "Hide" : "Details"}</button></div>
+            ${open ? `<div class="fl">${preview(n.node, first.kind === "new" && !first.field ? first.new : (M.norm(S.patch[n.node]) || {})[it.split("/")[1]])}${cs.map((c) => `<div><label><input type="checkbox" data-f="${E(c.path)}" ${included(c) ? "checked" : ""} style="width:auto"> <b class="${c.kind === "new" ? "new" : c.kind === "removed" ? "del" : "chg"}">${c.kind === "new" ? "+" : c.kind === "removed" ? "−" : "~"}</b> ${E(c.field || "(whole item)")}</label>
+              ${c.kind === "changed" ? `<div class="side"><div><span class="hint">yours now</span><br>${E(short(c.old, 160))}</div><div><span class="hint">from the file</span><br>${E(short(c.new, 160))}</div></div>` : c.kind === "new" ? `<div>${E(short(c.new, 200))}</div>` : `<div>${E(short(c.old, 200))}</div>`}</div>`).join("")}</div>` : ""}</div>`;
+        }).join("")}
+        ${keys.length > lim ? `<button class="btn sm" data-more="${E(n.node)}" type="button">Show ${Math.min(60, keys.length - lim)} more (of ${keys.length - lim})</button>` : ""}${!keys.length ? '<p class="hint" style="margin:.4rem 0 0">Nothing to show with the current filter.</p>' : ""}</div>`;
+    }).join("");
+    document.querySelectorAll("[data-mode]").forEach((s) => (s.onchange = () => { if (s.value === "replace" && !confirm("Replace makes this whole section exactly like the file and removes anything not in it. Continue?")) { s.value = S.plan.nodes[s.dataset.mode].mode; return; } S.modes[s.dataset.mode] = s.value; S.manual.clear(); refresh(); }));
+    document.querySelectorAll("[data-open]").forEach((b) => (b.onclick = () => { const k = b.dataset.open; S.open.has(k) ? S.open.delete(k) : S.open.add(k); drawNodes(); }));
+    document.querySelectorAll("[data-more]").forEach((b) => (b.onclick = () => { S.lim[b.dataset.more] = (S.lim[b.dataset.more] || 60) + 60; drawNodes(); }));
+    document.querySelectorAll("[data-item]").forEach((cb) => (cb.onchange = () => { Object.values(S.plan.nodes).forEach((n) => n.changes.forEach((c) => { if (c.item === cb.dataset.item) S.manual.set(c.path, cb.checked); })); draw(); }));
+    document.querySelectorAll("[data-f]").forEach((cb) => (cb.onchange = () => { S.manual.set(cb.dataset.f, cb.checked); draw(); }));
+  }
+  async function checkAssets() {
+    const mine = S, files = Object.keys(mine.refs || {}); if (!files.length) return;
+    const lim = 10; let i = 0;
+    const worker = async () => { while (i < files.length) { const f = files[i++]; try { const r = await fetch(f, { method: "HEAD", cache: "no-store" }); if (!r.ok) mine.missing.add(f); } catch { mine.missing.add(f); } } };
+    await Promise.all(Array.from({ length: Math.min(lim, files.length) }, worker));
+    if (S === mine && mine.missing.size) draw();
+  }
+
+  // ---------- apply / schedule / approval
+  async function apply(sel, mustApprove) {
+    const total = Object.keys(sel.updates).length; if (!total) return;
+    if (sel.counts.removed && !confirm(`${sel.counts.removed} item(s) will be removed. Continue?`)) return;
+    const meta = S.plan.meta, id = (meta.id || "manual-" + A.today()).replace(/[^A-Za-z0-9_-]/g, "-").slice(0, 60), btn = $("#apply"), at = $("#sched").value ? new Date($("#sched").value).getTime() : 0;
+    const job = { id, name: meta.name || id, updates: sel.updates, undo: sel.undo, risk: sel.risk, patch: id };
+    const undoFile = { _undo: sel.undo, _patch: { id: "undo-" + id, name: "Undo of " + job.name, date: A.today() } };
+    btn.disabled = true;
+    try {
+      if (mustApprove) { await R.submitForApproval(job); done(`<strong>Sent for approval ✓</strong> Another admin can approve it under “Settings &amp; approvals”.`); return; }
+      if (at && at > Date.now() + 30000) { await R.schedule(job, at); done(`<strong>Scheduled ✓</strong> It will be applied on ${E(A.fmt(at))} (the next time an admin page is open after that time).`); return; }
+      if ($("#bk").checked) A.download(`undo-${id}-${Date.now()}.json`, JSON.stringify(undoFile), "application/json");
+      const res = await R.commit(job, { onProgress: (i, n) => (btn.textContent = `Writing ${i}/${n}…`) });
+      hist = (await A.get("import_history").catch(() => hist)) || hist;
+      done(`<strong>Done ✓</strong> ${res.n} change(s) written. A backup is stored, so you can undo all or part of it from “History &amp; undo”. Your accounts, orders and messages were not touched.`, res.key, undoFile);
+    } catch (e) { btn.disabled = false; btn.textContent = "Apply"; $("#done").innerHTML = `<div class="note bad"><strong>Stopped part-way:</strong> ${E(e.message)}. Some changes may already be written — open “History &amp; undo” to put things back, then try again.</div>`; }
+  }
+  function done(html, key, undoFile) {
+    $("#review").innerHTML = "";
+    $("#done").innerHTML = `<div class="note">${html}</div><p>${key ? '<button class="btn" id="undoall" type="button">Undo this import</button> ' : ""}${queue.length ? `<button class="btn primary" id="nextq" type="button">Review next file (${queue.length} left)</button>` : '<a class="btn" href="/admin/merge">Import another file</a>'}</p>`;
+    if ($("#undoall")) $("#undoall").onclick = async () => { if (!confirm("Put back the values from before this import?")) return; try { const n = await R.undoPaths(key); $("#done").innerHTML = `<div class="note"><strong>Undone ✓</strong> ${n} item(s) restored.</div>`; } catch (e) { if (undoFile) undoFromFile(undoFile); else A.toast(e.message, true); } };
+    if ($("#nextq")) $("#nextq").onclick = next; S = null;
+  }
+  async function undoFromFile(file) {
+    if (!confirm("Put back the values from before the import? Anything you changed on those exact items since then will be overwritten.")) return;
+    try { const n = await R.write(file._undo); $("#done").innerHTML = `<div class="note"><strong>Undone ✓</strong> ${n} item(s) restored.</div>`; $("#review").innerHTML = ""; await A.push("audit_log", { ts: Date.now(), uid: A.session.uid, email: A.session.email, op: "import-undo", path: `patch:${(file._patch || {}).id || ""}` }).catch(() => {}); } catch (e) { A.toast("Undo failed: " + e.message, true); }
+  }
+  function reviewUndo(file, name) {
+    const n = Object.keys(file._undo).length, bad = Object.keys(file._undo).filter((p) => M.PROTECTED.includes(p.split("/")[0]));
+    if (bad.length) { $("#review").innerHTML = `<div class="note bad">This undo file touches protected data (${E(bad[0])}) and was refused.</div>`; return; }
+    $("#review").innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">undo file · ${E(name)}</span></div><div class="body"><p style="margin-top:0">This restores <strong>${n}</strong> item(s) to how they were before an earlier import.</p><button class="btn primary" id="doundo" type="button">Restore them</button></div></div>`;
+    $("#doundo").onclick = () => undoFromFile(file);
+  }
+
+  // ---------- history, undo (all or part), scheduled and pending
+  async function drawHist() {
+    hist = (await A.get("import_history").catch(() => hist)) || hist;
+    const [pend, sch] = await Promise.all([A.get("import_pending").catch(() => null), A.get("import_scheduled").catch(() => null)]);
+    const rows = Object.entries(hist).map(([k, v]) => ({ k, ...v })).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    $("#histbox").innerHTML = `${pend && Object.keys(pend).length ? `<div class="crt-window"><div class="titlebar"><span class="label">waiting-for-approval</span></div><div class="body">${Object.entries(pend).map(([k, p]) => `<div class="mrg-n"><header><strong>${E(p.name)}</strong><span class="risk ${E(p.risk)}">${E(p.risk)}</span><span class="hint">from ${E(p.by)} · ${E(A.fmt(p.ts))} · ${(p.updates || []).length} change(s)</span><span style="flex:1"></span><button class="btn sm primary" data-ap="${E(k)}" type="button">Approve &amp; apply</button><button class="btn sm" data-rj="${E(k)}" type="button">Reject</button></header>${(p.why || []).length ? `<p class="hint" style="margin:.3rem 0 0">${E(p.why.join(" · "))}</p>` : ""}</div>`).join("")}</div></div>` : ""}
+      ${sch && Object.keys(sch).length ? `<div class="crt-window"><div class="titlebar"><span class="label">scheduled</span></div><div class="body">${Object.entries(sch).map(([k, p]) => `<div class="mrg-n"><header><strong>${E(p.name)}</strong><span class="hint">runs ${E(A.fmt(p.at))} · ${(p.updates || []).length} change(s) · by ${E(p.by)}</span><span style="flex:1"></span><button class="btn sm primary" data-run="${E(k)}" type="button">Run now</button><button class="btn sm" data-cx="${E(k)}" type="button">Cancel</button></header></div>`).join("")}</div></div>` : ""}
+      <div class="crt-window"><div class="titlebar"><span class="label">past-imports</span></div><div class="body">${rows.map((h) => `<div class="mrg-n"><header><strong>${E(h.name || h.k)}</strong><span class="hint">${E(A.fmt(h.ts))} · ${E(h.by || "")} · ${h.changes || 0} change(s)</span>${h.risk ? `<span class="risk ${E(h.risk)}">${E(h.risk)}</span>` : ""}${h.approvedBy ? `<span class="hint">approved by ${E(h.approvedBy)}</span>` : ""}<span style="flex:1"></span>${h.backup ? `<button class="btn sm" data-hd="${E(h.backup)}" type="button">Details / partial undo</button><button class="btn sm" data-ua="${E(h.backup)}" type="button">Undo all</button>` : '<span class="hint">no stored backup (older import)</span>'}</header>
+        ${h.nodes ? `<p class="hint" style="margin:.3rem 0 0">${Object.entries(h.nodes).map(([n, c]) => `${E(n)}: +${c.new || 0} ~${c.changed || 0} −${c.removed || 0}`).join(" · ")}</p>` : ""}<div id="hd-${E(h.backup || h.k)}"></div></div>`).join("") || '<p class="hint">No imports yet.</p>'}</div></div>`;
+    document.querySelectorAll("[data-ap]").forEach((b) => (b.onclick = async () => { try { await R.approve(b.dataset.ap); A.toast("Approved and applied ✓"); drawHist(); } catch (e) { A.toast(e.message, true); } }));
+    document.querySelectorAll("[data-rj]").forEach((b) => (b.onclick = async () => { await A.del("import_pending/" + b.dataset.rj); drawHist(); }));
+    document.querySelectorAll("[data-cx]").forEach((b) => (b.onclick = async () => { await A.del("import_scheduled/" + b.dataset.cx); drawHist(); }));
+    document.querySelectorAll("[data-run]").forEach((b) => (b.onclick = async () => { const r = await A.get("import_scheduled/" + b.dataset.run); await R.commit({ id: r.id, name: r.name, updates: R.deser(r.updates), undo: R.deser(r.undo), risk: { level: r.risk } }); await A.del("import_scheduled/" + b.dataset.run); A.toast("Applied ✓"); drawHist(); }));
+    document.querySelectorAll("[data-ua]").forEach((b) => (b.onclick = async () => { if (!confirm("Put back everything this import changed?")) return; try { const n = await R.undoPaths(b.dataset.ua); A.toast(n + " item(s) restored ✓"); } catch (e) { A.toast(e.message, true); } }));
+    document.querySelectorAll("[data-hd]").forEach((b) => (b.onclick = async () => {
+      const key = b.dataset.hd, box = document.getElementById("hd-" + key); if (box.innerHTML) { box.innerHTML = ""; return; }
+      const bk = await A.get("import_backups/" + key); if (!bk) { box.innerHTML = '<p class="hint">Backup no longer stored.</p>'; return; }
+      const all = R.deser(bk.paths), by = {}; Object.keys(all).forEach((p) => { const n = p.split("/")[0]; (by[n] = by[n] || []).push(p); });
+      box.innerHTML = Object.entries(by).map(([n, ps]) => `<div class="mrg-n"><header><strong>${E(n)}</strong><span class="hint">${ps.length} item(s)</span><button class="btn sm" data-un="${E(n)}" type="button">Undo this section only</button></header><div class="mrg-list">${ps.slice(0, 40).map((p) => `<div><label><input type="checkbox" data-up="${E(p)}" style="width:auto"> ${E(p)}</label></div>`).join("")}${ps.length > 40 ? `<div class="hint">…and ${ps.length - 40} more (use “Undo this section only”)</div>` : ""}</div></div>`).join("") + '<button class="btn sm primary" id="un-' + E(key) + '" type="button">Undo ticked items</button>';
+      box.querySelectorAll("[data-un]").forEach((x) => (x.onclick = async () => { if (!confirm(`Restore the “${x.dataset.un}” section from before this import?`)) return; try { const n = await R.undoPaths(key, (p) => p.split("/")[0] === x.dataset.un); A.toast(n + " item(s) restored ✓"); } catch (e) { A.toast(e.message, true); } }));
+      document.getElementById("un-" + key).onclick = async () => { const ps = new Set([...box.querySelectorAll("[data-up]:checked")].map((c) => c.dataset.up)); if (!ps.size) return A.toast("Tick the items to restore first."); try { const n = await R.undoPaths(key, (p) => ps.has(p)); A.toast(n + " item(s) restored ✓"); } catch (e) { A.toast(e.message, true); } };
+    }));
+  }
+
+  // ---------- export
+  function drawExp() {
+    $("#expnodes").innerHTML = EXPORTABLE.map((n) => `<label style="display:inline-block;margin:.2rem .8rem .2rem 0"><input type="checkbox" data-en="${n}" style="width:auto"> ${n}</label>`).join("");
+    $("#expall").onclick = () => document.querySelectorAll("[data-en]").forEach((c) => (c.checked = true));
+    $("#expgo").onclick = async () => {
+      const picked = [...document.querySelectorAll("[data-en]:checked")].map((c) => c.dataset.en); if (!picked.length) return A.toast("Tick at least one section.", true);
+      const out = {}; for (const n of picked) { const v = await A.get(n).catch(() => null); if (v !== null && v !== undefined) out[n] = v; }
+      const modes = {}; Object.keys(out).forEach((n) => (modes[n] = M.DEFAULT_MODE[n] || "merge"));
+      const meta = { id: "export-" + A.today() + "-" + Date.now().toString(36), name: "Export of " + Object.keys(out).join(", "), notes: "Exported from the live site on " + A.today(), date: A.today(), modes };
+      meta.sha256 = await sha(M.signedText(out));
+      A.download(`ezra-export-${A.today()}.json`, JSON.stringify(Object.assign({ _patch: meta }, out), null, 1), "application/json");
+    };
+  }
+
+  // ---------- settings and approvals
+  function drawSet() {
+    $("#setbox").innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">import-rules</span></div><div class="body">
+      <div class="field"><label>Protected fields — one per line. Imports never change or remove these. Use <code>*</code> for “any id”.</label><textarea id="s_prot" rows="5" placeholder="materials/*/price&#10;blog_posts/*/image&#10;chatbot_faq/*/answer">${E((settings.protect || []).join("\n"))}</textarea></div>
+      <div class="field"><label><input type="checkbox" id="s_ke" ${settings.keepEdited ? "checked" : ""} style="width:auto"> By default, leave out items I edited by hand in the last 90 days</label></div>
+      <div class="field"><label><input type="checkbox" id="s_nd" ${settings.neverDelete ? "checked" : ""} style="width:auto"> By default, never delete anything</label></div>
+      <div class="field"><label><input type="checkbox" id="s_ap" ${settings.requireApproval ? "checked" : ""} style="width:auto"> High-risk imports (deletes, replace) need a second admin to approve</label><p class="hint" style="margin:.2rem 0 0">Admins on this site: ${nAdmins}. ${nAdmins < 2 ? "With one admin, approvals are skipped (nobody else could approve)." : ""}</p></div>
+      <button class="btn primary" id="s_save" type="button">Save rules</button></div></div>`;
+    $("#s_save").onclick = async () => { settings = { protect: $("#s_prot").value.split("\n").map((x) => x.trim()).filter(Boolean), keepEdited: $("#s_ke").checked, neverDelete: $("#s_nd").checked, requireApproval: $("#s_ap").checked }; await A.set("import_settings", settings); A.toast("Saved ✓"); };
+  }
+  R.runDue().then((n) => { if (n) drawHist(); }).catch(() => {});
+})();
+</script>
+</body>
+</html>

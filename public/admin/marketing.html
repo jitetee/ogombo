@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email tool — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+<style>
+  .mk-types{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 1rem}
+  .mk-types button{font:inherit;cursor:pointer;padding:.45rem .7rem;border:1px solid var(--line,#444);background:transparent;color:inherit;border-radius:6px}
+  .mk-types button.on{background:var(--accent,#0b6b5c);color:#fff;border-color:transparent}
+  .mk-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.2rem;align-items:start}
+  @media(max-width:900px){.mk-grid{grid-template-columns:1fr}}
+  .mk-form label{display:block;font-size:.82rem;margin:.7rem 0 .2rem;opacity:.85}
+  .mk-form input[type=text],.mk-form input[type=url],.mk-form input[type=number],.mk-form select,.mk-form textarea{width:100%;box-sizing:border-box}
+  .mk-form textarea{min-height:5.5rem}
+  .mk-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+  .mk-box{border:1px solid var(--line,#444);border-radius:8px;padding:.8rem;margin:.8rem 0}
+  .mk-box h3{margin:0 0 .3rem;font-size:1rem}
+  .mk-subs{max-height:9.5rem;overflow:auto;border:1px solid var(--line,#444);border-radius:6px;padding:.3rem .5rem;margin:.4rem 0;font-size:.85rem}
+  .mk-subs label{display:flex;gap:.4rem;margin:.1rem 0;align-items:center}
+  .mk-acts{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0}
+  .mk-frame{width:100%;height:520px;border:1px solid var(--line,#444);border-radius:8px;background:#f3f4f6}
+  .mk-text{width:100%;height:300px;box-sizing:border-box;font:13px/1.45 ui-monospace,Menlo,monospace;white-space:pre-wrap}
+  .mk-warn{color:#e0a100;font-size:.85rem;margin:.3rem 0}
+  .mk-tabs{display:flex;gap:.4rem;margin:.2rem 0}
+  .mk-tabs button{font:inherit;cursor:pointer;padding:.3rem .6rem;border:1px solid var(--line,#444);background:transparent;color:inherit;border-radius:6px}
+  .mk-tabs button.on{background:var(--accent,#0b6b5c);color:#fff}
+</style>
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">MAIL.EXE</span><h1>Email &amp; marketing tool</h1>
+<p class="hint">Fill in the details, get a full professional email, then open it in your email app (or Gmail) with the recipients, subject and message already filled in — you only press Send. No paid service involved.</p></section>
+
+<div class="mk-types" id="types"></div>
+<p class="hint" id="thint"></p>
+
+<div class="mk-grid">
+  <div class="mk-form" id="form">
+    <div class="mk-box">
+      <h3>1 · Who is it for?</h3>
+      <select id="aud"><option value="subs">All / selected subscribers</option><option value="custom">A list of emails I paste</option><option value="one">One person</option></select>
+      <div id="a_subs">
+        <div class="mk-row"><input type="text" id="sq" placeholder="Filter subscribers…"><label style="margin:0;display:flex;gap:.4rem;align-items:center"><input type="checkbox" id="sall" checked> select all</label></div>
+        <div class="mk-subs" id="slist">Loading subscribers…</div>
+        <label>Max recipients per email (in Bcc) — big lists are split into batches</label>
+        <input type="number" id="csz" min="1" max="500" value="50">
+      </div>
+      <div id="a_custom" hidden><label>Paste emails (comma, space or new line)</label><textarea id="cust" placeholder="a@x.com, b@y.com"></textarea></div>
+      <div id="a_one" hidden><label>To (email)</label><input type="text" id="one" placeholder="name@example.com"><label>Their first name (for the greeting)</label><input type="text" id="oname"></div>
+      <div class="hint" id="rsum"></div>
+    </div>
+
+    <div class="mk-box" id="pickbox" hidden>
+      <h3 id="pickt">Pick content</h3>
+      <select id="pick"></select>
+      <p class="hint">Choosing an item fills in the title, summary and link for you. You can still edit everything below.</p>
+    </div>
+
+    <div class="mk-box">
+      <h3>2 · The message</h3>
+      <div class="mk-row"><div><label>Tone</label><select id="tone"><option value="friendly">Friendly</option><option value="formal">Formal / professional</option></select></div>
+      <div><label>Language</label><select id="lang"><option value="en">English</option><option value="sw">Kiswahili</option></select></div></div>
+      <label>Subject (leave empty to auto-generate)</label><input type="text" id="subject">
+      <label>Headline / topic</label><input type="text" id="headline">
+      <label>Opening line (optional — a default is written for you)</label><input type="text" id="intro">
+      <label>Main message (blank line = new paragraph)</label><textarea id="message"></textarea>
+      <label id="plabel">Bullet points (one per line)</label><textarea id="points"></textarea>
+      <div class="mk-row"><div><label>Date / time (optional)</label><input type="text" id="when" placeholder="Sat 24 Oct, 7pm"></div><div><label>Where (optional)</label><input type="text" id="where"></div></div>
+      <label>Price / offer (optional)</label><input type="text" id="price" placeholder="KES 200 · free">
+      <div class="mk-row"><div><label>Button text</label><input type="text" id="ctaLabel" placeholder="Read the post"></div><div><label>Button link</label><input type="url" id="ctaUrl" placeholder="https://…"></div></div>
+      <div class="mk-row"><div><label>2nd button text (optional)</label><input type="text" id="cta2Label"></div><div><label>2nd button link</label><input type="url" id="cta2Url"></div></div>
+      <label>Closing line (optional)</label><input type="text" id="closing">
+      <label>P.S. (optional)</label><input type="text" id="ps">
+      <label style="display:flex;gap:.4rem;align-items:center"><input type="checkbox" id="unsub" checked> Add “you subscribed on…” unsubscribe line</label>
+      <label style="display:flex;gap:.4rem;align-items:center"><input type="checkbox" id="emoji"> Put an emoji at the start of the subject</label>
+    </div>
+
+    <div class="mk-box">
+      <h3>3 · Sender &amp; signature</h3>
+      <div class="mk-row"><div><label>Name</label><input type="text" id="sn"></div><div><label>Title</label><input type="text" id="st"></div></div>
+      <div class="mk-row"><div><label>Phone / WhatsApp</label><input type="text" id="sp"></div><div><label>Email</label><input type="text" id="se"></div></div>
+      <div class="mk-row"><div><label>Website</label><input type="text" id="sw"></div><div><label>Accent colour</label><input type="text" id="acc" value="#0b6b5c"></div></div>
+      <label>Extra signature lines (optional)</label><textarea id="sig" style="min-height:3rem"></textarea>
+      <div class="mk-acts"><button class="btn sm" id="savesig" type="button">Save as my default</button></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="mk-tabs" id="ptabs"><button data-p="html" class="on" type="button">Designed preview</button><button data-p="text" type="button">Plain text</button></div>
+    <iframe class="mk-frame" id="frame" title="Email preview" sandbox=""></iframe>
+    <textarea class="mk-text" id="ptext" readonly hidden></textarea>
+    <p class="hint" id="subj" style="margin:.5rem 0 0"></p>
+
+    <div class="mk-box">
+      <h3>Send it</h3>
+      <div id="batchrow" hidden><label style="font-size:.82rem">Batch</label><select id="batch"></select></div>
+      <div class="mk-acts" id="sendacts">
+        <button class="btn primary" id="b_mail" type="button">✉ Open in my email app</button>
+        <button class="btn" id="b_gmail" type="button">Gmail</button>
+        <button class="btn" id="b_outlook" type="button">Outlook web</button>
+        <button class="btn" id="b_eml" type="button">Download .eml (full design)</button>
+      </div>
+      <div class="mk-warn" id="warn"></div>
+      <p class="hint">“Email app” and Gmail open a compose window with To/Bcc, subject and message filled. Those links can only carry plain text, so use <b>Copy designed email</b> then paste into the compose window if you want the full coloured layout, or open the .eml file in Outlook / Apple Mail.</p>
+      <div class="mk-acts">
+        <button class="btn" id="c_rich" type="button">Copy designed email</button>
+        <button class="btn" id="c_text" type="button">Copy message</button>
+        <button class="btn" id="c_subj" type="button">Copy subject</button>
+        <button class="btn" id="c_to" type="button">Copy recipients</button>
+        <button class="btn" id="c_html" type="button">Copy HTML code</button>
+      </div>
+      <div class="mk-acts">
+        <button class="btn primary" id="b_sent" type="button">✓ Mark batch as sent</button>
+        <button class="btn" id="b_wa" type="button">Share via WhatsApp</button>
+      </div>
+    </div>
+
+    <div class="mk-box">
+      <h3>Drafts &amp; history</h3>
+      <div class="mk-acts"><input type="text" id="dname" placeholder="Draft name" style="flex:1;min-width:8rem"><button class="btn" id="d_save" type="button">Save draft</button></div>
+      <div id="drafts" class="hint">…</div>
+      <details style="margin-top:.5rem"><summary>Sent log</summary><div id="log" class="hint"></div></details>
+    </div>
+  </div>
+</div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/admin/admin.js"></script>
+<script src="/admin/mailgen.js"></script>
+<script>
+(async () => {
+  await A.guard("marketing");
+  const $ = (id) => document.getElementById(id), M = window.EO_MAIL, E = A.esc;
+  const qs = new URLSearchParams(location.search);
+  const FIELDS = ["aud", "csz", "cust", "one", "oname", "tone", "lang", "subject", "headline", "intro", "message", "points", "when", "where", "price", "ctaLabel", "ctaUrl", "cta2Label", "cta2Url", "closing", "ps", "sn", "st", "sp", "se", "sw", "acc", "sig"];
+  const CHECKS = ["unsub", "emoji"];
+  let type = TYPEOK(qs.get("type")) || "update", subs = [], settings = {}, blog = {}, mats = {}, site = {}, drafts = {}, logs = {};
+  function TYPEOK(t) { return M.TYPES[t] ? t : null; }
+  const ls = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+  const safe = async (p) => { try { return (await A.get(p)) || {}; } catch (e) { return {}; } };
+
+  [site, settings, blog, mats, drafts, logs] = await Promise.all([safe("site_settings"), safe("marketing_settings"), safe("blog_posts"), safe("materials"), safe("marketing_drafts"), safe("marketing_log")]);
+  const prof = await safe("profile"), nl = await safe("newsletter");
+  subs = A.rows(nl).filter((r) => r.email).sort((a, b) => (b.ts || 0) - (a.ts || 0)).map((r) => ({ email: r.email, on: true }));
+  const base = (site.site_url || location.origin).replace(/\/$/, "");
+
+  /* defaults */
+  const def = Object.assign({ sn: prof.name || site.site_name || "", st: (prof.tagline || "").split(".")[0].slice(0, 80), sp: (site.whatsapp && site.whatsapp.primary) || prof.phone_public || "", se: site.email || prof.email || "", sw: base.replace(/^https?:\/\//, ""), acc: "#0b6b5c", sig: "", csz: 50 }, settings);
+  FIELDS.forEach((f) => { if (def[f] != null && $(f)) $(f).value = def[f]; });
+  try { const last = JSON.parse(ls.get("eo-mk-last") || "null"); if (last && last.f && !qs.get("fresh")) { Object.entries(last.f).forEach(([k, v]) => { if ($(k) && !["sn", "st", "sp", "se", "sw", "acc", "sig"].includes(k)) $(k).value = v; }); } } catch (e) {}
+  if (qs.get("to")) { $("aud").value = "one"; $("one").value = qs.get("to"); }
+  if (qs.get("name")) $("oname").value = qs.get("name");
+  if (qs.get("headline")) $("headline").value = qs.get("headline");
+
+  /* types */
+  const tb = $("types");
+  Object.entries(M.TYPES).forEach(([k, t]) => { const b = document.createElement("button"); b.type = "button"; b.dataset.t = k; b.textContent = t.icon + " " + t.label; b.onclick = () => setType(k); tb.append(b); });
+  function setType(k) {
+    type = k; tb.querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.t === k));
+    $("thint").textContent = M.TYPES[k].hint; $("plabel").textContent = M.TYPES[k].pointsLabel;
+    const pb = $("pickbox"), pk = $("pick");
+    if (k === "post" || k === "material") {
+      const src = k === "post" ? blog : mats;
+      const items = A.rows(src).filter((x) => k === "post" ? true : x.status !== "draft").sort((a, b) => String(b.date || b.created || "").localeCompare(String(a.date || a.created || "")));
+      $("pickt").textContent = k === "post" ? "Pick a blog post" : "Pick a material";
+      pk.innerHTML = `<option value="">— choose —</option>` + items.map((x) => `<option value="${E(x._key)}">${E(x.title || x._key)}</option>`).join("");
+      pb.hidden = false;
+    } else pb.hidden = true;
+    render();
+  }
+  $("pick").onchange = () => {
+    const k = $("pick").value; if (!k) return;
+    if (type === "post") {
+      const p = blog[k]; $("headline").value = p.title || ""; $("message").value = p.excerpt || "";
+      $("ctaUrl").value = `${base}/blog/${k}`; $("ctaLabel").value = $("lang").value === "sw" ? "Soma makala" : "Read the post"; $("points").value = (p.tags || []).length ? "Topics: " + p.tags.join(", ") : "";
+    } else {
+      const m = mats[k]; $("headline").value = m.title || ""; $("message").value = m.description || "";
+      $("ctaUrl").value = `${base}/materials/item/${k}`; $("ctaLabel").value = $("lang").value === "sw" ? "Tazama nyenzo" : "View the material";
+      $("price").value = m.access === "paid" ? "KES " + (m.price || "—") : "Free";
+      $("points").value = [m.category, m.file_type && m.file_type.toUpperCase()].filter(Boolean).join("\n");
+    }
+    render();
+  };
+
+  /* recipients */
+  function paintSubs() {
+    const q = $("sq").value.toLowerCase();
+    $("slist").innerHTML = subs.length ? subs.map((s, i) => (!q || s.email.toLowerCase().includes(q)) ? `<label><input type="checkbox" data-i="${i}" ${s.on ? "checked" : ""}> ${E(s.email)}</label>` : "").join("") : "No subscribers yet — they appear here when people join your newsletter.";
+    $("slist").querySelectorAll("input").forEach((c) => c.onchange = () => { subs[+c.dataset.i].on = c.checked; render(); });
+  }
+  $("sq").oninput = paintSubs;
+  $("sall").onchange = () => { const q = $("sq").value.toLowerCase(); subs.forEach((s) => { if (!q || s.email.toLowerCase().includes(q)) s.on = $("sall").checked; }); paintSubs(); render(); };
+  function recipients() {
+    const a = $("aud").value;
+    if (a === "subs") return { mode: a, list: subs.filter((s) => s.on).map((s) => s.email), bad: [] };
+    if (a === "custom") { const r = M.parseEmails($("cust").value); return { mode: a, list: r.ok, bad: r.bad }; }
+    const r = M.parseEmails($("one").value); return { mode: a, list: r.ok.slice(0, 1), bad: r.bad };
+  }
+  $("aud").onchange = () => { $("a_subs").hidden = $("aud").value !== "subs"; $("a_custom").hidden = $("aud").value !== "custom"; $("a_one").hidden = $("aud").value !== "one"; render(); };
+
+  /* build */
+  function form() {
+    const f = {}; FIELDS.concat(CHECKS).forEach((k) => { f[k] = CHECKS.includes(k) ? $(k).checked : $(k).value; }); return f;
+  }
+  let cur = null, batches = [[]], bi = 0;
+  function render() {
+    const f = form(), r = recipients();
+    cur = M.build({ type, tone: f.tone, lang: f.lang, subject: f.subject, headline: f.headline, intro: f.intro, message: f.message, points: f.points, when: f.when, where: f.where, price: f.price, ctaLabel: f.ctaLabel, ctaUrl: f.ctaUrl, cta2Label: f.cta2Label, cta2Url: f.cta2Url, closing: f.closing, ps: f.ps, unsub: f.unsub && r.mode === "subs", emoji: f.emoji, name: r.mode === "one" ? f.oname : "", site: f.sw || site.site_name, accent: /^#[0-9a-f]{3,8}$/i.test(f.acc) ? f.acc : "#0b6b5c", signature: f.sig, sender: { name: f.sn, title: f.st, phone: f.sp, email: f.se, site: f.sw } });
+    $("frame").srcdoc = cur.html; $("ptext").value = cur.text; $("subj").innerHTML = `<b>Subject:</b> ${E(cur.subject)}`;
+    batches = r.mode === "subs" || r.mode === "custom" ? M.chunk(r.list, +f.csz || 50) : [r.list];
+    if (!batches.length) batches = [[]];
+    if (bi >= batches.length) bi = 0;
+    const bs = $("batch"); bs.innerHTML = batches.map((b, i) => `<option value="${i}">Batch ${i + 1} of ${batches.length} (${b.length} recipient${b.length === 1 ? "" : "s"})</option>`).join(""); bs.value = bi;
+    $("batchrow").hidden = batches.length < 2;
+    $("rsum").innerHTML = `${r.list.length} recipient(s)` + (r.bad.length ? ` · <span class="mk-warn">ignored invalid: ${E(r.bad.join(", "))}</span>` : "") + (batches.length > 1 ? ` · will be sent in ${batches.length} batches` : "");
+    warn(); ls.set("eo-mk-last", JSON.stringify({ type, f }));
+  }
+  $("batch").onchange = () => { bi = +$("batch").value; warn(); };
+  function parts() {
+    const f = form(), r = recipients(), list = batches[bi] || [], self = f.se || "";
+    const single = r.mode === "one";
+    return { to: single ? list.join(",") : self, bcc: single ? "" : list.join(","), subject: cur.subject, body: cur.text };
+  }
+  function warn() {
+    const p = parts(), w = [];
+    if (!(batches[bi] || []).length) w.push("No recipients yet — the email will open with an empty To field.");
+    if (M.mailto(p).length > 1900) w.push("This is long for a “mailto” link — some email apps cut it off. Use Gmail, or Copy message and paste it, or download the .eml.");
+    if (M.gmail(p).length > 7500) w.push("Too long even for Gmail’s link — use Copy message / Download .eml.");
+    $("warn").textContent = w.join(" ");
+  }
+  const open = (u) => { const w = window.open(u, "_blank"); if (!w) location.href = u; };
+  $("b_mail").onclick = () => { const u = M.mailto(parts()); if (u.length > 1900 && !confirm("The link is long and may be cut off by your email app. Open anyway?")) return; location.href = u; };
+  $("b_gmail").onclick = () => open(M.gmail(parts()));
+  $("b_outlook").onclick = () => open(M.outlook(parts()));
+  $("b_eml").onclick = () => { const p = parts(), f = form(); A.download(`email-${Date.now()}.eml`, M.eml({ from: f.se, to: p.to, bcc: p.bcc, subject: p.subject, text: cur.text, html: cur.html }), "message/rfc822"); };
+  const copy = async (txt, ok) => { try { await navigator.clipboard.writeText(txt); A.toast(ok || "Copied ✓"); } catch (e) { const t = document.createElement("textarea"); t.value = txt; document.body.append(t); t.select(); try { document.execCommand("copy"); A.toast(ok || "Copied ✓"); } catch (x) { A.toast("Copy failed — select the text manually", true); } t.remove(); } };
+  $("c_text").onclick = () => copy(cur.text, "Message copied ✓");
+  $("c_subj").onclick = () => copy(cur.subject, "Subject copied ✓");
+  $("c_to").onclick = () => copy((batches[bi] || []).join(", "), "Recipients copied ✓");
+  $("c_html").onclick = () => copy(cur.html, "HTML copied ✓");
+  $("c_rich").onclick = async () => {
+    try { await navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([cur.html], { type: "text/html" }), "text/plain": new Blob([cur.text], { type: "text/plain" }) })]); A.toast("Designed email copied — paste it into the message box ✓"); }
+    catch (e) { copy(cur.text, "Rich copy not supported here — plain message copied"); }
+  };
+  $("b_wa").onclick = () => open("https://wa.me/?text=" + encodeURIComponent(cur.subject + "\n\n" + cur.text.slice(0, 1500)));
+  $("b_sent").onclick = async () => {
+    try { await A.push("marketing_log", { ts: Date.now(), type, subject: cur.subject.slice(0, 200), count: (batches[bi] || []).length, batch: `${bi + 1}/${batches.length}`, audience: $("aud").value }); A.toast("Logged ✓"); loadLog(); if (bi < batches.length - 1) { bi++; $("batch").value = bi; warn(); A.toast(`Next: batch ${bi + 1} of ${batches.length}`); } }
+    catch (e) { A.toast("Could not log: " + e.message, true); }
+  };
+  $("ptabs").querySelectorAll("button").forEach((b) => b.onclick = () => { $("ptabs").querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); const t = b.dataset.p === "text"; $("frame").hidden = t; $("ptext").hidden = !t; });
+
+  /* saved settings, drafts, log */
+  $("savesig").onclick = async () => { try { await A.set("marketing_settings", { sn: $("sn").value, st: $("st").value, sp: $("sp").value, se: $("se").value, sw: $("sw").value, acc: $("acc").value, sig: $("sig").value, csz: +$("csz").value || 50 }); A.toast("Saved as your default ✓"); } catch (e) { A.toast(e.message, true); } };
+  function paintDrafts() {
+    const l = A.rows(drafts).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    $("drafts").innerHTML = l.length ? l.map((d) => `<div style="display:flex;gap:.4rem;align-items:center;margin:.2rem 0"><span style="flex:1">${E(d.name || "Untitled")} · <i>${E((M.TYPES[d.type] || {}).label || d.type)}</i></span><button class="btn sm" data-l="${E(d._key)}" type="button">Load</button><button class="btn sm danger" data-d="${E(d._key)}" type="button">✕</button></div>`).join("") : "No drafts saved yet.";
+    $("drafts").querySelectorAll("[data-l]").forEach((b) => b.onclick = () => { const d = drafts[b.dataset.l]; Object.entries(d.f || {}).forEach(([k, v]) => { if (CHECKS.includes(k)) $(k).checked = !!v; else if ($(k)) $(k).value = v; }); $("aud").onchange(); setType(M.TYPES[d.type] ? d.type : "update"); A.toast("Draft loaded"); });
+    $("drafts").querySelectorAll("[data-d]").forEach((b) => b.onclick = async () => { if (await A.confirm("Delete this draft?")) { await A.del("marketing_drafts/" + b.dataset.d); delete drafts[b.dataset.d]; paintDrafts(); } });
+  }
+  $("d_save").onclick = async () => {
+    const f = form(), name = $("dname").value.trim() || f.headline || cur.subject;
+    try { const k = await A.push("marketing_drafts", { name: name.slice(0, 80), type, ts: Date.now(), f }); const key = k && (k.name || k); drafts[key || "d" + Date.now()] = { name, type, ts: Date.now(), f }; paintDrafts(); A.toast("Draft saved ✓"); } catch (e) { A.toast("Save failed: " + e.message, true); }
+  };
+  async function loadLog() {
+    logs = await safe("marketing_log");
+    const l = A.rows(logs).sort((a, b) => b.ts - a.ts).slice(0, 25);
+    $("log").innerHTML = l.length ? `<table class="tbl"><tbody>${l.map((x) => `<tr><td>${A.fmt(x.ts)}</td><td>${E((M.TYPES[x.type] || {}).label || x.type)}</td><td>${E(x.subject)}</td><td>${x.count} · ${E(x.batch)}</td></tr>`).join("")}</tbody></table>` : "Nothing logged yet. Use “Mark batch as sent” after you send.";
+  }
+
+  [...FIELDS, ...CHECKS].forEach((k) => { const el = $(k); if (el) { el.addEventListener("input", render); el.addEventListener("change", render); } });
+  paintSubs(); paintDrafts(); loadLog(); $("aud").onchange(); setType(type);
+})();
+</script>
+</body>
+</html>

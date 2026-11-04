@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">CONTENT.EXE</span><h1>Content manager</h1>
+<p class="hint">Blogger-style editor for blog posts, plus content cards and book pages. Changes are live as soon as you press Save — no redeploy needed. Set <b>Status → draft</b> to hide an item, or pick a future date to schedule a blog post.</p></section>
+<div id="tabs"></div><div id="pane"></div>
+
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("content");
+  const words = (h) => { const t = (h || "").replace(/<[^>]+>/g, " ").trim(); return t ? t.split(/\s+/).length : 0; };
+  let minOrder = 0;
+  const blog = {
+    node: "blog_posts", title: "blog post", keyField: "slug", slugFrom: "title", touch: "updated",
+    search: ["title", "slug", "excerpt"], sort: (a, b) => ((a.date || "") < (b.date || "") ? 1 : -1),
+    columns: [{ key: "title", label: "Title" }, { key: "date", label: "Date" }, { key: "status", label: "Status", badge: true }, { key: "tags", label: "Tags" }],
+    defaults: () => ({ status: "draft", date: A.today(), author: "Ezra Ogombo" }),
+    view: (it) => `/blog/${it._key}`,
+    fields: [
+      { key: "title", label: "Title", type: "text", required: true, wide: true },
+      { key: "slug", label: "URL slug", type: "text", required: true, help: "Becomes /blog/<slug>. Lowercase, hyphens." },
+      { key: "date", label: "Publish date", type: "date", required: true, help: "A future date schedules the post." },
+      { key: "status", label: "Status", type: "select", options: ["published", "draft"] },
+      { key: "author", label: "Author", type: "text" },
+      { key: "thumbnail", label: "Featured image", type: "text", placeholder: "/assets/blog/my-photo.jpg", help: "Used on blog cards and as the preview image when the link is shared on Facebook/WhatsApp. Drive links are converted automatically." },
+      { key: "tags", label: "Tags", type: "tags" },
+      { key: "excerpt", label: "Excerpt (shown on cards)", type: "textarea", required: true, rows: 2, wide: true },
+      { key: "meta_description", label: "SEO description (150–160 characters ideal)", type: "textarea", rows: 2, wide: true },
+      { key: "content", label: "Post", type: "html", required: true, wide: true },
+    ],
+    beforeSave: (out) => { if (out.thumbnail) out.thumbnail = A.driveImg(out.thumbnail); out.read_minutes = Math.max(1, Math.round(words(out.content) / 200)); if (!out.status) out.status = "published"; },
+  };
+  const content = {
+    node: "content_highlights", title: "content item", keyField: "slug", slugFrom: "title", search: ["title", "slug", "caption"],
+    columns: [{ key: "title", label: "Title" }, { key: "status", label: "Status", badge: true }, { key: "order", label: "Order" }],
+    defaults: () => ({ status: "published", order: minOrder - 1 }),
+    view: (it) => `/content/${it._key}`, decorate: (d) => { minOrder = Math.min(0, ...Object.values(d).map((x) => x.order || 0)); },
+    fields: [
+      { key: "title", label: "Title", type: "text", required: true, wide: true },
+      { key: "slug", label: "URL slug", type: "text", required: true },
+      { key: "status", label: "Status", type: "select", options: ["published", "draft"] },
+      { key: "image", label: "Image", type: "text", placeholder: "/assets/content/my-graphic.jpg" },
+      { key: "order", label: "Order (lowest first)", type: "number" },
+      { key: "caption", label: "Caption", type: "textarea", rows: 2, required: true, wide: true },
+      { key: "body", label: "Full text", type: "html", wide: true },
+    ],
+    beforeSave: (out) => { if (out.image) out.image = A.driveImg(out.image); },
+  };
+  const books = {
+    node: "writing_projects", title: "book", keyField: "slug", slugFrom: "title", search: ["title", "summary"],
+    columns: [{ key: "title", label: "Title" }, { key: "status", label: "Status", badge: true }],
+    defaults: () => ({ status: "in progress", order: 99 }), view: (it) => `/writing/books/${it._key}`,
+    fields: [
+      { key: "title", label: "Title", type: "text", required: true }, { key: "slug", label: "URL slug", type: "text", required: true },
+      { key: "status", label: "Status", type: "select", options: ["idea", "outlining", "in progress", "drafting", "editing", "published"] }, { key: "order", label: "Order", type: "number" },
+      { key: "summary", label: "Summary", type: "textarea", required: true, wide: true }, { key: "excerpt", label: "Excerpt / quote", type: "textarea", wide: true },
+    ],
+  };
+  const PAGE_KEYS = ["home", "about", "cv", "contact", "privacy", "writing", "materials", "content", "blog", "search"];
+  const pagesCfg = {
+    node: "pages", title: "page text", keyField: "key", slugFrom: "key", search: ["key", "title", "heading"], sort: (a, b) => PAGE_KEYS.indexOf(a._key) - PAGE_KEYS.indexOf(b._key),
+    columns: [{ key: "key", label: "Page" }, { key: "title", label: "SEO title" }, { key: "heading", label: "Heading" }],
+    view: (it) => (it._key === "home" ? "/" : "/" + it._key), defaults: () => ({}),
+    fields: [
+      { key: "key", label: "Page key", type: "select", options: PAGE_KEYS, required: true, help: "Which page this text belongs to." },
+      { key: "title", label: "SEO title (browser tab / Google)", type: "text", wide: true },
+      { key: "description", label: "SEO description", type: "textarea", rows: 2, wide: true },
+      { key: "kicker", label: "Small label above the heading", type: "text" },
+      { key: "heading", label: "Main heading (HTML allowed; keep <span id=\"live-age\"> on About)", type: "text", wide: true },
+      { key: "intro", label: "Intro paragraph (HTML allowed)", type: "textarea", rows: 3, wide: true },
+      { key: "body", label: "Page body (shown below the heading — leave empty to keep the built-in layout)", type: "html", wide: true },
+    ],
+  };
+  const map = { blog, content, books, pages: pagesCfg };
+  A.tabs(document.getElementById("tabs"), [["blog", "Blog posts"], ["content", "Content cards"], ["books", "Books / writing"], ["pages", "Page text"]], (k) => A.crud(document.getElementById("pane"), map[k]));
+})();
+</script>
+</body>
+</html>

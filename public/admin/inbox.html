@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inbox — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">INBOX.EXE</span><h1>Messages, comments &amp; engagement</h1></section>
+<div id="tabs"></div><div id="pane"></div>
+
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("inbox");
+  const pane = document.getElementById("pane");
+  const pageUrl = (t, s) => (t === "blog" ? "/blog/" + s : t === "content" ? "/content/" + s : t === "book" ? "/writing/books/" + s : t === "material" ? "/materials/item/" + s : "/");
+
+  async function messages() {
+    pane.innerHTML = `<div class="toolbar"><select id="mf"><option value="">All</option><option>new</option><option>read</option><option>replied</option></select><span class="hint" id="mn"></span></div><div id="ml"></div>`;
+    let data = {};
+    const load = async () => { data = (await A.get("contact_inbox")) || {}; paint(); };
+    const paint = () => {
+      const f = document.getElementById("mf").value, list = A.rows(data).sort((a, b) => b.ts - a.ts).filter((m) => !f || (m.status || "new") === f);
+      document.getElementById("mn").textContent = list.length + " message(s)";
+      document.getElementById("ml").innerHTML = list.map((m) => `<div class="crt-window" data-id="${A.esc(m._key)}"><div class="titlebar"><span class="label">${A.fmt(m.ts)} · ${A.esc(m.subject || "")}</span></div><div class="body"><p style="margin:0 0 .3rem"><strong>${A.esc(m.name)}</strong> ${A.pill(m.status || "new")}</p>
+        <p class="hint" style="margin:0 0 .5rem">${A.esc(m.email || "")} ${A.esc(m.phone || "")}</p><p style="color:var(--ink);white-space:pre-wrap">${A.esc(m.message)}</p><div class="row-links" data-act></div></div></div>`).join("") || "<p>No messages.</p>";
+      document.querySelectorAll("#ml [data-id]").forEach((el) => {
+        const id = el.dataset.id, m = data[id], act = el.querySelector("[data-act]"), set = async (s) => { await A.update(`contact_inbox/${id}`, { status: s }); load(); };
+        if (m.email) act.append(A.btn("Reply (email)", "sm primary", () => { window.open(`mailto:${m.email}?subject=${encodeURIComponent("Re: " + (m.subject || "your message"))}`); set("replied"); }), A.btn("Smart reply", "sm", () => { location.href = `/admin/marketing?type=enquiry&fresh=1&to=${encodeURIComponent(m.email)}&name=${encodeURIComponent((m.name || "").split(" ")[0])}&headline=${encodeURIComponent(m.subject || "your message")}`; }));
+        if (m.phone) act.append(A.btn("WhatsApp", "sm", () => { window.open(`https://wa.me/${m.phone.replace(/\D/g, "").replace(/^0/, "254")}`); set("replied"); }));
+        act.append(A.btn("Mark read", "sm", () => set("read")), A.btn("Delete", "sm danger", async () => { if (await A.confirm("Delete this message?")) { await A.del(`contact_inbox/${id}`); load(); } }));
+      });
+    };
+    document.getElementById("mf").onchange = paint; load();
+  }
+
+  async function comments() {
+    pane.innerHTML = `<div class="toolbar"><select id="cf"><option value="">All</option><option>pending</option><option>visible</option><option>hidden</option></select><input id="cq" type="search" placeholder="Search…"><span class="hint" id="cn"></span></div><div class="tbl-wrap" id="cl"></div>`;
+    let flat = [];
+    const load = async () => {
+      const d = (await A.get("comments")) || {}; flat = [];
+      Object.entries(d).forEach(([t, ts]) => Object.entries(ts || {}).forEach(([s, cs]) => Object.entries(cs || {}).forEach(([id, c]) => flat.push({ t, s, id, ...c })))); paint();
+    };
+    const paint = () => {
+      const f = document.getElementById("cf").value, q = document.getElementById("cq").value.toLowerCase();
+      const list = flat.filter((c) => (!f || c.status === f) && (!q || (c.text + c.name).toLowerCase().includes(q))).sort((a, b) => b.ts - a.ts);
+      document.getElementById("cn").textContent = list.length + " comment(s)";
+      document.getElementById("cl").innerHTML = `<table class="tbl"><thead><tr><th>When</th><th>Where</th><th>Who / what</th><th>Status</th><th></th></tr></thead><tbody>${list.map((c) => `<tr data-k="${A.esc(c.t + "/" + c.s + "/" + c.id)}"><td>${A.fmt(c.ts)}</td><td><a href="${pageUrl(c.t, c.s)}" target="_blank">${A.esc(c.t)}/${A.esc(c.s)}</a>${c.parent ? '<br><span class="hint">reply</span>' : ""}</td><td><strong>${A.esc(c.name)}</strong> <span class="hint">♥ ${c.likes || 0}</span><br>${A.esc(c.text)}</td><td>${A.pill(c.status)}</td><td class="act"></td></tr>`).join("") || '<tr><td colspan="5">No comments.</td></tr>'}</tbody></table>`;
+      document.querySelectorAll("#cl tr[data-k]").forEach((tr) => {
+        const k = tr.dataset.k, c = flat.find((x) => `${x.t}/${x.s}/${x.id}` === k), act = tr.querySelector(".act"), set = async (s) => { await A.update(`comments/${k}`, { status: s }); load(); };
+        act.append(A.btn("Approve", "sm", () => set("visible")), A.btn("Hide", "sm", () => set("hidden")), A.btn("Reply", "sm", async () => { const t = prompt("Reply as Ezra Ogombo:"); if (!t) return; await A.push(`comments/${c.t}/${c.s}`, { name: "Ezra Ogombo", text: t, ts: Date.now(), status: "visible", parent: c.parent || c.id }); load(); }), A.btn("Delete", "sm danger", async () => { if (await A.confirm("Delete this comment?")) { await A.del(`comments/${k}`); load(); } }));
+      });
+    };
+    document.getElementById("cf").onchange = paint; document.getElementById("cq").oninput = paint; load();
+  }
+
+  async function newsletter() {
+    const d = (await A.get("newsletter")) || {}, list = A.rows(d).sort((a, b) => b.ts - a.ts);
+    pane.innerHTML = `<div class="toolbar"><span class="hint">${list.length} subscriber(s)</span><span style="flex:1"></span></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Email</th><th>Name</th><th>Interests</th><th>Joined</th><th>From</th><th></th></tr></thead><tbody>${list.map((s) => `<tr data-k="${A.esc(s._key)}"><td>${A.esc(s.email)}</td><td>${A.esc(s.name || "")}</td><td>${A.esc(s.interests || "")}</td><td>${A.fmt(s.ts)}</td><td>${A.esc(s.page || "")}</td><td class="act"></td></tr>`).join("")}</tbody></table></div>`;
+    pane.querySelector(".toolbar").append(A.btn("✉ Email subscribers", "primary", () => { location.href = "/admin/marketing"; }), A.btn("Export CSV", "primary", () => A.csv("subscribers.csv", [["email", "name", "interests", "joined", "page"], ...list.map((s) => [s.email, s.name || "", s.interests || "", new Date(s.ts).toISOString(), s.page])])));
+    pane.querySelectorAll("tr[data-k]").forEach((tr) => tr.querySelector(".act").append(A.btn("Delete", "sm danger", async () => { if (await A.confirm("Remove subscriber?")) { await A.del(`newsletter/${tr.dataset.k}`); newsletter(); } })));
+  }
+
+  async function requests() {
+    const d = (await A.get("material_requests")) || {}, list = A.rows(d).sort((a, b) => b.ts - a.ts);
+    pane.innerHTML = `<div class="toolbar"><span class="hint">${list.length} material request(s)</span></div>${list.map((r) => `<div class="crt-window" data-k="${A.esc(r._key)}"><div class="titlebar"><span class="label">${A.fmt(r.ts)} · ${A.esc(r.name || "Anonymous")}</span></div><div class="body"><p style="white-space:pre-wrap;color:var(--ink)">${A.esc(r.text)}</p><p class="hint">${A.esc(r.contact || "no contact left")}</p><div class="row-links" data-act></div></div></div>`).join("") || "<p>No requests yet.</p>"}`;
+    pane.querySelectorAll("[data-k]").forEach((el) => { const k = el.dataset.k, r = d[k], act = el.querySelector("[data-act]");
+      if (/@/.test(r.contact || "")) act.append(A.btn("Reply (email)", "sm primary", () => { location.href = `/admin/marketing?type=enquiry&fresh=1&to=${encodeURIComponent(r.contact.trim())}&name=${encodeURIComponent(r.name || "")}&headline=${encodeURIComponent("your material request")}`; }));
+      else if (/\d{7}/.test(r.contact || "")) act.append(A.btn("WhatsApp", "sm", () => window.open(`https://wa.me/${r.contact.replace(/\D/g, "").replace(/^0/, "254")}`)));
+      act.append(A.btn("Delete", "sm danger", async () => { if (await A.confirm("Delete this request?")) { await A.del(`material_requests/${k}`); requests(); } })); });
+  }
+
+  async function downloads() {
+    const [log, stats, mats] = await Promise.all([A.get("download_log", false, '&orderBy="$key"&limitToLast=300'), A.get("material_stats"), A.get("materials")]).then((r) => r.map((x) => x || {}));
+    const list = A.rows(log).sort((a, b) => b.ts - a.ts);
+    const sum = Object.entries(stats).map(([s, v]) => [s, v.downloads || 0]).sort((a, b) => b[1] - a[1]);
+    pane.innerHTML = `<div class="grid2"><div><h3>Totals per material</h3><table class="tbl"><tbody>${sum.map(([s, n]) => `<tr><td>${A.esc((mats[s] || {}).title || s)}</td><td>${n}</td></tr>`).join("") || "<tr><td>No downloads yet.</td></tr>"}</tbody></table></div>
+      <div><h3>Recent downloads</h3><table class="tbl"><tbody>${list.slice(0, 60).map((l) => `<tr><td>${A.fmt(l.ts)}</td><td>${A.esc(l.title || l.material)}</td></tr>`).join("")}</tbody></table></div></div>`;
+  }
+
+  async function engagement() {
+    const [r, sh, pdf] = await Promise.all([A.get("reactions"), A.get("shares"), A.get("pdf_downloads")]).then((x) => x.map((y) => y || {}));
+    const keys = new Set([...Object.keys(r), ...Object.keys(sh), ...Object.keys(pdf)]);
+    const out = [];
+    keys.forEach((t) => { const slugs = new Set([...Object.keys(r[t] || {}), ...Object.keys(sh[t] || {}), ...Object.keys(pdf[t] || {})]); slugs.forEach((s) => { const rr = (r[t] || {})[s] || {}; out.push({ t, s, react: Object.values(rr).reduce((n, v) => n + v, 0), shares: (sh[t] || {})[s] || 0, pdf: (pdf[t] || {})[s] || 0 }); }); });
+    out.sort((a, b) => b.react + b.shares + b.pdf - (a.react + a.shares + a.pdf));
+    pane.innerHTML = `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Page</th><th>Reactions</th><th>Shares</th><th>PDF downloads</th></tr></thead><tbody>${out.map((o) => `<tr><td><a target="_blank" href="${pageUrl(o.t, o.s)}">${A.esc(o.t)}/${A.esc(o.s)}</a></td><td>${o.react}</td><td>${o.shares}</td><td>${o.pdf}</td></tr>`).join("") || "<tr><td>No engagement yet.</td></tr>"}</tbody></table></div>`;
+  }
+  async function chatbot() {
+    const [cfg, un, st, fb] = await Promise.all([A.get("chatbot_config"), A.get("chat_unanswered"), A.get("chat_stats"), A.get("chat_feedback", false, '&orderBy="$key"&limitToLast=40')]).then((r) => r.map((x) => x || {}));
+    const chips = Array.isArray(cfg.chips) ? cfg.chips : Object.values(cfg.chips || {});
+    const groups = {}; A.rows(un).forEach((u) => { const k = (u.q || "").toLowerCase().trim(); (groups[k] = groups[k] || { q: u.q, n: 0, keys: [], ts: 0 }); groups[k].n++; groups[k].keys.push(u._key); groups[k].ts = Math.max(groups[k].ts, u.ts); });
+    const list = Object.values(groups).sort((a, b) => b.n - a.n || b.ts - a.ts);
+    pane.innerHTML = `<div class="cards"><div class="stat"><b>${st.total || 0}</b><span>messages</span></div><div class="stat"><b>${st.answered || 0}</b><span>answered</span></div><div class="stat"><b>${st.unanswered || 0}</b><span>unanswered</span></div><div class="stat"><b>${st.up || 0} / ${st.down || 0}</b><span>👍 / 👎</span></div><div class="stat"><b>${st.leads || 0}</b><span>leads sent to Messages</span></div><div class="stat"><b>${st.voice || 0}</b><span>voice questions</span></div></div>
+      <h3>What people ask for</h3><p class="hint">How often each kind of question came up.</p><div class="chips">${Object.entries(st).filter(([k]) => k.startsWith("i_")).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<span class="pill">${A.esc(k.slice(2))}: ${v}</span>`).join(" ") || "<span class=hint>Nothing yet.</span>"}</div>
+      <div class="grid2"><div>
+        <h3>Unanswered questions</h3><p class="hint">Turn a question into an FAQ answer, or dismiss it.</p>
+        <table class="tbl"><tbody id="ul">${list.map((g, i) => `<tr data-i="${i}"><td>${A.esc(g.q)}<br><span class="hint">asked ${g.n}× · ${A.fmt(g.ts)}</span></td><td class="act"></td></tr>`).join("") || "<tr><td>None 🎉</td></tr>"}</tbody></table></div>
+      <div><h3>Bot settings</h3>
+        <div class="field"><label><input type="checkbox" id="cb_on" style="width:auto" ${cfg.enabled === false ? "" : "checked"}> Chatbot enabled</label></div>
+        <div class="field"><label><input type="checkbox" id="cb_gr" style="width:auto" ${cfg.greeting === false ? "" : "checked"}> Greeting bubble (shows once per visit)</label></div>
+        <div class="field"><label><input type="checkbox" id="cb_sp" style="width:auto" ${cfg.sponsor === false ? "" : "checked"}> Occasional labelled sponsored suggestion</label></div>
+        <div class="field"><label><input type="checkbox" id="cb_ld" style="width:auto" ${cfg.lead === false ? "" : "checked"}> Offer to pass unanswered questions to Messages</label></div>
+        <div class="field"><label>Name in title bar</label><input id="cb_name" value="${A.esc(cfg.name || "ASK-EZRA.EXE")}"></div>
+        <div class="field"><label>Welcome message</label><textarea id="cb_wel" rows="3">${A.esc(cfg.welcome || "")}</textarea></div>
+        <div class="field"><label>Reply when nothing is found</label><textarea id="cb_fb" rows="2">${A.esc(cfg.fallback || "")}</textarea></div>
+        <div class="field"><label>Quick-reply chips (one per line)</label><textarea id="cb_chips" rows="5">${A.esc(chips.join("\n"))}</textarea></div>
+        <button class="btn primary" id="cb_save" type="button">Save settings</button></div></div>
+      <h3>FAQ answers</h3><p class="hint">Keywords are matched against what people type (typos and Swahili synonyms are handled). Use {age} for Ezra's age.</p><div id="faq"></div>
+      <h3>Recent feedback</h3><table class="tbl"><tbody>${A.rows(fb).sort((a, b) => b.ts - a.ts).map((f) => `<tr><td>${f.v > 0 ? "👍" : "👎"}</td><td>${A.esc(f.q)}</td><td class="hint">${A.esc(f.a)} · ${A.fmt(f.ts)}</td></tr>`).join("") || "<tr><td>No feedback yet.</td></tr>"}</tbody></table>`;
+    pane.querySelectorAll("#ul tr[data-i]").forEach((tr) => { const g = list[tr.dataset.i]; tr.querySelector(".act").append(
+      A.btn("Make FAQ", "sm primary", async () => { const kw = prompt("Keywords people use (comma separated):", g.q); if (!kw) return; const ans = prompt("Answer the bot should give:"); if (!ans) return; await A.push("chatbot_faq", { keywords: kw.split(",").map((s) => s.trim()).filter(Boolean), answer: ans }); await Promise.all(g.keys.map((k) => A.del("chat_unanswered/" + k))); A.toast("FAQ added"); chatbot(); }),
+      A.btn("Dismiss", "sm", async () => { await Promise.all(g.keys.map((k) => A.del("chat_unanswered/" + k))); chatbot(); })); });
+    document.getElementById("cb_save").onclick = async () => { await A.set("chatbot_config", { enabled: document.getElementById("cb_on").checked, greeting: document.getElementById("cb_gr").checked, sponsor: document.getElementById("cb_sp").checked, lead: document.getElementById("cb_ld").checked, name: document.getElementById("cb_name").value.trim(), welcome: document.getElementById("cb_wel").value.trim(), fallback: document.getElementById("cb_fb").value.trim(), chips: document.getElementById("cb_chips").value.split("\n").map((s) => s.trim()).filter(Boolean) }); A.toast("Saved ✓"); };
+    A.crud(document.getElementById("faq"), { node: "chatbot_faq", title: "FAQ answer", search: ["answer"], sort: () => 0, columns: [{ key: "keywords", label: "Keywords" }, { key: "answer", label: "Answer" }], fields: [{ key: "keywords", label: "Keywords", type: "tags", required: true, wide: true }, { key: "answer", label: "Answer", type: "textarea", required: true, wide: true }] });
+  }
+  const map = { messages, comments, newsletter, requests, downloads, engagement, chatbot };
+  A.tabs(document.getElementById("tabs"), [["messages", "Messages"], ["comments", "Comments"], ["newsletter", "Newsletter"], ["requests", "Requests"], ["downloads", "Downloads"], ["engagement", "Engagement"], ["chatbot", "Chatbot"]], (k) => map[k]());
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# This file is required by Google AdSense once you have a publisher account.
+# Replace pub-0000000000000000 below with your real AdSense Publisher ID
+# (find it in your AdSense account under Account → Account information).
+#
+# Until you apply for and get approved for AdSense, this file has no effect —
+# it's just sitting here ready for that one-line edit.
+google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

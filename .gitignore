@@ -1,0 +1,17 @@
+# secrets
+.env
+.env.*
+
+# dependencies and caches
+node_modules/
+__pycache__/
+*.pyc
+
+# editor / OS noise
+*.log
+*.swp
+*~
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

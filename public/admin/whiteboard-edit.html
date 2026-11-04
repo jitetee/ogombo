@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whiteboard editor — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+<link rel="stylesheet" href="/css/wb.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1rem"><span class="kicker">WHITEBOARD.EXE</span><h1>Editor</h1><p class="hint">Drag assets onto the board, move and resize them, and set what the voice says for each scene. Changes save by themselves.</p></section>
+<div id="nav"></div>
+<div class="wb-row" id="top"></div>
+<div class="wb">
+  <div class="wb-side" id="assets"></div>
+  <div>
+    <div class="wb-stagebox" id="stagebox"><canvas id="cv"></canvas><canvas id="ov"></canvas></div>
+    <div class="wb-row"><button class="btn sm primary" id="play" type="button">Play</button><input type="range" id="seek" min="0" max="1000" value="0" style="flex:1;min-width:80px"><span class="mono wb-note" id="tm">0:00</span></div>
+    <div class="wb-strip" id="strip"></div>
+    <div class="wb-tl" id="tl"></div>
+  </div>
+  <div class="wb-side wb-ed" id="insp"></div>
+</div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/video/whiteboard.js"></script>
+<script src="/js/video/wb-script.js"></script>
+<script src="/js/video/polish.js"></script>
+<script src="/js/video/tts.js"></script>
+<script src="/js/wb/store.js"></script>
+<script src="/js/wb/common.js"></script>
+<script src="/js/wb/audio.js"></script>
+<script src="/admin/admin.js"></script>
+<script src="/js/wb/editor.js"></script>
+</body>
+</html>

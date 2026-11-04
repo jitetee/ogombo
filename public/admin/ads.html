@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ads — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">ADS.EXE</span><h1>Ads &amp; sponsors</h1></section>
+<div id="tabs"></div><div id="pane"></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/ads.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("ads");
+  const E = A.esc, $ = (s, r) => (r || document).querySelector(s), pane = $("#pane");
+  const TYPES = EO_ADS.TYPES, tl = (k) => (TYPES.find((t) => t.key === k) || { label: k }).label;
+  const today = A.today();
+  const addDays = (d, n) => new Date(new Date(d + "T00:00:00Z").getTime() + n * 864e5).toISOString().slice(0, 10);
+  const kes = (n) => "KES " + Number(n || 0).toLocaleString("en-KE");
+  const asObj = (x) => (Array.isArray(x) ? Object.fromEntries(x.map((v, i) => [String(i), v]).filter(([, v]) => v)) : x || {});
+  const arr = (x) => (Array.isArray(x) ? x : Object.values(x || {}));
+  const D = { ads: {}, reqs: {}, pk: {}, set: {}, sponsors: {}, stats: null, pages: null };
+  async function load() {
+    const r = await Promise.all(["ads", "sponsor_requests", "ad_packages", "ad_settings", "sponsors", "ad_coupons", "sponsor_fulfil", "ad_templates", "sponsor_notes", "ad_pause"].map((p) => A.get(p).catch(() => null)));
+    D.ads = asObj(r[0]); D.reqs = asObj(r[1]); D.pk = asObj(r[2]); D.set = r[3] || {}; D.sponsors = asObj(r[4]); D.coupons = asObj(r[5]); D.ful = asObj(r[6]); D.tpl = asObj(r[7]); D.notes = asObj(r[8]); D.pause = asObj(r[9]); D.stats = null; D.pages = null;
+  }
+  const getStats = async () => D.stats || (D.stats = asObj(await A.get("ad_stats")));
+  const state = (a) => (String(a.active).toLowerCase() === "no" || a.active === false ? "off" : a.start && a.start > today ? "scheduled" : a.end && a.end < today ? "expired" : "live");
+  const reqState = (r) => (r.status === "live" && r.end && r.end < today ? "expired" : r.status);
+  const chips = (list) => `<span class="chips">${list.map((t) => `<span class="chip">${E(tl(t))}</span>`).join("")}</span>`;
+  const wa = (phone, text) => { let n = String(phone || "").replace(/\D/g, ""); if (n.startsWith("0")) n = "254" + n.slice(1); return n ? `https://wa.me/${n}?text=${encodeURIComponent(text || "")}` : ""; };
+  const MSG_DEF = {
+    paid: "Hello {name}, we received your payment for request {id}. We are verifying it and will switch your ad on within 24 hours.",
+    live: "Hello {name}, your ad \"{ad}\" is now live until {end}. You can follow views and clicks in your sponsor dashboard. Thank you!",
+    pics: "Hello {name}, please send the pictures for your ad request {id} here on WhatsApp so we can add them to your ads.",
+    notfound: "Hello {name}, we could not find your payment for request {id}. Please check the M-Pesa code and send it again in your dashboard.",
+    expiring: "Hello {name}, your ad \"{ad}\" ends on {end}. Reply here if you would like to renew or extend it.",
+    rejected: "Hello {name}, sorry, we cannot run the ad for request {id}. {note}",
+  };
+  const MSG_LABEL = { paid: "Payment received", live: "Ad is live", pics: "Please send pictures", notfound: "Payment not found", expiring: "Expiring soon / renew", rejected: "Request rejected" };
+  const waText = (key, r, rid) => String((D.set.wa && D.set.wa[key]) || MSG_DEF[key] || "").replace(/\{(\w+)\}/g, (_, k) => { const v = { name: String(r.sponsor_name || "").split(" ")[0] || "there", id: rid, ad: (r.ad && r.ad.headline) || "", end: r.end || "", amount: kes(r.price), note: r.admin_note || "" }[k]; return v == null ? "" : v; }).replace(/\s+$/, "");
+  const waFor = (key, rid, r) => wa(r.sponsor_phone, waText(key, r, rid));
+  const bannedList = () => String(D.set.banned || "").toLowerCase().split(/[\n,;]+/).map((x) => x.trim()).filter(Boolean);
+  const creativesOfR = (r) => [r.ad].concat(Array.from({ length: 14 }, (_, i) => (r.more_ads || {})["a" + (i + 2)])).filter(Boolean);
+  let availJson = "";
+  // public "booked" ranges so sponsors can see which dates are taken (only campaigns that are live / scheduled)
+  async function publishAvailability() {
+    const out = {};
+    Object.values(D.reqs).forEach((r) => {
+      if (!["live", "edit_submitted"].includes(r.status) || !r.start || !r.end || r.end < today) return;
+      String(r.placements || "").split(",").map((x) => x.trim()).filter(Boolean).forEach((t) => { (out[t] = out[t] || []).push({ s: r.start, e: r.end }); });
+    });
+    D.avail = out;
+    const j = JSON.stringify(out); if (j === availJson) return; availJson = j;
+    try { await A.set("ad_availability", Object.keys(out).length ? out : null); } catch {}
+  }
+  const field = (label, inner, wide, help) => `<div class="field" ${wide ? 'style="grid-column:1/-1"' : ""}><label>${label}</label>${inner}${help ? `<small>${help}</small>` : ""}</div>`;
+  const btn = (l, c, f) => A.btn(l, c, f);
+
+  // shrink a picked image to a small JPEG data URL (<150 KB) for the database
+  const imgToData = (file) => new Promise((resolve, reject) => {
+    if (!/^image\//.test(file.type)) return reject(new Error("Pick an image file."));
+    const url = URL.createObjectURL(file), im = new Image();
+    im.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Could not read that image.")); };
+    im.onload = () => {
+      URL.revokeObjectURL(url); let w = Math.min(900, im.naturalWidth), q = 0.85;
+      for (let i = 0; i < 14; i++) {
+        const h = Math.round(im.naturalHeight * (w / im.naturalWidth)), c = document.createElement("canvas"); c.width = w; c.height = h;
+        const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, w, h); x.drawImage(im, 0, 0, w, h);
+        const u = c.toDataURL("image/jpeg", q); if (u.length < 150000) return resolve(u);
+        if (q > 0.5) q -= 0.1; else w = Math.round(w * 0.8);
+      }
+      reject(new Error("That image is too detailed to shrink."));
+    };
+    im.src = url;
+  });
+  async function resolveImg(v) {
+    v = String(v || "");
+    if (v.startsWith("db:")) return (await A.get("ad_images/" + v.slice(3))) || "";
+    if (v.startsWith("dbp:")) return (await A.get("ad_images_pending/" + v.slice(4))) || "";
+    return v;
+  }
+  const clip = (s, n) => String(s || "").slice(0, n);
+
+  // =====================================================================
+  // revenue rows from verified sponsor payments, extensions and direct deals
+  function revenueRows() {
+    const rows = [], day = (ts) => new Date(ts).toISOString().slice(0, 10);
+    Object.entries(D.reqs).forEach(([rid, r]) => {
+      const who = r.sponsor_name || r.sponsor_email || "";
+      if (r.payment && r.payment.status === "verified") rows.push({ date: day(r.verified_at || r.updated || r.created), sponsor: who, amount: Number(r.price) || 0, kind: "package", ref: r.package_name || "", ad: r.ad_id || "" });
+      arr(r.extensions).forEach((x) => rows.push({ date: day(x.ts), sponsor: who, amount: Number(x.amount) || 0, kind: "extension", ref: `+${x.days} days`, ad: r.ad_id || "" }));
+    });
+    Object.entries(D.ads).forEach(([id, a]) => { if (!a.request && Number(a.price_paid) > 0) rows.push({ date: a.paid_on || a.start || today, sponsor: a.sponsor_name || "", amount: Number(a.price_paid), kind: "direct deal", ref: a.headline, ad: id }); });
+    return rows.sort((a, b) => b.date.localeCompare(a.date));
+  }
+  const earnedBy = () => { const m = {}; revenueRows().forEach((r) => { if (r.ad) m[r.ad] = (m[r.ad] || 0) + r.amount; }); return m; };
+
+  // =====================================================================
+  // add / edit an ad
+  function adForm(key, existing, after) {
+    const a = Object.assign({ headline: "", body: "", cta: "Learn more", link: "", accent: "green", sponsor: "", placement: "header", active: "yes", start: "", end: "" }, existing || {});
+    const cur = new Set(EO_ADS.placesOf(a));
+    const form = document.createElement("div");
+    form.innerHTML = `<div class="grid2">
+      ${field("Headline *", `<input id="a_headline" maxlength="80" value="${E(a.headline)}">`, true)}
+      ${field("Text", `<textarea id="a_body" rows="2" maxlength="220">${E(a.body || "")}</textarea>`, true)}
+      ${field("Link * (https://… or /page)", `<input id="a_link" maxlength="300" value="${E(a.link)}">`)}
+      ${field("Button text", `<input id="a_cta" maxlength="24" value="${E(a.cta || "")}">`)}
+      ${field("Small label", `<input id="a_sponsor" maxlength="30" value="${E(a.sponsor || "")}" placeholder="Ad / Sponsored / Socials">`)}
+      ${field("Colour", `<select id="a_accent">${["green", "amber", "magenta"].map((c) => `<option ${a.accent === c ? "selected" : ""}>${c}</option>`).join("")}</select>`)}
+      ${field("Active", `<select id="a_active"><option ${state(a) !== "off" ? "selected" : ""} value="yes">yes — shown</option><option ${state(a) === "off" ? "selected" : ""} value="no">no — hidden</option></select>`)}
+      <div></div>
+      ${field("Only beside posts tagged… (optional)", `<input id="a_tags" maxlength="120" value="${E(a.tags || "")}" placeholder="e.g. nursing, theatre">`, false, "Comma-separated post tags. Leave empty to show everywhere. Not applied to header, footer and text links.")}<div></div>
+      ${field("Custom colour (optional)", `<input id="a_color" maxlength="7" value="${E(a.color || "")}" placeholder="#12a4ff">`, false, "A hex colour like #12a4ff. Overrides the colour above.")}
+      ${field("Pin to the front", `<select id="a_pin"><option value="no">no</option><option value="yes" ${a.pin === true || a.pin === "yes" ? "selected" : ""}>yes — first in the rotation</option></select>`)}
+      ${field("Only on these days (Kenya time)", `<div class="plgrid">${["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map((d, i) => `<label><input type="checkbox" data-dow="${i}" ${String(a.days_of_week == null ? "" : a.days_of_week).split(",").includes(String(i)) ? "checked" : ""}> ${d}</label>`).join("")}</div>`, true, "Leave all unticked for every day.")}
+      ${field("From hour (0–23)", `<input id="a_hf" type="number" min="0" max="24" value="${E(a.hour_from == null ? "" : a.hour_from)}">`)}
+      ${field("To hour (1–24)", `<input id="a_ht" type="number" min="0" max="24" value="${E(a.hour_to == null ? "" : a.hour_to)}">`, false, "e.g. 18 to 23 = evenings only.")}
+      ${field("A/B test group (optional)", `<input id="a_ab" maxlength="30" value="${E(a.ab || "")}" placeholder="e.g. rcb-headline">`, true, "Give two or more ads the same group name: each visitor sees only one of them. Compare them in Analytics → A/B tests.")}
+      ${field("WhatsApp lead number (optional)", `<input id="a_leadwa" maxlength="20" value="${E(a.lead_wa || "")}" placeholder="07xx xxx xxx">`, false, "The button opens a WhatsApp chat; taps are counted as leads.")}
+      ${field("Show only to… (language)", `<select id="a_lang"><option value="">everyone</option><option value="sw" ${a.lang === "sw" ? "selected" : ""}>Swahili browsers</option><option value="en" ${a.lang === "en" ? "selected" : ""}>English browsers</option></select>`)}
+      ${field("Show only to… (country)", `<select id="a_geo"><option value="">everyone</option><option value="ke" ${a.geo === "ke" ? "selected" : ""}>visitors in Kenya</option><option value="intl" ${a.geo === "intl" ? "selected" : ""}>visitors outside Kenya</option></select>`, false, "Detected from the visitor's phone time zone and language. Nothing is stored.")}
+      ${field("Start date (optional)", `<input id="a_start" type="date" value="${E(a.start || "")}">`)}
+      ${field("End date (optional)", `<input id="a_end" type="date" value="${E(a.end || "")}">`)}
+    </div>
+    <label>Where it shows *</label>
+    <div class="plgrid">${TYPES.map((t) => `<label title="${E(t.desc)}"><input type="checkbox" data-pl="${t.key}" ${cur.has(t.key) ? "checked" : ""}> ${E(t.label)}</label>`).join("")}</div>
+    <div class="grid2">
+      ${field("Picture path / link", `<input id="a_img" value="${E(/^db:/.test(a.image || "") ? "" : a.image || "")}" placeholder="/assets/ads/pic.jpg or https://…"><small>Upload the file into <code>assets/ads/</code> (no database storage), redeploy, then paste its path. <br><label style="display:inline"><input type="checkbox" id="a_noimg" style="width:auto"> remove picture</label></small>`)}
+      ${field("Advertiser (for your records)", `<input id="a_spname" value="${E(a.sponsor_name || "")}">`)}
+      ${field("Amount paid (KES)", `<input id="a_price" type="number" min="0" value="${E(a.price_paid || "")}">`, false, "For deals you made yourself. Counts in the revenue report.")}
+      ${field("Paid on", `<input id="a_paid" type="date" value="${E(a.paid_on || "")}">`)}
+      ${field("Private notes", `<input id="a_notes" value="${E(a.notes || "")}">`)}
+    </div>
+    <div class="toolbar" style="margin-top:.6rem"><select id="a_tpl"><option value="">Load a template…</option>${Object.entries(D.tpl || {}).map(([k, t]) => `<option value="${E(k)}">${E(t.name)}</option>`).join("")}</select><button class="btn sm" id="a_savetpl" type="button">Save as template</button></div>
+    <div id="a_prev"></div>`;
+    const prev = async () => {
+      const pls = [...form.querySelectorAll("[data-pl]:checked")].map((c) => c.dataset.pl);
+      const ad = { headline: $("#a_headline", form).value, body: $("#a_body", form).value, cta: $("#a_cta", form).value || "Learn more", link: "#", accent: $("#a_accent", form).value, sponsor: $("#a_sponsor", form).value || "Ad", image: fileData || $("#a_img", form).value || (existingImg && !$("#a_noimg", form).checked ? existingImg : "") };
+      const seen = new Set();
+      $("#a_prev", form).innerHTML = "<h3>Preview</h3>" + pls.map((t) => { const f = (TYPES.find((x) => x.key === t) || {}).fmt; if (seen.has(f)) return ""; seen.add(f); return `<div class="prev-box"><span class="hint">${E(tl(t))}</span>${EO_ADS.previewHTML(ad, t)}</div>`; }).join("");
+    };
+    let fileData = "", existingImg = "";
+    if (a.image && /^db/.test(a.image)) resolveImg(a.image).then((u) => { existingImg = u; prev(); });
+    else if (a.image) existingImg = a.image;
+    form.addEventListener("input", prev); form.addEventListener("change", prev); prev();
+    const TPLK = ["headline", "body", "cta", "link", "accent", "sponsor", "placement", "tags", "color", "days_of_week", "hour_from", "hour_to"];
+    $("#a_tpl", form).onchange = (e) => {
+      const t = (D.tpl || {})[e.target.value]; if (!t) return;
+      const set = (id, v) => { $("#" + id, form).value = v == null ? "" : v; };
+      set("a_headline", t.headline); set("a_body", t.body); set("a_cta", t.cta); set("a_link", t.link); set("a_accent", t.accent || "green"); set("a_sponsor", t.sponsor); set("a_tags", t.tags); set("a_color", t.color); set("a_hf", t.hour_from); set("a_ht", t.hour_to);
+      const pl = new Set(EO_ADS.placesOf(t)); form.querySelectorAll("[data-pl]").forEach((c) => (c.checked = pl.has(c.dataset.pl)));
+      form.querySelectorAll("[data-dow]").forEach((c) => (c.checked = String(t.days_of_week == null ? "" : t.days_of_week).split(",").includes(c.dataset.dow)));
+      prev();
+    };
+    $("#a_savetpl", form).onclick = async () => {
+      const name = prompt("Template name?"); if (!name) return;
+      const g = (id) => $("#" + id, form).value.trim();
+      const t = { name: clip(name, 40), headline: g("a_headline"), body: g("a_body"), cta: g("a_cta"), link: g("a_link"), accent: g("a_accent"), sponsor: g("a_sponsor"), placement: [...form.querySelectorAll("[data-pl]:checked")].map((c) => c.dataset.pl).join(","), tags: g("a_tags"), color: g("a_color"), hour_from: g("a_hf"), hour_to: g("a_ht"), days_of_week: [...form.querySelectorAll("[data-dow]:checked")].map((c) => c.dataset.dow).join(",") };
+      Object.keys(t).forEach((k) => { if (t[k] === "") delete t[k]; });
+      try { const id = "t" + Date.now().toString(36); await A.set("ad_templates/" + id, t); D.tpl = Object.assign({}, D.tpl, { [id]: t }); A.toast("Template saved ✓"); } catch (e) { A.toast(e.message, true); }
+    };
+    const save = btn("Save", "primary"), cancel = btn("Cancel");
+    const m = A.modal(key ? "Edit ad" : "New ad", form, [cancel, save], true);
+    cancel.onclick = m.close;
+    save.onclick = async () => {
+      const v = (id) => $("#" + id, form).value.trim();
+      const pls = [...form.querySelectorAll("[data-pl]:checked")].map((c) => c.dataset.pl);
+      if (!v("a_headline")) return A.toast("Headline is required", true);
+      if (!/^(https?:\/\/|\/)\S+/i.test(v("a_link"))) return A.toast("Link must start with https:// or /", true);
+      if (!pls.length) return A.toast("Tick at least one place for the ad to show", true);
+      const id = key || (A.slugify(v("a_headline")).slice(0, 40) || "ad") + "-" + Date.now().toString(36).slice(-4);
+      const rec = Object.assign({}, existing || {}, { headline: v("a_headline"), body: v("a_body"), cta: v("a_cta"), link: v("a_link"), accent: v("a_accent"), sponsor: v("a_sponsor"), placement: pls.join(","), active: v("a_active"), start: v("a_start"), end: v("a_end"), tags: v("a_tags").toLowerCase(), color: v("a_color"), ab: v("a_ab"), lead_wa: v("a_leadwa").replace(/[^\d+]/g, ""), lang: v("a_lang"), geo: v("a_geo"), pin: v("a_pin") === "yes", days_of_week: [...form.querySelectorAll("[data-dow]:checked")].map((c) => c.dataset.dow).join(","), hour_from: v("a_hf") === "" ? "" : Math.max(0, Math.min(24, Math.round(Number(v("a_hf"))))), hour_to: v("a_ht") === "" ? "" : Math.max(0, Math.min(24, Math.round(Number(v("a_ht"))))), sponsor_name: v("a_spname"), paid_on: v("a_paid"), notes: v("a_notes") });
+      const price = Number(v("a_price")); if (price > 0) rec.price_paid = price; else delete rec.price_paid;
+      ["body", "cta", "sponsor", "start", "end", "tags", "sponsor_name", "paid_on", "notes", "color", "ab", "days_of_week", "hour_from", "hour_to", "lead_wa", "lang", "geo"].forEach((k) => { if (rec[k] === "" || rec[k] == null || rec[k] === false) delete rec[k]; });
+      if (rec.color && !/^#[0-9a-fA-F]{6}$/.test(rec.color)) return A.toast("Custom colour must look like #12a4ff", true);
+      if (!rec.pin) delete rec.pin;
+      save.disabled = true;
+      try {
+        if ($("#a_noimg", form).checked) delete rec.image;
+        else if (v("a_img")) rec.image = A.driveImg(v("a_img"));
+        delete rec._key; delete rec.id; rec.id = id;
+        await A.set("ads/" + id, rec);
+        if (rec.request) await A.update("sponsor_requests/" + rec.request, { ad: { headline: clip(rec.headline, 80), body: clip(rec.body, 220), cta: clip(rec.cta, 24), link: clip(rec.link, 300), image: clip(rec.image, 600), accent: rec.accent, sponsor: clip(rec.sponsor, 30), wa: rec.lead_wa ? clip(rec.lead_wa, 20) : null }, updated: Date.now() }).catch(() => {});
+        m.close(); A.toast("Saved ✓"); await after();
+      } catch (e) { A.toast("Save failed: " + e.message, true); save.disabled = false; }
+    };
+  }
+
+  // =====================================================================
+  // per-ad metrics popup
+  async function adMetrics(id) {
+    const a = D.ads[id] || { headline: id };
+    const days = asObj((await getStats())[id]);
+    const pages = asObj(await A.get("ad_pages/" + id));
+    const box = document.createElement("div");
+    const m = A.modal("Results — " + a.headline, box, null, true);
+    const draw = (from) => {
+      const to = today, sm = EO_ADS.summarize(days, from, to), earned = earnedBy()[id] || 0;
+      const row = (k, v) => `<tr><td>${E(k)}</td><td>${v.v}</td><td>${v.c}</td><td>${v.v ? (v.c / v.v * 100).toFixed(2) : "0.00"}%</td></tr>`;
+      const pg = Object.entries(pages).sort((x, y) => (y[1].v || 0) - (x[1].v || 0)).slice(0, 10);
+      box.innerHTML = `<div class="toolbar"><select id="rg"><option value="${addDays(today, -6)}">Last 7 days</option><option value="${addDays(today, -29)}">Last 30 days</option><option value="${addDays(today, -89)}">Last 90 days</option><option value="${Object.keys(days).sort()[0] || today}">All time</option></select></div>
+        <div class="cards"><div class="stat"><b>${sm.v}</b><span>Views</span></div><div class="stat"><b>${sm.c}</b><span>Clicks</span></div><div class="stat"><b>${sm.ctr.toFixed(2)}%</b><span>CTR</span></div><div class="stat"><b>${sm.u}</b><span>Unique viewers (daily)</span></div>${sm.ld ? `<div class="stat"><b>${sm.ld}</b><span>WhatsApp chats started</span></div>` : ""}${sm.x ? `<div class="stat"><b>${sm.x}</b><span>Hid this ad</span></div>` : ""}<div class="stat"><b>${kes(earned)}</b><span>Earned</span></div><div class="stat"><b>${sm.v && earned ? kes(earned / sm.v * 1000) : "—"}</b><span>eCPM</span></div></div>
+        ${EO_ADS.chartSVG(sm.byDay)}
+        <div class="grid2"><div><h3>By spot</h3><table class="tbl"><thead><tr><th>Spot</th><th>Views</th><th>Clicks</th><th>CTR</th></tr></thead><tbody>${Object.entries(sm.byPl).map(([k, v]) => row(tl(k), v)).join("") || '<tr><td colspan="4" class="hint">No data yet.</td></tr>'}</tbody></table></div>
+        <div><h3>Devices</h3><table class="tbl"><thead><tr><th>Device</th><th>Views</th><th>Clicks</th><th>CTR</th></tr></thead><tbody>${row("Phone", sm.byDev.m)}${row("Computer / tablet", sm.byDev.d)}</tbody></table>
+        <h3>Top pages (all time)</h3><table class="tbl"><tbody>${pg.map(([k, v]) => `<tr><td class="mono">${E(k)}</td><td>${v.v || 0} v</td><td>${v.c || 0} c</td></tr>`).join("") || '<tr><td class="hint">No data yet.</td></tr>'}</tbody></table></div></div>`;
+      $("#rg", box).value = from; $("#rg", box).onchange = (e) => draw(e.target.value);
+    };
+    draw(addDays(today, -29));
+  }
+
+  // =====================================================================
+  // publish / approve / pause helpers for sponsor requests
+  const SOCN = { facebook: "Facebook", instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" };
+  const creativesOf = (r) => [r.ad].concat(Array.from({ length: 14 }, (_, i) => (r.more_ads || {})["a" + (i + 2)])).filter(Boolean);
+  const idFor = (base, i) => (i === 0 ? base : base + "-" + (i + 1));
+  const reqAds = (rid) => Object.keys(D.ads).filter((k) => D.ads[k].request === rid);
+  const adFromC = (r, c, image) => Object.assign({ headline: c.headline, body: c.body || "", cta: c.cta || "Learn more", link: c.link, accent: c.accent || "green", sponsor: c.sponsor || "Sponsored", image: image || "" }, c.wa ? { lead_wa: c.wa } : {});
+  const okImg = (v) => !v || /^(https:\/\/|\/)[^\s]+$/.test(v);
+  // save pictures + social post links typed in the review window; also updates ads that are already live
+  async function saveFulfil(rid, r, box) {
+    const images = {}, socials = {};
+    box.querySelectorAll("[data-img]").forEach((i) => { const v = i.value.trim(); if (v) { if (!okImg(v)) throw new Error("Picture path must start with / or https://"); images[i.dataset.img] = v.slice(0, 300); } });
+    box.querySelectorAll("[data-soc]").forEach((i) => { const v = i.value.trim(); if (v) socials[i.dataset.soc] = v.slice(0, 300); });
+    const rec = {}; if (Object.keys(images).length) rec.images = images; if (Object.keys(socials).length) rec.socials = socials;
+    await A.set("sponsor_fulfil/" + rid, Object.keys(rec).length ? rec : null);
+    const base = r.ad_id || "sp-" + rid;
+    for (let i = 0; i < creativesOf(r).length; i++) { const id = idFor(base, i); if (D.ads[id]) await A.update("ads/" + id, { image: images["a" + (i + 1)] || null }); }
+    return images;
+  }
+  async function publish(rid, r, start, days, images) {
+    const base = r.ad_id || "sp-" + rid, end = addDays(start, days - 1), cr = creativesOf(r);
+    for (let i = 0; i < cr.length; i++) {
+      const id = idFor(base, i), image = (images || {})["a" + (i + 1)] || (D.ads[id] || {}).image || "";
+      const rec = Object.assign(adFromC(r, cr[i], image), { id, placement: r.placements, active: "yes", start, end, owner: r.owner, request: rid, sponsor_name: r.sponsor_name || "", price_paid: i === 0 ? Number(r.price) || 0 : 0, paid_on: today });
+      if (Object.keys(r.addons || {}).some((k) => (((D.pk[r.package] || {}).addons || {})[k] || {}).effect === "pin")) rec.pin = true;
+      if (!rec.image) delete rec.image;
+      await A.set("ads/" + id, rec);
+    }
+    await A.update("sponsor_requests/" + rid, { status: "live", ad_id: base, start, end, verified_at: Date.now(), published_at: Date.now(), admin_note: "", "payment/status": "verified", updated: Date.now() });
+  }
+  async function approveEdit(rid, r) {
+    const base = r.ad_id, cr = creativesOf(r), first = D.ads[base] || {};
+    for (let i = 0; i < cr.length; i++) {
+      const id = idFor(base, i), cur = D.ads[id] || Object.assign({}, first, { id, price_paid: 0 });
+      const rec = Object.assign({}, cur, adFromC(r, cr[i], cur.image)); if (!rec.image) delete rec.image;
+      await A.set("ads/" + id, rec);
+    }
+    for (const id of reqAds(rid)) { const m = id.match(/-(\d+)$/); if (m && Number(m[1]) > cr.length) await A.del("ads/" + id); }
+    await A.update("sponsor_requests/" + rid, { status: "live", admin_note: "", updated: Date.now() });
+  }
+
+  async function review(rid, after) {
+    const r = D.reqs[rid]; if (!r) return;
+    const st = reqState(r), p = r.payment || {};
+    const box = document.createElement("div");
+    const F = (await A.get("sponsor_fulfil/" + rid)) || {}, fi = F.images || {}, fs = F.socials || {};
+    const cr = creativesOf(r), socs = String(r.socials || "").split(",").map((x) => x.trim()).filter(Boolean);
+    const adv = Object.assign({}, r.ad, { image: fi.a1 || "" });
+    const places = String(r.placements || "").split(",").filter(Boolean);
+    const live = r.ad_id ? D.ads[r.ad_id] : null;
+    const seen = new Set();
+    box.innerHTML = `<div class="grid2"><div>
+      <dl class="kv"><dt>Status</dt><dd>${A.pill(st)}</dd><dt>Sponsor</dt><dd>${E(r.sponsor_name || "")}<br><span class="hint">${E(r.sponsor_email || "")} · ${E(r.sponsor_phone || "")}</span></dd>
+      <dt>Package</dt><dd>${E(r.package_name || r.package)}<br><span class="hint">${kes(r.price)} · ${E(r.days)} days · ${cr.length}/${E(r.max_ads || cr.length)} ads</span></dd><dt>Spots</dt><dd>${chips(places)}</dd>
+      ${r.coupon ? `<dt>Coupon</dt><dd class="mono">${E(r.coupon)}</dd>` : ""}<dt>Preferred start</dt><dd>${E(r.preferred_start || "—")}</dd>${r.start ? `<dt>Running</dt><dd>${E(r.start)} → ${E(r.end)}</dd>` : ""}
+      <dt>Requested</dt><dd>${A.fmt(r.created)}</dd></dl>
+      <h3>Payment</h3>${p.code ? `<dl class="kv"><dt>Status</dt><dd>${A.pill(p.status)}</dd><dt>Method</dt><dd>${E(p.method)}</dd><dt>Code</dt><dd class="mono"><strong>${E(p.code)}</strong></dd><dt>Amount</dt><dd>${kes(p.amount)} ${Number(p.amount) !== Number(r.price) ? `<span class="pill rejected">expected ${kes(r.price)}</span>` : ""}</dd><dt>From</dt><dd>${E(p.phone || "—")}</dd><dt>Note</dt><dd>${E(p.note || "—")}</dd><dt>Sent</dt><dd>${A.fmt(p.submitted)}</dd></dl>` : `<p class="hint">No payment details sent yet.</p>`}
+      ${r.admin_note ? `<div class="note"><strong>Note to sponsor:</strong> ${E(r.admin_note)}</div>` : ""}
+      ${arr(r.extensions).length ? `<h3>Extensions</h3><ul>${arr(r.extensions).map((x) => `<li>+${E(x.days)} days · ${kes(x.amount)} · ${A.fmt(x.ts)}</li>`).join("")}</ul>` : ""}
+      </div><div><h3>Ad</h3>${places.map((t) => { const f = (TYPES.find((x) => x.key === t) || {}).fmt; if (seen.has(f)) return ""; seen.add(f); return `<div class="prev-box"><span class="hint">${E(tl(t))}</span>${EO_ADS.previewHTML(adv, t)}</div>`; }).join("")}
+      <p class="mono hint">Link: <a href="${E(r.ad.link)}" target="_blank" rel="noopener noreferrer">${E(r.ad.link)}</a></p>
+      ${cr.length > 1 ? `<h3>All ${cr.length} ads</h3><ol class="hint">${cr.map((c) => `<li><strong>${E(c.headline)}</strong> → <a href="${E(c.link)}" target="_blank" rel="noopener noreferrer">${E(c.link)}</a></li>`).join("")}</ol>` : ""}
+      ${st === "edit_submitted" && live ? `<div class="note">The sponsor changed this ad. The old version is still live: <strong>${E(live.headline)}</strong>.</div>` : ""}
+      </div></div>
+      <h3>Pictures <span class="hint">— sent to your WhatsApp. Upload to <code>assets/ads/</code>, redeploy, paste the path (e.g. <code>/assets/ads/${E(rid)}-1.jpg</code>)</span></h3>
+      ${r.wa_note ? `<p class="hint">Sponsor's note: ${E(r.wa_note)}</p>` : ""}
+      <details open><summary><strong>Ad quality</strong></summary>${creativesOfR(r).map((c, i) => { const q = EO_ADS.quality(c, { banned: bannedList() }); return `<p style="margin:.4rem 0 .1rem"><strong>Ad ${i + 1}:</strong> ${E(c.headline || "")} — <span class="pill ${q.score >= 80 ? "live" : q.score >= 55 ? "pending" : "rejected"}">${q.score}/100</span></p><ul class="qlist" style="list-style:none;padding:0;margin:0;font-size:.8rem">${q.checks.filter((x) => !x.ok).map((x) => `<li style="color:var(--amber)">✗ ${E(x.label)}</li>`).join("") || '<li style="color:var(--crt-green)">✓ all checks passed</li>'}</ul>`; }).join("")}</details>
+      ${Object.keys(r.addons || {}).length ? `<p class="hint"><strong>Add-ons bought:</strong> ${Object.keys(r.addons).map((k) => E((((D.pk[r.package] || {}).addons || {})[k] || {}).label || k)).join(", ")}${Object.keys(r.addons).some((k) => (((D.pk[r.package] || {}).addons || {})[k] || {}).effect === "pin") ? " — will be pinned automatically" : " — do these by hand"}</p>` : ""}
+      <div class="grid2">${cr.map((c, i) => `<div class="field"><label>Ad ${i + 1}: ${E(c.headline)}</label><input data-img="a${i + 1}" maxlength="300" value="${E(fi["a" + (i + 1)] || (D.ads[idFor(r.ad_id || "sp-" + rid, i)] || {}).image || "")}" placeholder="/assets/ads/${E(rid)}-${i + 1}.jpg"></div>`).join("")}</div>
+      ${socs.length ? `<h3>Social posts <span class="hint">— paste the post link (or type "posted")</span></h3><div class="grid2">${socs.map((k) => `<div class="field"><label>${E(SOCN[k] || k)}</label><input data-soc="${E(k)}" maxlength="300" value="${E(fs[k] || "")}" placeholder="https://…"></div>`).join("")}</div>` : ""}
+      ${(() => { const bl = bannedList(), hits = bl.length ? cr.map((c) => bl.find((w) => [c.headline, c.body, c.link, c.cta].join(" ").toLowerCase().includes(w))).filter(Boolean) : []; return hits.length ? `<div class="note bad"><strong>Check the wording:</strong> matches your blocked list (${E([...new Set(hits)].join(", "))}).</div>` : ""; })()}
+      <div class="field"><label>WhatsApp the sponsor</label><div style="display:flex;gap:.4rem;flex-wrap:wrap"><select id="r_tpl">${Object.keys(MSG_DEF).map((k) => `<option value="${k}">${E(MSG_LABEL[k])}</option>`).join("")}</select><button class="btn sm" id="r_tplgo" type="button">Open WhatsApp</button></div></div>
+      <div class="field"><label>Message to sponsor (shown on their page; used for rejections / pauses)</label><input id="r_note" maxlength="380" value="${E(r.admin_note || "")}"></div>
+      <div id="r_pub" class="grid2" ${["payment_submitted", "awaiting_payment", "draft"].includes(st) ? "" : "hidden"}>${field("Start date", `<input id="r_start" type="date" value="${E(r.preferred_start && r.preferred_start > today ? r.preferred_start : today)}">`)}${field("Days", `<input id="r_days" type="number" min="1" max="366" value="${E(r.days)}">`)}</div>`;
+    const foot = [], note = () => clip($("#r_note", box).value.trim(), 380);
+    const run = (label, fn) => async () => { try { await fn(); await load(); await publishAvailability(); A.toast(label + " ✓"); m.close(); await after(); } catch (e) { A.toast("Failed: " + e.message, true); } };
+    const m = A.modal("Request — " + ((r.ad && r.ad.headline) || rid), box, foot, true);
+    const add = (l, c, f) => { const b = btn(l, c, f); m.foot.appendChild(b); return b; };
+    foot.length = 0;
+    m.foot.innerHTML = "";
+    $("#r_tplgo", box).onclick = () => { const u = waFor($("#r_tpl", box).value, rid, Object.assign({}, r, { admin_note: note() })); if (u) window.open(u, "_blank"); else A.toast("This sponsor has no phone number", true); };
+    const phoneLink = wa(r.sponsor_phone, `Hello ${r.sponsor_name || ""}, about your ad on the site: `);
+    if (phoneLink) { const a = btn("WhatsApp sponsor", "sm", () => window.open(phoneLink, "_blank")); m.foot.appendChild(a); }
+    add("Save pictures & posts", "sm", run("Saved", async () => { await saveFulfil(rid, r, box); }));
+    add("Edit ad", "sm", () => { m.close(); if (live) adForm(r.ad_id, live, after); else A.toast("Publish it first, then you can edit the live ad.", true); });
+    if (["payment_submitted", "awaiting_payment"].includes(st)) {
+      add("Verify payment & go live", "primary", run("Payment verified — ad is live", async () => {
+        const start = $("#r_start", box).value || today, days = Math.max(1, Number($("#r_days", box).value) || r.days);
+        if (p.code && Number(p.amount) !== Number(r.price) && !confirm(`The sponsor paid ${kes(p.amount)} but the package costs ${kes(r.price)}. Go live anyway?`)) throw new Error("cancelled");
+        const lim = D.set.limits || {}, bad = EO_ADS.clash(D.avail || {}, lim, places, start, days);
+        if (bad.length && !confirm(`These spots are already full on those dates: ${bad.map(tl).join(", ")}. Go live anyway?`)) throw new Error("cancelled");
+        const images = await saveFulfil(rid, r, box);
+        await publish(rid, r, start, days, images);
+        if (r.coupon && D.coupons[r.coupon]) await A.update("ad_coupons/" + r.coupon, { used: (Number(D.coupons[r.coupon].used) || 0) + 1 }).catch(() => {});
+      }));
+      if (p.code) add("Payment not received", "danger", run("Payment marked not received", async () => { await A.update("sponsor_requests/" + rid, { "payment/status": "rejected", status: "awaiting_payment", admin_note: note() || "We could not find this payment. Please check the code and send it again.", updated: Date.now() }); }));
+      add("Reject request", "danger", run("Request rejected", async () => { await A.update("sponsor_requests/" + rid, { status: "rejected", admin_note: note() || "Sorry, we can't run this ad.", updated: Date.now() }); }));
+    }
+    if (st === "edit_submitted") {
+      add("Approve changes", "primary", run("Changes approved", () => approveEdit(rid, r)));
+      add("Reject changes", "danger", run("Changes rejected", async () => {
+        const cur = D.ads[r.ad_id] || {}, img = clip(cur.image, 600);
+        const pick = (c) => ({ headline: clip(c.headline, 80), body: clip(c.body, 220), cta: clip(c.cta, 24), link: clip(c.link, 300), accent: c.accent || "green", sponsor: clip(c.sponsor, 30) });
+        const more = {}; for (let i = 1; i < 15; i++) { const o = D.ads[idFor(r.ad_id, i)]; if (o) more["a" + (i + 1)] = pick(o); }
+        await A.update("sponsor_requests/" + rid, { status: "live", ad: pick(cur), more_ads: Object.keys(more).length ? more : null, admin_note: note() || "We couldn't approve those changes, so your previous ad is still running.", updated: Date.now() });
+      }));
+    }
+    if (["live", "edit_submitted"].includes(st) || st === "expired") {
+      add("Disable (pause)", "danger", run("Ad paused", async () => { for (const id of reqAds(rid)) await A.update("ads/" + id, { active: "no" }); await A.update("sponsor_requests/" + rid, { status: "paused", admin_note: note(), updated: Date.now() }); }));
+      add("Extend…", "", run("Extended", async () => {
+        const n = Number(prompt("Extend by how many days?", "7")); if (!(n > 0)) throw new Error("cancelled");
+        const amt = Number(prompt("Amount the sponsor paid for this extension (KES, 0 if free)", "0")) || 0;
+        const base = r.end && r.end > today ? r.end : today, end = addDays(base, n), ex = arr(r.extensions).concat([{ days: n, amount: amt, ts: Date.now() }]);
+        for (const id of reqAds(rid)) await A.update("ads/" + id, { end, active: "yes" });
+        await A.update("sponsor_requests/" + rid, { end, status: "live", extensions: ex, updated: Date.now() });
+      }));
+    }
+    if (st === "paused") add("Resume", "primary", run("Ad resumed", async () => { for (const id of reqAds(rid)) await A.update("ads/" + id, { active: "yes" }); await A.update("sponsor_requests/" + rid, { status: "live", admin_note: "", updated: Date.now() }); }));
+    if (r.ad_id) add("Results", "sm", () => adMetrics(r.ad_id));
+    if (r.ad_id) add("Print report", "sm", async () => {
+      try {
+        const st = await getStats(), ids = reqAds(rid), days = EO_ADS.mergeStats(ids.map((i) => asObj(st[i]))), from = r.start || today, to = r.end && r.end < today ? r.end : today, sm = EO_ADS.summarize(days, from, to);
+        EO_ADS.openReport({ title: "Ad report — " + ((r.ad && r.ad.headline) || ""), site: "", sponsor: r.sponsor_name, pkg: `${r.package_name || r.package} · ${cr.length} ad(s)`, start: r.start, end: r.end, summary: sm, byPl: Object.entries(sm.byPl).map(([k, v]) => ({ label: tl(k), v: v.v, c: v.c })), byDay: sm.byDay, socials: socs.map((k) => ({ name: SOCN[k] || k, url: fs[k] })) });
+      } catch (e) { A.toast(e.message, true); }
+    });
+    add("Delete", "sm danger", async () => {
+      if (!(await A.confirm("Delete this request" + (r.ad_id ? " and its live ad" : "") + "? Stats are kept."))) return;
+      try { for (const id of reqAds(rid)) await A.del("ads/" + id); await A.del("sponsor_fulfil/" + rid).catch(() => {}); await A.del("sponsor_requests/" + rid); if (r.owner) await A.del(`sponsors/${r.owner}/requests/${rid}`).catch(() => {}); await load(); m.close(); A.toast("Deleted"); await after(); } catch (e) { A.toast(e.message, true); }
+    });
+  }
+
+  // =====================================================================
+  // tabs
+  async function overview() {
+    pane.innerHTML = `<p class="hint">Loading…</p>`;
+    const stats = await getStats(), from = addDays(today, -29);
+    let V = 0, C = 0; Object.values(stats).forEach((d) => { const s = EO_ADS.summarize(asObj(d), from, today); V += s.v; C += s.c; });
+    const live = Object.values(D.ads).filter((a) => state(a) === "live").length;
+    const rev = revenueRows(), ym = today.slice(0, 7), month = rev.filter((x) => x.date.startsWith(ym)).reduce((n, x) => n + x.amount, 0), total = rev.reduce((n, x) => n + x.amount, 0);
+    const todo = Object.entries(D.reqs).filter(([, r]) => ["payment_submitted", "edit_submitted"].includes(r.status)).sort((a, b) => (a[1].updated || 0) - (b[1].updated || 0));
+    const waiting = Object.values(D.reqs).filter((r) => r.status === "awaiting_payment").length;
+    const off = TYPES.filter((t) => D.set.types && D.set.types[t.key] === false).length;
+    pane.innerHTML = `<div class="cards"><div class="stat"><b>${live}</b><span>Live ads</span></div><div class="stat"><b>${todo.length}</b><span>Need your action</span></div><div class="stat"><b>${waiting}</b><span>Awaiting sponsor payment</span></div><div class="stat"><b>${V}</b><span>Views · 30 days</span></div><div class="stat"><b>${C}</b><span>Clicks · 30 days</span></div><div class="stat"><b>${V ? (C / V * 100).toFixed(2) : "0.00"}%</b><span>CTR · 30 days</span></div><div class="stat"><b>${kes(month)}</b><span>Revenue this month</span></div><div class="stat"><b>${kes(total)}</b><span>Revenue all time</span></div></div>
+      ${D.set.enabled === false ? `<div class="note bad"><strong>All ads are switched off</strong> (Ad types tab). Visitors see no ads.</div>` : off ? `<div class="note">${off} ad type(s) are switched off.</div>` : ""}
+      <div class="crt-window"><div class="titlebar"><span class="label">needs-action</span></div><div class="body" id="todo"></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">to-do-pictures-and-posts</span></div><div class="body" id="owed"></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">ending-soon</span></div><div class="body" id="soon"></div></div>`;
+    // pictures + social posts still owed on paid campaigns
+    const owedRows = [];
+    Object.entries(D.reqs).forEach(([rid, r]) => {
+      if (!["payment_submitted", "live", "edit_submitted"].includes(r.status)) return;
+      const F = D.ful[rid] || {}, fi = F.images || {}, fs = F.socials || {}, n = creativesOfR(r).length;
+      const missPics = Array.from({ length: n }).filter((_, i) => !fi["a" + (i + 1)] && !((D.ads[(r.ad_id || "sp-" + rid) + (i ? "-" + (i + 1) : "")] || {}).image)).length;
+      const missSoc = r.status === "payment_submitted" ? [] : String(r.socials || "").split(",").map((x) => x.trim()).filter(Boolean).filter((k) => !fs[k]);
+      if (missPics || missSoc.length) owedRows.push({ rid, r, missPics, missSoc });
+    });
+    $("#owed").innerHTML = owedRows.length ? `<table class="tbl"><tbody>${owedRows.map((o) => `<tr><td><strong>${E((o.r.ad && o.r.ad.headline) || o.rid)}</strong><br><span class="hint">${E(o.r.sponsor_name || "")} · ${A.pill(reqState(o.r))}</span></td><td>${o.missPics ? `<span class="chip">${o.missPics} picture(s) missing</span> ` : ""}${o.missSoc.map((k) => `<span class="chip">${E(SOCN[k] || k)} post owed</span>`).join(" ")}</td><td class="act">${o.missPics && waFor("pics", o.rid, o.r) ? `<a class="btn sm" target="_blank" rel="noopener" href="${E(waFor("pics", o.rid, o.r))}">WhatsApp: pictures</a> ` : ""}<button class="btn sm primary" data-o="${E(o.rid)}" type="button">Open</button></td></tr>`).join("")}</tbody></table>` : `<p class="hint" style="margin:0">Nothing owed. Every paid campaign has its pictures and social posts.</p>`;
+    $("#owed").querySelectorAll("[data-o]").forEach((b) => (b.onclick = () => review(b.dataset.o, overview)));
+    // campaigns ending in the next 7 days
+    const soon = Object.entries(D.reqs).filter(([, r]) => r.status === "live" && r.end && r.end >= today && r.end <= addDays(today, 7)).sort((a, b) => a[1].end.localeCompare(b[1].end));
+    $("#soon").innerHTML = soon.length ? `<table class="tbl"><tbody>${soon.map(([k, r]) => { const dl = Math.round((new Date(r.end) - new Date(today)) / 864e5); return `<tr><td><strong>${E((r.ad && r.ad.headline) || k)}</strong><br><span class="hint">${E(r.sponsor_name || "")} · ${E(r.package_name || "")}</span></td><td>ends ${E(r.end)} <span class="chip">${dl === 0 ? "today" : dl + " day(s)"}</span></td><td class="act">${waFor("expiring", k, r) ? `<a class="btn sm" target="_blank" rel="noopener" href="${E(waFor("expiring", k, r))}">WhatsApp: renew</a> ` : ""}<button class="btn sm primary" data-s="${E(k)}" type="button">Open</button></td></tr>`; }).join("")}</tbody></table>` : `<p class="hint" style="margin:0">No campaigns end in the next 7 days.</p>`;
+    $("#soon").querySelectorAll("[data-s]").forEach((b) => (b.onclick = () => review(b.dataset.s, overview)));
+    const t = $("#todo");
+    t.innerHTML = todo.length ? `<table class="tbl"><tbody>${todo.map(([k, r]) => `<tr><td>${A.pill(r.status)}</td><td><strong>${E((r.ad && r.ad.headline) || k)}</strong><br><span class="hint">${E(r.sponsor_name || "")} · ${E(r.package_name || "")}</span></td><td>${r.payment ? `${kes(r.payment.amount)} · <span class="mono">${E(r.payment.code)}</span>` : ""}</td><td class="act"><button class="btn sm primary" data-r="${E(k)}" type="button">Review</button></td></tr>`).join("")}</tbody></table>` : `<p class="hint" style="margin:0">Nothing waiting. New payments and ad changes show up here.</p>`;
+    t.querySelectorAll("[data-r]").forEach((b) => (b.onclick = () => review(b.dataset.r, overview)));
+  }
+
+  async function requests() {
+    pane.innerHTML = `<div class="toolbar"><select id="rf"><option value="">All requests</option><option value="payment_submitted">Payment to verify</option><option value="edit_submitted">Changes to approve</option><option value="awaiting_payment">Awaiting payment</option><option value="live">Live</option><option value="paused">Paused</option><option value="expired">Expired</option><option value="rejected">Rejected</option><option value="draft">Drafts</option></select><span class="hint" id="rn"></span></div><div class="tbl-wrap" id="rt"></div>`;
+    const paint = () => {
+      const f = $("#rf").value;
+      const rows = Object.entries(D.reqs).filter(([, r]) => !f || reqState(r) === f).sort((a, b) => (b[1].updated || b[1].created || 0) - (a[1].updated || a[1].created || 0));
+      $("#rn").textContent = rows.length + " request(s)";
+      $("#rt").innerHTML = `<table class="tbl"><thead><tr><th>Ad</th><th>Sponsor</th><th>Package</th><th>Payment</th><th>Status</th><th>Dates</th><th></th></tr></thead><tbody>${rows.map(([k, r]) => `<tr><td><strong>${E((r.ad && r.ad.headline) || "—")}</strong></td><td>${E(r.sponsor_name || "")}<br><span class="hint">${E(r.sponsor_phone || r.sponsor_email || "")}</span></td><td>${E(r.package_name || r.package)}<br><span class="hint">${kes(r.price)}</span></td><td>${r.payment ? `${A.pill(r.payment.status)}<br><span class="mono hint">${E(r.payment.code)}</span>` : '<span class="hint">—</span>'}</td><td>${A.pill(reqState(r))}</td><td>${r.start ? E(r.start) + " → " + E(r.end) : '<span class="hint">—</span>'}</td><td class="act"><button class="btn sm primary" data-r="${E(k)}" type="button">Open</button></td></tr>`).join("") || `<tr><td colspan="7" class="hint">No requests.</td></tr>`}</tbody></table>`;
+      $("#rt").querySelectorAll("[data-r]").forEach((b) => (b.onclick = () => review(b.dataset.r, requests)));
+    };
+    $("#rf").onchange = paint; if (location.hash === "#requests" && !$("#rf").value) $("#rf").value = ""; paint();
+  }
+
+  async function adsTab() {
+    pane.innerHTML = `<p class="hint">Loading…</p>`;
+    const stats = await getStats(), from = addDays(today, -29), earned = earnedBy();
+    pane.innerHTML = `<div class="toolbar"><select id="af"><option value="">All ads</option><option value="live">Live now</option><option value="scheduled">Scheduled</option><option value="off">Switched off</option><option value="expired">Expired</option><option value="own">My own</option><option value="sponsor">Sponsor ads</option></select><span class="hint" id="an"></span><span style="flex:1"></span><button class="btn" id="seed" type="button">Load starter ads &amp; settings</button><button class="btn primary" id="newad" type="button">+ New ad</button></div><div class="tbl-wrap" id="at"></div>`;
+    const paint = () => {
+      const f = $("#af").value;
+      const rows = Object.entries(D.ads).filter(([, a]) => a && a.headline).filter(([, a]) => !f || (f === "own" ? !a.request && !a.owner : f === "sponsor" ? !!a.owner || !!a.request : state(a) === f));
+      $("#an").textContent = rows.length + " ad(s)";
+      $("#at").innerHTML = `<table class="tbl"><thead><tr><th>Ad</th><th>Shows in</th><th>State</th><th>Dates</th><th>Views 30d</th><th>Clicks</th><th>CTR</th><th></th></tr></thead><tbody>${rows.map(([k, a]) => { const s = EO_ADS.summarize(asObj(stats[k]), from, today); return `<tr><td><strong>${E(a.headline)}</strong><br><span class="hint">${a.request || a.owner ? "Sponsor: " + E(a.sponsor_name || "") : "Own ad"}${earned[k] ? " · " + kes(earned[k]) : ""}</span></td><td>${chips(EO_ADS.placesOf(a))}</td><td>${A.pill(state(a))}</td><td>${a.start || a.end ? E(a.start || "…") + " → " + E(a.end || "…") : '<span class="hint">always</span>'}</td><td>${s.v}</td><td>${s.c}</td><td>${s.ctr.toFixed(2)}%</td><td class="act"><button class="btn sm" data-m="${E(k)}" type="button">Results</button> <button class="btn sm" data-e="${E(k)}" type="button">Edit</button> <button class="btn sm ${state(a) === "off" ? "primary" : ""}" data-t="${E(k)}" type="button">${state(a) === "off" ? "Switch on" : "Switch off"}</button> <button class="btn sm danger" data-d="${E(k)}" type="button">Delete</button></td></tr>`; }).join("") || `<tr><td colspan="8" class="hint">No ads here yet.</td></tr>`}</tbody></table>`;
+      const t = $("#at");
+      t.querySelectorAll("[data-m]").forEach((b) => (b.onclick = () => adMetrics(b.dataset.m)));
+      t.querySelectorAll("[data-e]").forEach((b) => (b.onclick = () => adForm(b.dataset.e, D.ads[b.dataset.e], async () => { await load(); adsTab(); })));
+      t.querySelectorAll("[data-t]").forEach((b) => (b.onclick = async () => { const a = D.ads[b.dataset.t], on = state(a) === "off"; try { await A.update("ads/" + b.dataset.t, { active: on ? "yes" : "no" }); if (a.request && b.dataset.t === "sp-" + a.request) await A.update("sponsor_requests/" + a.request, { status: on ? "live" : "paused", updated: Date.now() }).catch(() => {}); A.toast(on ? "Switched on" : "Switched off"); await load(); adsTab(); } catch (e) { A.toast(e.message, true); } }));
+      t.querySelectorAll("[data-d]").forEach((b) => (b.onclick = async () => { if (!(await A.confirm("Delete this ad? Its stats are kept."))) return; try { await A.del("ads/" + b.dataset.d); await load(); adsTab(); } catch (e) { A.toast(e.message, true); } }));
+    };
+    $("#af").onchange = paint; paint();
+    $("#newad").onclick = () => adForm(null, null, async () => { await load(); adsTab(); });
+    $("#seed").onclick = async () => {
+      if (!(await A.confirm("Add the starter ad settings, 4 example packages (switched off, price 0) and example ads? Anything you already have is kept."))) return;
+      try {
+        const seed = await fetch("/data/seed-db.json").then((r) => r.json()); let n = 0;
+        if (!Object.keys(D.set).length && seed.ad_settings) { await A.set("ad_settings", seed.ad_settings); n++; }
+        if (!Object.keys(D.pk).length && seed.ad_packages) { await A.set("ad_packages", seed.ad_packages); n++; }
+        for (const [k, a] of Object.entries(asObj(seed.ads))) if (!D.ads[k]) { await A.set("ads/" + k, Object.assign({}, a, { id: k })); n++; }
+        A.toast(`Added ${n} item(s)`); await load(); adsTab();
+      } catch (e) { A.toast(e.message, true); }
+    };
+  }
+
+  async function typesTab() {
+    const cfg = D.set, types = cfg.types || {};
+    const count = (k) => Object.values(D.ads).filter((a) => a && a.headline && state(a) === "live" && EO_ADS.placesOf(a).includes(k)).length;
+    pane.innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">ad-types</span></div><div class="body">
+      <p class="hint" style="margin-top:0">Switch a type <strong>off</strong> and visitors won't see it anywhere on the site; switch it <strong>on</strong> and it shows again. Changes apply the next time a page loads.</p>
+      <div class="type-row"><label class="switch"><input type="checkbox" id="master" ${cfg.enabled === false ? "" : "checked"}><span></span></label><div class="t"><strong>All ads</strong><small>Master switch for every ad on the site.</small></div></div>
+      ${TYPES.map((t) => `<div class="type-row"><label class="switch"><input type="checkbox" data-k="${t.key}" ${types[t.key] === false ? "" : "checked"}><span></span></label><div class="t"><strong>${E(t.label)}</strong><small>${E(t.desc)}</small></div><span class="hint">${count(t.key)} live</span><input type="number" min="1" max="20" data-lim="${t.key}" value="${E((cfg.limits || {})[t.key] || "")}" placeholder="slots" title="Max sponsors at the same time (empty = no limit)" style="width:5rem"></div>`).join("")}
+      <div class="grid2" style="margin-top:1rem">${field("Seconds between ads (rotating spots)", `<input id="secs" type="number" min="3" max="60" value="${E(cfg.rotate_seconds || 10)}">`)}<div></div>
+      ${field("Popup / slide-in limit per visitor per day", `<input id="fcap" type="number" min="0" max="20" value="${E(cfg.freq_cap == null ? 2 : cfg.freq_cap)}">`, false, "0 = no limit.")}
+      ${field("Tracking tags on external links", `<select id="utm"><option value="yes" ${cfg.utm === false ? "" : "selected"}>on (utm_source, utm_medium, utm_campaign)</option><option value="no" ${cfg.utm === false ? "selected" : ""}>off</option></select>`, false, "Lets sponsors see your traffic in their own analytics.")}
+      ${field("Ads: fade (%)", `<input id="lk_fade" type="number" min="20" max="100" value="${E((cfg.look || {}).fade || 50)}">`, false, "50 = soft. 100 = full strength. Hover always brightens.")}
+      ${field("Ads: corner roundness (px)", `<input id="lk_rad" type="number" min="0" max="24" value="${E((cfg.look || {}).radius == null ? 4 : cfg.look.radius)}">`)}
+      ${field("Default small label", `<input id="lk_label" maxlength="20" value="${E((cfg.look || {}).label || "")}" placeholder="Ad">`, false, "Shown on ads that have no label of their own, e.g. Sponsored.")}
+      ${field("Monthly revenue goal (KES)", `<input id="goal" type="number" min="0" value="${E(cfg.goal_month || "")}">`, false, "Shown as a progress bar in Analytics.")}
+      ${field("Renewal coupon code", `<input id="rncp" maxlength="20" value="${E(cfg.renew_coupon || "")}" placeholder="e.g. RENEW10">`, false, "Offered to sponsors in their renewal reminder. Create it in the Coupons tab.")}
+      ${field("Renewal reminder (days before the end)", `<input id="rnd" type="number" min="1" max="30" value="${E(cfg.renew_days || 3)}">`)}
+      ${field("No pop-ups on posts tagged…", `<input id="nopop" maxlength="120" value="${E(cfg.no_popup_tags || "")}" placeholder="e.g. grief, health-scare">`, false, "Comma-separated post tags. Pop-ups always wait until a visitor has read for a while, and never on their first page.")}
+      ${field("Longest pause a sponsor may take (days)", `<input id="mpd" type="number" min="0" max="30" value="${E(cfg.max_pause_days == null ? 7 : cfg.max_pause_days)}">`, false, "0 = sponsors cannot pause. Paused days are added to the end of the campaign.")}
+      ${field("Blocked words / domains (one per line or comma-separated)", `<textarea id="banned" rows="3" maxlength="800">${E(cfg.banned || "")}</textarea>`, true, "Sponsors can't submit ads containing these; you also get a warning when reviewing.")}
+      ${field("Ad rules shown to sponsors", `<textarea id="rules" rows="3" maxlength="600">${E(cfg.rules || "")}</textarea>`, true)}</div>
+      <button class="btn primary" id="savecfg" type="button">Save settings</button></div></div>`;
+    const write = async (patch) => { try { await A.update("ad_settings", patch); D.set = Object.assign({}, D.set, patch); A.toast("Saved ✓"); } catch (e) { A.toast("Save failed: " + e.message, true); } };
+    $("#master").onchange = (e) => write({ enabled: e.target.checked });
+    pane.querySelectorAll("[data-k]").forEach((c) => (c.onchange = () => write({ [`types/${c.dataset.k}`]: c.checked }).then(() => { D.set.types = Object.assign({}, D.set.types, { [c.dataset.k]: c.checked }); })));
+    $("#savecfg").onclick = () => { const lim = {}; pane.querySelectorAll("[data-lim]").forEach((i) => { const n = Math.round(Number(i.value)); if (n > 0) lim[i.dataset.lim] = n; }); return write({ limits: Object.keys(lim).length ? lim : null, freq_cap: Math.max(0, Math.min(20, Math.round(Number($("#fcap").value) || 0))), utm: $("#utm").value === "yes", banned: clip($("#banned").value.trim(), 800), rotate_seconds: Math.min(60, Math.max(3, Number($("#secs").value) || 10)), look: { fade: Math.max(20, Math.min(100, Math.round(Number($("#lk_fade").value) || 50))), radius: Math.max(0, Math.min(24, Math.round(Number($("#lk_rad").value) || 0))), label: clip($("#lk_label").value.trim(), 20) }, goal_month: Math.max(0, Math.round(Number($("#goal").value) || 0)), renew_coupon: clip($("#rncp").value.trim().toUpperCase(), 20), renew_days: Math.max(1, Math.min(30, Math.round(Number($("#rnd").value) || 3))), max_pause_days: Math.max(0, Math.min(30, Math.round(Number($("#mpd").value) || 0))), no_popup_tags: clip($("#nopop").value.trim().toLowerCase(), 120), rules: clip($("#rules").value.trim(), 600) }); };
+  }
+
+  async function packagesTab() {
+    pane.innerHTML = `<div class="toolbar"><span class="hint">What sponsors can buy. Only <strong>active</strong> packages show in the sponsor portal. A package's price and spots are locked when a sponsor orders it.</span><span style="flex:1"></span><button class="btn primary" id="newpk" type="button">+ New package</button></div><div class="tbl-wrap" id="pt"></div>`;
+    const paint = () => {
+      const rows = Object.entries(D.pk).sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
+      $("#pt").innerHTML = `<table class="tbl"><thead><tr><th>Package</th><th>Price</th><th>Days</th><th>Ads</th><th>Socials</th><th>Spots</th><th>Active</th><th></th></tr></thead><tbody>${rows.map(([k, p]) => `<tr><td><strong>${E(p.name)}</strong><br><span class="hint">${E(p.description || "")}</span></td><td>${kes(p.price)}</td><td>${E(p.days)}</td><td>${E(p.max_ads || 1)}</td><td>${E(String(p.socials || "—").split(",").map((k) => SOCN[k.trim()] || k).join(", "))}</td><td>${chips(String(p.placements || "").split(",").filter(Boolean))}</td><td>${A.pill(p.active ? "on" : "off")}</td><td class="act"><button class="btn sm" data-e="${E(k)}" type="button">Edit</button> <button class="btn sm danger" data-d="${E(k)}" type="button">Delete</button></td></tr>`).join("") || `<tr><td colspan="8" class="hint">No packages yet.</td></tr>`}</tbody></table>`;
+      $("#pt").querySelectorAll("[data-e]").forEach((b) => (b.onclick = () => form(b.dataset.e)));
+      $("#pt").querySelectorAll("[data-d]").forEach((b) => (b.onclick = async () => { if (!(await A.confirm("Delete this package? Existing requests keep their copy."))) return; await A.del("ad_packages/" + b.dataset.d); await load(); packagesTab(); }));
+    };
+    function form(key) {
+      const p = Object.assign({ name: "", description: "", price: 0, days: 7, max_ads: 5, socials: "facebook", placements: "header", active: true, order: Object.keys(D.pk).length + 1 }, key ? D.pk[key] : {});
+      const cur = new Set(String(p.placements).split(",").map((s) => s.trim()));
+      const f = document.createElement("div");
+      f.innerHTML = `<div class="grid2">${field("Name *", `<input id="p_name" value="${E(p.name)}">`, true)}${field("Description", `<input id="p_desc" value="${E(p.description || "")}">`, true)}${field("Price (KES) *", `<input id="p_price" type="number" min="0" value="${E(p.price)}">`)}${field("Days *", `<input id="p_days" type="number" min="1" max="366" value="${E(p.days)}">`)}${field("Ads allowed (1–15)", `<input id="p_max" type="number" min="1" max="15" value="${E(p.max_ads || 5)}">`)}${field("Order", `<input id="p_order" type="number" value="${E(p.order || 0)}">`)}${field("Active", `<select id="p_active"><option value="yes" ${p.active ? "selected" : ""}>yes — sponsors can buy it</option><option value="no" ${p.active ? "" : "selected"}>no — hidden</option></select>`)}</div><label>Optional add-ons sponsors can tick at checkout (up to 5)</label>${[1, 2, 3, 4, 5].map((i) => { const ad = ((p.addons || {})["a" + i]) || {}; return `<div class="grid2" style="grid-template-columns:2fr 1fr 1.4fr"><input data-ao="${i}" data-f="label" maxlength="40" placeholder="Add-on name, e.g. Extra 7 days" value="${E(ad.label || "")}"><input data-ao="${i}" data-f="price" type="number" min="0" placeholder="KES" value="${E(ad.price || "")}"><select data-ao="${i}" data-f="effect"><option value="none" ${ad.effect === "pin" ? "" : "selected"}>manual (I do it)</option><option value="pin" ${ad.effect === "pin" ? "selected" : ""}>pin first in rotation</option></select></div>`; }).join("")}<label>Social posts included (you post these yourself)</label><div class="plgrid">${Object.entries(SOCN).map(([k, l]) => `<label><input type="checkbox" data-so="${k}" ${String(p.socials || "").split(",").includes(k) ? "checked" : ""}> ${l}</label>`).join("")}</div><label>Website spots included *</label><div class="plgrid">${TYPES.map((t) => `<label><input type="checkbox" data-pl="${t.key}" ${cur.has(t.key) ? "checked" : ""}> ${E(t.label)}</label>`).join("")}</div>`;
+      const save = btn("Save", "primary"), cancel = btn("Cancel"), m = A.modal(key ? "Edit package" : "New package", f, [cancel, save]);
+      cancel.onclick = m.close;
+      save.onclick = async () => {
+        const v = (id) => $("#" + id, f).value.trim(), pls = [...f.querySelectorAll("[data-pl]:checked")].map((c) => c.dataset.pl);
+        if (!v("p_name") || !pls.length || !(Number(v("p_days")) >= 1)) return A.toast("Name, days and at least one spot are required", true);
+        const id = key || A.slugify(v("p_name")).slice(0, 30) || "pkg" + Date.now().toString(36);
+        try { await A.set("ad_packages/" + id, { name: v("p_name"), description: v("p_desc"), price: Number(v("p_price")) || 0, days: Math.round(Number(v("p_days"))), placements: pls.join(","), max_ads: Math.max(1, Math.min(15, Math.round(Number(v("p_max")) || 1))), socials: [...f.querySelectorAll("[data-so]:checked")].map((c) => c.dataset.so).join(","), active: v("p_active") === "yes", order: Number(v("p_order")) || 0, addons: (() => { const o = {}; [1, 2, 3, 4, 5].forEach((i) => { const g = (k) => f.querySelector(`[data-ao="${i}"][data-f="${k}"]`).value.trim(); if (g("label")) o["a" + i] = { label: clip(g("label"), 40), price: Math.max(0, Math.round(Number(g("price")) || 0)), effect: g("effect") === "pin" ? "pin" : "none" }; }); return Object.keys(o).length ? o : null; })() }); m.close(); A.toast("Saved ✓"); await load(); packagesTab(); } catch (e) { A.toast(e.message, true); }
+      };
+    }
+    paint(); $("#newpk").onclick = () => form(null);
+  }
+
+  async function sponsorsTab() {
+    const rev = revenueRows(), byName = {};
+    Object.entries(D.reqs).forEach(([, r]) => { const o = (byName[r.owner] = byName[r.owner] || { n: 0, spent: 0 }); o.n++; });
+    Object.entries(D.reqs).forEach(([, r]) => { if (r.payment && r.payment.status === "verified") byName[r.owner].spent += Number(r.price) || 0; arr(r.extensions).forEach((x) => (byName[r.owner].spent += Number(x.amount) || 0)); });
+    const rows = Object.entries(D.sponsors).sort((a, b) => (b[1].created || 0) - (a[1].created || 0));
+    pane.innerHTML = `<p class="hint">Everyone who created a sponsor account. Sign-ups are open, so someone listed here has not necessarily bought anything.</p><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Name</th><th>Business</th><th>Email</th><th>Phone</th><th>Joined</th><th>Requests</th><th>Paid</th><th>Notes / tags</th><th></th></tr></thead><tbody>${rows.map(([k, s]) => { const o = byName[k] || { n: 0, spent: 0 }, nt = (D.notes || {})[k] || {}; const w = wa(s.phone, `Hello ${s.name || ""}, `); return `<tr><td>${E(s.name)}</td><td>${E(s.company || "")}</td><td>${E(s.email)}</td><td>${E(s.phone || "")}</td><td>${A.fmt(s.created)}</td><td>${o.n}</td><td>${kes(o.spent)}</td><td><input data-nt="${E(k)}" data-f="tags" placeholder="tags: vip, late-payer" value="${E(nt.tags || "")}" style="width:9rem"><br><input data-nt="${E(k)}" data-f="note" placeholder="private note" value="${E(nt.note || "")}" style="width:9rem"></td><td class="act">${w ? `<a class="btn sm" href="${E(w)}" target="_blank" rel="noopener">WhatsApp</a>` : ""}</td></tr>`; }).join("") || `<tr><td colspan="8" class="hint">No sponsors yet.</td></tr>`}</tbody></table></div><p class="hint">Revenue rows in the database: ${rev.length}. Notes and tags are private and save when you leave the box.</p>`;
+    pane.querySelectorAll("[data-nt]").forEach((i) => (i.onchange = async () => {
+      const k = i.dataset.nt, o = Object.assign({}, (D.notes || {})[k] || {}, { [i.dataset.f]: clip(i.value.trim(), 200) });
+      if (!o.tags) delete o.tags; if (!o.note) delete o.note;
+      try { await A.set("sponsor_notes/" + k, Object.keys(o).length ? o : null); D.notes = Object.assign({}, D.notes, { [k]: o }); A.toast("Saved ✓"); } catch (e) { A.toast(e.message, true); }
+    }));
+  }
+
+  async function metricsTab() {
+    pane.innerHTML = `<p class="hint">Loading…</p>`;
+    const stats = await getStats(); if (!D.pages) D.pages = asObj(await A.get("ad_pages"));
+    let from = addDays(today, -29), to = today;
+    const draw = () => {
+      const earned = earnedBy(), per = [], tot = {};
+      Object.entries(D.ads).forEach(([k, a]) => { if (!a || !a.headline) return; const s = EO_ADS.summarize(asObj(stats[k]), from, to); per.push({ k, a, s, e: earned[k] || 0 }); s.byDay.forEach((d) => { const t = (tot[d.d] = tot[d.d] || { d: d.d, v: 0, c: 0 }); t.v += d.v; t.c += d.c; }); });
+      per.sort((x, y) => y.s.v - x.s.v);
+      const all = EO_ADS.summarize({}, from, to); all.byDay = EO_ADS.dayRange(from, to).map((d) => tot[d] || { d, v: 0, c: 0 });
+      const V = per.reduce((n, x) => n + x.s.v, 0), C = per.reduce((n, x) => n + x.s.c, 0), U = per.reduce((n, x) => n + x.s.u, 0);
+      const pl = {}, dev = { m: { v: 0, c: 0 }, d: { v: 0, c: 0 } };
+      per.forEach((x) => { Object.entries(x.s.byPl).forEach(([k, v]) => { const t = (pl[k] = pl[k] || { v: 0, c: 0 }); t.v += v.v; t.c += v.c; }); ["m", "d"].forEach((k) => { dev[k].v += x.s.byDev[k].v; dev[k].c += x.s.byDev[k].c; }); });
+      const pct = (c, v) => (v ? (c / v * 100).toFixed(2) : "0.00") + "%";
+      const rev = revenueRows(), months = {};
+      rev.forEach((r) => { const m = r.date.slice(0, 7); months[m] = (months[m] || 0) + r.amount; });
+      const rr = rev.filter((r) => r.date >= from && r.date <= to), rsum = rr.reduce((n, r) => n + r.amount, 0);
+      const pgs = {}; Object.values(D.pages).forEach((p) => Object.entries(asObj(p)).forEach(([k, v]) => { const t = (pgs[k] = pgs[k] || { v: 0, c: 0 }); t.v += v.v || 0; t.c += v.c || 0; }));
+      const toppages = Object.entries(pgs).sort((a, b) => b[1].v - a[1].v).slice(0, 10);
+      pane.innerHTML = `<div class="toolbar"><label>From <input type="date" id="mf" value="${from}"></label><label>To <input type="date" id="mt" value="${to}"></label><button class="btn sm" data-q="7" type="button">7d</button><button class="btn sm" data-q="30" type="button">30d</button><button class="btn sm" data-q="90" type="button">90d</button><span style="flex:1"></span><button class="btn" id="csv1" type="button">Download ads CSV</button><button class="btn" id="csv2" type="button">Download revenue CSV</button></div>
+        <div class="cards"><div class="stat"><b>${V}</b><span>Views</span></div><div class="stat"><b>${C}</b><span>Clicks</span></div><div class="stat"><b>${pct(C, V)}</b><span>CTR</span></div><div class="stat"><b>${U}</b><span>Unique viewers (daily)</span></div><div class="stat"><b>${kes(rsum)}</b><span>Revenue in range</span></div><div class="stat"><b>${V && rsum ? kes(rsum / V * 1000) : "—"}</b><span>eCPM (revenue per 1,000 views)</span></div></div>
+        <div class="crt-window"><div class="titlebar"><span class="label">views-and-clicks</span></div><div class="body">${EO_ADS.chartSVG(all.byDay)}</div></div>
+        <div class="crt-window"><div class="titlebar"><span class="label">per-ad</span></div><div class="body tbl-wrap"><table class="tbl"><thead><tr><th>Ad</th><th>Owner</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Unique</th><th>Earned (all time)</th><th></th></tr></thead><tbody>${per.map((x) => `<tr><td><strong>${E(x.a.headline)}</strong> ${A.pill(state(x.a))}</td><td>${x.a.request || x.a.owner ? E(x.a.sponsor_name || "Sponsor") : "Own"}</td><td>${x.s.v}</td><td>${x.s.c}</td><td>${pct(x.s.c, x.s.v)}</td><td>${x.s.u}</td><td>${kes(x.e)}</td><td class="act"><button class="btn sm" data-m="${E(x.k)}" type="button">Details</button></td></tr>`).join("")}</tbody></table></div></div>
+        <div class="grid2"><div class="crt-window"><div class="titlebar"><span class="label">by-spot</span></div><div class="body"><table class="tbl"><thead><tr><th>Spot</th><th>Views</th><th>Clicks</th><th>CTR</th></tr></thead><tbody>${Object.entries(pl).sort((a, b) => b[1].v - a[1].v).map(([k, v]) => `<tr><td>${E(tl(k))}</td><td>${v.v}</td><td>${v.c}</td><td>${pct(v.c, v.v)}</td></tr>`).join("") || '<tr><td colspan="4" class="hint">No data yet.</td></tr>'}</tbody></table>
+          <h3>Devices</h3><table class="tbl"><tbody><tr><td>Phone</td><td>${dev.m.v} views</td><td>${dev.m.c} clicks</td></tr><tr><td>Computer / tablet</td><td>${dev.d.v} views</td><td>${dev.d.c} clicks</td></tr></tbody></table></div></div>
+          <div class="crt-window"><div class="titlebar"><span class="label">revenue</span></div><div class="body"><table class="tbl"><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody>${Object.entries(months).sort((a, b) => b[0].localeCompare(a[0])).map(([m, n]) => `<tr><td>${E(m)}</td><td>${kes(n)}</td></tr>`).join("") || '<tr><td colspan="2" class="hint">No verified payments yet.</td></tr>'}</tbody></table>
+          <h3>Top pages for ads (all time)</h3><table class="tbl"><tbody>${toppages.map(([k, v]) => `<tr><td class="mono">${E(k)}</td><td>${v.v} v</td><td>${v.c} c</td></tr>`).join("") || '<tr><td class="hint">No data yet.</td></tr>'}</tbody></table></div></div></div>
+        <p class="hint">Views count when at least half an ad is on screen for one second. Clicks count once per click. Visitors who block scripts, bots and your own localhost testing are not counted. Counts are written from visitors' browsers, so treat them as strong estimates rather than audited figures.</p>`;
+      $("#mf").onchange = (e) => { from = e.target.value || from; draw(); }; $("#mt").onchange = (e) => { to = e.target.value || to; draw(); };
+      pane.querySelectorAll("[data-q]").forEach((b) => (b.onclick = () => { from = addDays(today, -(Number(b.dataset.q) - 1)); to = today; draw(); }));
+      pane.querySelectorAll("[data-m]").forEach((b) => (b.onclick = () => adMetrics(b.dataset.m)));
+      $("#csv1").onclick = () => A.csv(`ads-${from}-to-${to}.csv`, [["ad", "owner", "state", "spots", "views", "clicks", "ctr_pct", "unique_daily", "earned_kes"]].concat(per.map((x) => [x.a.headline, x.a.sponsor_name || (x.a.request ? "Sponsor" : "Own"), state(x.a), x.a.placement, x.s.v, x.s.c, x.s.ctr.toFixed(2), x.s.u, x.e])));
+      $("#csv2").onclick = () => A.csv("ad-revenue.csv", [["date", "sponsor", "type", "reference", "amount_kes"]].concat(rev.map((r) => [r.date, r.sponsor, r.kind, r.ref, r.amount])));
+    };
+    draw();
+  }
+
+
+  // =====================================================================
+  // Calendar: who is booked when, and where a spot is full
+  async function calendarTab() {
+    const N = 42, days = Array.from({ length: N }, (_, i) => addDays(today, i)), lim = D.set.limits || {};
+    const camps = Object.entries(D.reqs).filter(([, r]) => ["live", "edit_submitted"].includes(r.status) && r.start && r.end && r.end >= today);
+    const used = TYPES.filter((t) => lim[t.key] || camps.some(([, r]) => String(r.placements).split(",").includes(t.key)));
+    const cnt = (t, d) => camps.filter(([, r]) => r.start <= d && r.end >= d && String(r.placements).split(",").map((x) => x.trim()).includes(t)).length;
+    pane.innerHTML = `<p class="hint">Next ${N} days. Numbers are sponsor campaigns on that spot. <span class="chip" style="background:#3a2a00">some</span> <span class="chip" style="background:#4a1020">full</span> Set the slot limit per spot in <strong>Ad types</strong>; sponsors are told when a spot is full and your Verify button warns you.</p>
+      <div class="tbl-wrap"><table class="tbl cal"><thead><tr><th>Spot</th><th>Limit</th>${days.map((d, i) => `<th title="${d}" style="padding:2px;font-size:.68rem;text-align:center">${i % 7 === 0 ? d.slice(5) : d.slice(8)}</th>`).join("")}</tr></thead><tbody>
+      ${used.map((t) => `<tr><td>${E(t.label)}</td><td>${lim[t.key] || "—"}</td>${days.map((d) => { const c = cnt(t.key, d), full = lim[t.key] && c >= lim[t.key]; return `<td title="${E(t.label)} · ${d}: ${c}" style="padding:2px;text-align:center;font-size:.7rem;background:${full ? "#4a1020" : c ? "#3a2a00" : "transparent"}">${c || ""}</td>`; }).join("")}</tr>`).join("") || `<tr><td class="hint" colspan="${N + 2}">No live sponsor campaigns yet.</td></tr>`}
+      </tbody></table></div>
+      <h3>Campaigns</h3><table class="tbl"><thead><tr><th>Sponsor</th><th>Ad</th><th>Dates</th><th>Spots</th></tr></thead><tbody>${camps.sort((a, b) => a[1].start.localeCompare(b[1].start)).map(([k, r]) => `<tr><td>${E(r.sponsor_name || "")}</td><td>${E((r.ad && r.ad.headline) || k)}</td><td>${E(r.start)} → ${E(r.end)}</td><td>${chips(String(r.placements || "").split(",").filter(Boolean))}</td></tr>`).join("") || `<tr><td colspan="4" class="hint">None.</td></tr>`}</tbody></table>`;
+  }
+
+  // =====================================================================
+  // Coupons
+  async function couponsTab() {
+    pane.innerHTML = `<div class="toolbar"><span class="hint">Discount codes for sponsors. A code is checked when they book; the price is locked on the request.</span><span style="flex:1"></span><button class="btn primary" id="newcp" type="button">+ New coupon</button></div><div class="tbl-wrap" id="cpt"></div>`;
+    const paint = () => {
+      const rows = Object.entries(D.coupons).sort((a, b) => a[0].localeCompare(b[0]));
+      $("#cpt").innerHTML = `<table class="tbl"><thead><tr><th>Code</th><th>Discount</th><th>Used</th><th>Expires</th><th>Active</th><th></th></tr></thead><tbody>${rows.map(([k, c]) => `<tr><td class="mono"><strong>${E(k)}</strong></td><td>${c.percent ? c.percent + "%" : ""}${c.percent && c.off ? " + " : ""}${c.off ? kes(c.off) : ""}</td><td>${E(c.used || 0)}${c.max_uses ? " / " + E(c.max_uses) : ""}</td><td>${E(c.expires || "—")}</td><td>${A.pill(c.active ? "on" : "off")}</td><td class="act"><button class="btn sm" data-e="${E(k)}" type="button">Edit</button> <button class="btn sm danger" data-d="${E(k)}" type="button">Delete</button></td></tr>`).join("") || `<tr><td colspan="6" class="hint">No coupons yet.</td></tr>`}</tbody></table>`;
+      $("#cpt").querySelectorAll("[data-e]").forEach((b) => (b.onclick = () => form(b.dataset.e)));
+      $("#cpt").querySelectorAll("[data-d]").forEach((b) => (b.onclick = async () => { if (!(await A.confirm("Delete this coupon?"))) return; await A.del("ad_coupons/" + b.dataset.d); await load(); couponsTab(); }));
+    };
+    function form(key) {
+      const c = Object.assign({ percent: 10, off: "", max_uses: "", expires: "", active: true }, key ? D.coupons[key] : {});
+      const f = document.createElement("div");
+      f.innerHTML = `<div class="grid2">${field("Code *", `<input id="c_code" maxlength="20" value="${E(key || "")}" ${key ? "disabled" : ""} style="text-transform:uppercase" placeholder="WELCOME10">`)}${field("Active", `<select id="c_active"><option value="yes" ${c.active ? "selected" : ""}>yes</option><option value="no" ${c.active ? "" : "selected"}>no</option></select>`)}${field("Percent off", `<input id="c_pct" type="number" min="0" max="100" value="${E(c.percent || "")}">`)}${field("…and/or KES off", `<input id="c_off" type="number" min="0" value="${E(c.off || "")}">`)}${field("Max uses (empty = unlimited)", `<input id="c_max" type="number" min="1" value="${E(c.max_uses || "")}">`)}${field("Expires (optional)", `<input id="c_exp" type="date" value="${E(c.expires || "")}">`)}</div>`;
+      const save = btn("Save", "primary"), cancel = btn("Cancel"), m = A.modal(key ? "Edit coupon" : "New coupon", f, [cancel, save]); cancel.onclick = m.close;
+      save.onclick = async () => {
+        const code = (key || $("#c_code", f).value).trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+        const pct = Math.max(0, Math.min(100, Number($("#c_pct", f).value) || 0)), off = Math.max(0, Number($("#c_off", f).value) || 0);
+        if (code.length < 3 || (!pct && !off)) return A.toast("Give a code (3+ characters) and a discount", true);
+        const rec = { active: $("#c_active", f).value === "yes", used: Number((D.coupons[code] || {}).used) || 0 };
+        if (pct) rec.percent = pct; if (off) rec.off = off;
+        const mx = Math.round(Number($("#c_max", f).value)); if (mx > 0) rec.max_uses = mx;
+        if ($("#c_exp", f).value) rec.expires = $("#c_exp", f).value;
+        try { await A.set("ad_coupons/" + code, rec); m.close(); A.toast("Saved ✓"); await load(); couponsTab(); } catch (e) { A.toast(e.message, true); }
+      };
+    }
+    paint(); $("#newcp").onclick = () => form(null);
+  }
+
+  // =====================================================================
+  // Tools: health check, smarter rotation, audience numbers, WhatsApp messages, backup
+  async function toolsTab() {
+    pane.innerHTML = `
+      <div class="crt-window"><div class="titlebar"><span class="label">ad-health</span></div><div class="body"><p class="hint" style="margin-top:0">Checks every live and scheduled ad: does its picture load, does its link work? (Links to other websites can only be opened and tested by you.)</p><button class="btn primary" id="hc" type="button">Check live ads</button><div id="hcout" style="margin-top:.8rem"></div></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">smarter-rotation</span></div><div class="body"><p class="hint" style="margin-top:0">Ads with a better click rate over the last 14 days appear more often in the rotation (needs at least 100 views to count). Press apply whenever you like; reset puts everything back to equal.</p><button class="btn" id="op" type="button">Calculate</button> <button class="btn danger" id="opreset" type="button">Reset to equal</button><div id="opout" style="margin-top:.8rem"></div></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">audience-numbers</span></div><div class="body"><p class="hint" style="margin-top:0">Shows "page views and visitors, last 30 days" on the public <a href="/advertise" target="_blank">Advertise page</a>. Refresh it whenever you want the numbers updated.</p><button class="btn" id="aud" type="button">Refresh audience numbers</button> <span class="hint" id="audout"></span></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">whatsapp-messages</span></div><div class="body"><p class="hint" style="margin-top:0">Ready-made messages used by the WhatsApp buttons. Use {name} {id} {ad} {end} {amount} {note}.</p>
+        ${Object.keys(MSG_DEF).map((k) => `<div class="field"><label>${E(MSG_LABEL[k])}</label><textarea data-msg="${k}" rows="2" maxlength="500">${E((D.set.wa && D.set.wa[k]) || MSG_DEF[k])}</textarea></div>`).join("")}
+        <button class="btn primary" id="savemsg" type="button">Save messages</button> <button class="btn" id="resetmsg" type="button">Reset to defaults</button></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">backup</span></div><div class="body"><p class="hint" style="margin-top:0">Downloads a copy of your database (site content, ads, sponsors, requests) as one JSON file. The free plan has no automatic backups, so do this regularly.</p><label><input type="checkbox" id="bkstats" style="width:auto"> include statistics (bigger file)</label><br><br><button class="btn primary" id="bk" type="button">Download backup</button> <span class="hint" id="bkout"></span></div></div>`;
+
+    // -- health check
+    $("#hc").onclick = async () => {
+      const out = $("#hcout"); out.innerHTML = `<p class="hint">Checking…</p>`;
+      const live = Object.entries(D.ads).filter(([, a]) => a && a.headline && ["live", "scheduled"].includes(state(a)));
+      const imgOk = (u) => new Promise((res) => { const i = new Image(); const t = setTimeout(() => res("slow"), 8000); i.onload = () => { clearTimeout(t); res("ok"); }; i.onerror = () => { clearTimeout(t); res("missing"); }; i.src = u; });
+      const probe = async (u) => { if (!u) return "—"; if (u.startsWith("/") || u.startsWith(location.origin)) { try { const r = await fetch(u, { method: "HEAD", cache: "no-store" }); return r.ok ? "ok" : "missing (" + r.status + ")"; } catch { return "unreachable"; } } return "external"; };
+      const rows = [];
+      for (const [k, a] of live) {
+        let im = "—"; const iv = String(a.image || "");
+        if (iv.startsWith("db:")) im = "ok (database)"; else if (iv) im = iv.startsWith("/") || iv.startsWith(location.origin) ? await probe(iv) : await imgOk(iv);
+        const lk = await probe(a.link);
+        rows.push({ k, a, im, lk });
+      }
+      out.innerHTML = `<table class="tbl"><thead><tr><th>Ad</th><th>Picture</th><th>Link</th></tr></thead><tbody>${rows.map((x) => `<tr><td><strong>${E(x.a.headline)}</strong><br><span class="mono hint">${E(x.k)}</span></td><td>${/^ok/.test(x.im) || x.im === "—" ? E(x.im) : `<span class="pill rejected">${E(x.im)}</span> <span class="mono hint">${E(x.a.image)}</span>`}</td><td>${x.lk === "ok" ? "ok" : x.lk === "external" ? `<a href="${E(x.a.link)}" target="_blank" rel="noopener noreferrer">open to test ↗</a>` : `<span class="pill rejected">${E(x.lk)}</span>`}</td></tr>`).join("") || `<tr><td colspan="3" class="hint">No live ads.</td></tr>`}</tbody></table><p class="hint">${rows.filter((x) => /missing|unreachable|slow/.test(x.im + x.lk)).length} problem(s) found.</p>`;
+    };
+    // -- rotation weights
+    let calc = null;
+    $("#op").onclick = async () => {
+      const st = await getStats(), from = addDays(today, -13), rows = [];
+      Object.entries(D.ads).filter(([, a]) => a && a.headline && state(a) === "live").forEach(([k, a]) => { const sm = EO_ADS.summarize(asObj(st[k]), from, today); rows.push({ k, a, v: sm.v, c: sm.c, ctr: sm.v ? sm.c / sm.v : 0 }); });
+      const ok = rows.filter((r) => r.v >= 100).sort((a, b) => b.ctr - a.ctr);
+      calc = {}; rows.forEach((r) => (calc[r.k] = 1));
+      ok.forEach((r, i) => { calc[r.k] = i < Math.ceil(ok.length / 3) ? 3 : i < Math.ceil(ok.length * 2 / 3) ? 2 : 1; });
+      $("#opout").innerHTML = `<table class="tbl"><thead><tr><th>Ad</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Weight</th></tr></thead><tbody>${rows.map((r) => `<tr><td>${E(r.a.headline)}</td><td>${r.v}</td><td>${r.c}</td><td>${(r.ctr * 100).toFixed(2)}%</td><td>${calc[r.k]}${D.set.weights && D.set.weights[r.k] ? ` <span class="hint">(now ${D.set.weights[r.k]})</span>` : ""}</td></tr>`).join("") || `<tr><td colspan="5" class="hint">No live ads.</td></tr>`}</tbody></table><button class="btn primary" id="opapply" type="button">Apply these weights</button>`;
+      $("#opapply").onclick = async () => { try { await A.set("ad_settings/weights", calc); D.set.weights = calc; A.toast("Rotation updated ✓"); } catch (e) { A.toast(e.message, true); } };
+    };
+    $("#opreset").onclick = async () => { try { await A.set("ad_settings/weights", null); D.set.weights = null; A.toast("Weights reset ✓"); } catch (e) { A.toast(e.message, true); } };
+    // -- audience
+    $("#aud").onclick = async () => {
+      try {
+        const daily = (await A.get("analytics/daily")) || {}, from = addDays(today, -29);
+        let v = 0, u = 0; Object.entries(daily).forEach(([d, o]) => { if (d >= from && d <= today) { v += Number(o.views) || 0; u += Number(o.visitors) || 0; } });
+        const st = await getStats(); let av = 0, ac = 0; Object.values(st).forEach((d) => { const sm = EO_ADS.summarize(asObj(d), from, today); av += sm.v; ac += sm.c; });
+        await A.set("ad_audience", { views_30d: v, visitors_30d: u, avg_ctr: av >= 200 ? Math.round((ac / av) * 10000) / 100 : null, updated: today });
+        $("#audout").textContent = `Saved: ${v.toLocaleString()} views, ${u.toLocaleString()} visitors (30 days).`;
+      } catch (e) { A.toast(e.message, true); }
+    };
+    // -- messages
+    $("#savemsg").onclick = async () => { const w = {}; pane.querySelectorAll("[data-msg]").forEach((t) => { const v = t.value.trim(); if (v && v !== MSG_DEF[t.dataset.msg]) w[t.dataset.msg] = clip(v, 500); }); try { await A.set("ad_settings/wa", Object.keys(w).length ? w : null); D.set.wa = w; A.toast("Saved ✓"); } catch (e) { A.toast(e.message, true); } };
+    $("#resetmsg").onclick = async () => { try { await A.set("ad_settings/wa", null); D.set.wa = null; A.toast("Reset ✓"); toolsTab(); } catch (e) { A.toast(e.message, true); } };
+    // -- backup
+    $("#bk").onclick = async () => {
+      const nodes = ["profile", "status", "blog_posts", "content_highlights", "writing_projects", "material_categories", "materials", "chatbot_faq", "occasions", "jokes", "milestones", "interests", "cyber_cafe_services", "side_projects", "gallery", "ads", "payment", "content_generator", "site_settings", "pages", "chatbot_config", "ad_settings", "ad_packages", "ad_coupons", "ad_availability", "ad_audience", "sponsors", "sponsor_requests", "sponsor_fulfil", "material_orders", "contact_inbox", "newsletter", "comments", "reactions", "shares", "pdf_downloads", "material_stats", "material_files", "chat_unanswered", "chat_feedback", "admins"];
+      if ($("#bkstats").checked) nodes.push("ad_stats", "ad_pages", "analytics", "chat_stats", "download_log");
+      const out = { _backup: { date: new Date().toISOString(), note: "ezra-ogombo database backup" } }, miss = [];
+      $("#bk").disabled = true;
+      for (let i = 0; i < nodes.length; i++) { $("#bkout").textContent = `Reading ${i + 1}/${nodes.length}…`; try { const v = await A.get(nodes[i]); if (v != null) out[nodes[i]] = v; } catch { miss.push(nodes[i]); } }
+      A.download(`backup-${today}.json`, JSON.stringify(out), "application/json");
+      $("#bk").disabled = false; $("#bkout").textContent = `Done. ${Object.keys(out).length - 1} sections saved${miss.length ? "; could not read: " + miss.join(", ") : ""}.`;
+    };
+  }
+
+  // =====================================================================
+  // Activity log (written automatically by the admin tools)
+  async function logTab() {
+    pane.innerHTML = `<div class="toolbar"><label><input type="checkbox" id="lg_ads" checked style="width:auto"> ads &amp; sponsors only</label><input id="lg_q" placeholder="filter…" style="max-width:14rem"><span class="hint" id="lg_n"></span></div><div class="tbl-wrap" id="lgt"><p class="hint">Loading…</p></div>`;
+    let rows = [];
+    try { const o = (await A.get("audit_log", false, '&orderBy="$key"&limitToLast=500')) || {}; rows = Object.values(o).filter((x) => x && x.ts).sort((a, b) => b.ts - a.ts); } catch (e) { $("#lgt").innerHTML = `<p class="hint">Could not load: ${E(e.message)}</p>`; return; }
+    const paint = () => {
+      const q = $("#lg_q").value.toLowerCase(), onlyAds = $("#lg_ads").checked;
+      const f = rows.filter((x) => (!onlyAds || /^(ads|ad_|sponsor)/.test(x.path || "")) && (!q || JSON.stringify(x).toLowerCase().includes(q))).slice(0, 300);
+      $("#lg_n").textContent = f.length + " entries";
+      $("#lgt").innerHTML = `<table class="tbl"><thead><tr><th>When</th><th>Who</th><th>What</th><th>Where</th></tr></thead><tbody>${f.map((x) => `<tr><td>${E(A.fmt(x.ts))}</td><td>${E(x.email || x.uid || "")}</td><td>${E(x.op)}</td><td class="mono">${E(x.path)}</td></tr>`).join("") || `<tr><td colspan="4" class="hint">Nothing.</td></tr>`}</tbody></table>`;
+    };
+    $("#lg_ads").onchange = paint; $("#lg_q").oninput = paint; paint();
+  }
+
+
+  // =====================================================================
+  // Analytics: goal & forecast, leaderboard, spot report card, heatmap, posts, A/B, funnel, month-end
+  const printHTML = (title, html) => { const w = window.open("", "_blank"); if (!w) return A.toast("Allow pop-ups to print", true); w.document.write(`<!doctype html><meta charset="utf-8"><title>${E(title)}</title><style>body{font:14px/1.45 system-ui,sans-serif;margin:24px;color:#111}table{border-collapse:collapse;width:100%;margin:8px 0}td,th{border:1px solid #bbb;padding:5px 8px;text-align:left}th{background:#eee}h1{font-size:20px}</style><h1>${E(title)}</h1>${html}<p><button onclick="print()">Print / Save as PDF</button></p>`); w.document.close(); };
+  const csvDown = (name, rows) => A.download(name, rows.map((r) => r.map((c) => `"${String(c == null ? "" : c).replace(/"/g, '""')}"`).join(",")).join("\n"), "text/csv");
+  const sumDays = (ids, st) => { const days = {}; ids.forEach((id) => Object.entries(asObj(st[id])).forEach(([d, x]) => { const t = (days[d] = days[d] || {}); Object.entries(x).forEach(([k, n]) => (t[k] = (t[k] || 0) + n)); })); return days; };
+  async function buildShare(rid) {
+    const r = D.reqs[rid], st = await getStats(), ids = reqAds(rid), days = sumDays(ids, st);
+    const from = r.start || addDays(today, -29), to = r.end && r.end < today ? r.end : today, sm = EO_ADS.summarize(days, from, to);
+    const adsum = ids.map((id) => { const x = EO_ADS.summarize(asObj(st[id]), from, to); return { h: clip((D.ads[id] || {}).headline, 80), v: x.v, c: x.c }; });
+    return { sponsor: clip(r.sponsor_name, 60), package: clip(r.package_name, 40), start: r.start || "", end: r.end || "", v: sm.v, c: sm.c, u: sm.u, ld: sm.ld, ctr: Math.round(sm.ctr * 100) / 100, byDay: sm.byDay.slice(-120), byPl: sm.byPl, ads: adsum, updated: today };
+  }
+  async function analyticsTab() {
+    pane.innerHTML = `<p class="hint">Loading…</p>`;
+    const st = await getStats(), pages = asObj(await A.get("ad_pages").catch(() => null)), from = addDays(today, -29);
+    const rev = revenueRows(), ym = today.slice(0, 7), month = rev.filter((x) => x.date.startsWith(ym)).reduce((n, x) => n + x.amount, 0), goal = Number(D.set.goal_month) || 0;
+    // renewals
+    const paidBy = {}; Object.values(D.reqs).forEach((r) => { if (r.payment && r.payment.status === "verified") paidBy[r.owner] = (paidBy[r.owner] || 0) + 1; });
+    const buyers = Object.keys(paidBy).length, renewers = Object.values(paidBy).filter((n) => n > 1).length, renewRate = buyers ? renewers / buyers : 0;
+    // forecast
+    let running = 0, expected = 0;
+    Object.values(D.reqs).forEach((r) => {
+      if (r.status !== "live" || !r.end || r.end < today) return;
+      const total = Math.max(1, (new Date(r.end) - new Date(r.start || today)) / 864e5 + 1), left = Math.max(0, (new Date(r.end) - new Date(today)) / 864e5 + 1);
+      running += (Number(r.price) || 0) * Math.min(1, left / total);
+      if (r.end <= addDays(today, 30)) expected += (Number(r.price) || 0) * renewRate;
+    });
+    // leaderboard
+    const lb = {};
+    Object.entries(D.reqs).forEach(([rid, r]) => {
+      const o = (lb[r.owner] = lb[r.owner] || { name: r.sponsor_name || r.sponsor_email || r.owner, paid: 0, n: 0, v: 0, c: 0 });
+      if (r.payment && r.payment.status === "verified") { o.n++; o.paid += (Number(r.price) || 0); }
+      arr(r.extensions).forEach((x) => (o.paid += Number(x.amount) || 0));
+      const sm = EO_ADS.summarize(sumDays(reqAds(rid), st)); o.v += sm.v; o.c += sm.c;
+    });
+    const lbRows = Object.entries(lb).filter(([, o]) => o.paid || o.v).sort((a, b) => b[1].paid - a[1].paid).slice(0, 15);
+    // spot report card (30 days)
+    const spot = {}; TYPES.forEach((t) => (spot[t.key] = { v: 0, c: 0 }));
+    Object.values(st).forEach((d) => { const sm = EO_ADS.summarize(asObj(d), from, today); Object.entries(sm.byPl).forEach(([k, x]) => { if (spot[k]) { spot[k].v += x.v; spot[k].c += x.c; } }); });
+    const liveN = (k) => Object.values(D.ads).filter((a) => a && a.headline && state(a) === "live" && EO_ADS.placesOf(a).includes(k)).length;
+    const soldN = (k) => Object.values(D.reqs).filter((r) => r.status === "live" && r.end >= today && String(r.placements || "").split(",").map((x) => x.trim()).includes(k)).length;
+    // heatmap data
+    const heat = { v: Array.from({ length: 7 }, () => Array(24).fill(0)), c: Array.from({ length: 7 }, () => Array(24).fill(0)) };
+    Object.values(st).forEach((d) => Object.entries(asObj(d)).forEach(([day, x]) => { if (day < from) return; const w = new Date(day + "T12:00:00Z").getUTCDay(); Object.entries(x).forEach(([k, n]) => { const m = k.match(/^([vc])h_(\d\d)$/); if (m) heat[m[1]][w][+m[2]] += n; }); }));
+    // posts
+    const pg = {}; Object.values(pages).forEach((o) => Object.entries(asObj(o)).forEach(([p, x]) => { const t = (pg[p] = pg[p] || { v: 0, c: 0 }); t.v += x.v || 0; t.c += x.c || 0; }));
+    const pgRows = Object.entries(pg).filter(([, x]) => x.v >= 20).sort((a, b) => b[1].c / b[1].v - a[1].c / a[1].v || b[1].c - a[1].c).slice(0, 12);
+    // A/B
+    const ab = {}; Object.entries(D.ads).forEach(([k, a]) => { if (a && a.ab) { const x = EO_ADS.summarize(asObj(st[k]), from, today); (ab[a.ab] = ab[a.ab] || []).push({ k, a, v: x.v, c: x.c }); } });
+    // funnel
+    const reqs = Object.values(D.reqs), F = { acc: Object.keys(D.sponsors).length, started: reqs.length, sub: reqs.filter((r) => r.payment).length, ver: reqs.filter((r) => r.payment && r.payment.status === "verified").length, ren: renewers };
+    const pct = (a, b) => (b ? Math.round((a / b) * 100) + "%" : "—");
+    const ctr = (x) => (x.v ? (x.c / x.v * 100).toFixed(2) : "0.00") + "%";
+    const mx = (m) => Math.max(1, ...m.flat());
+    const heatHTML = (m) => `<div class="tbl-wrap"><table class="tbl" style="font-size:.7rem"><thead><tr><th></th>${Array.from({ length: 24 }, (_, h) => `<th style="padding:2px">${h}</th>`).join("")}</tr></thead><tbody>${["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d, i) => `<tr><th>${d}</th>${m[i].map((n, h) => `<td title="${d} ${h}:00 — ${n}" style="padding:2px;min-width:14px;background:rgba(0,200,120,${(n / mx(m)).toFixed(2)})">${n ? "" : ""}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    const shareable = Object.entries(D.reqs).filter(([, r]) => ["live", "expired", "paused"].includes(r.status));
+    pane.innerHTML = `
+      <div class="crt-window"><div class="titlebar"><span class="label">goal-and-forecast</span></div><div class="body">
+        <div class="cards"><div class="stat"><b>${kes(month)}</b><span>This month${goal ? " of " + kes(goal) : ""}</span></div><div class="stat"><b>${kes(Math.round(running))}</b><span>Paid & still running (pro-rata)</span></div><div class="stat"><b>${kes(Math.round(expected))}</b><span>Expected renewals · next 30 days</span></div><div class="stat"><b>${pct(renewers, buyers)}</b><span>Sponsors who came back</span></div></div>
+        ${goal ? `<div style="background:var(--panel-border);height:10px;border-radius:5px;overflow:hidden"><div style="width:${Math.min(100, month / goal * 100).toFixed(0)}%;height:100%;background:var(--crt-green,#2ecc71)"></div></div><p class="hint">${Math.min(100, Math.round(month / goal * 100))}% of this month's goal. Set the goal in Ad types → settings.</p>` : `<p class="hint">Set a monthly goal in the Ad types tab to see a progress bar.</p>`}</div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">sponsor-leaderboard</span></div><div class="body tbl-wrap"><table class="tbl"><thead><tr><th>#</th><th>Sponsor</th><th>Paid</th><th>Bookings</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Came back</th></tr></thead><tbody>${lbRows.map(([k, o], i) => `<tr><td>${i + 1}</td><td>${E(o.name)}${(D.notes[k] || {}).tags ? ` <span class="chip">${E(D.notes[k].tags)}</span>` : ""}</td><td>${kes(o.paid)}</td><td>${o.n}</td><td>${o.v}</td><td>${o.c}</td><td>${ctr(o)}</td><td>${o.n > 1 ? "yes" : "—"}</td></tr>`).join("") || `<tr><td colspan="8" class="hint">No data yet.</td></tr>`}</tbody></table></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">spot-report-card · 30 days</span></div><div class="body tbl-wrap"><table class="tbl"><thead><tr><th>Spot</th><th>Views</th><th>Clicks</th><th>CTR</th><th>Live ads</th><th>Sponsor campaigns</th><th>Limit</th></tr></thead><tbody>${TYPES.map((t) => `<tr><td>${E(t.label)}</td><td>${spot[t.key].v}</td><td>${spot[t.key].c}</td><td>${ctr(spot[t.key])}</td><td>${liveN(t.key)}</td><td>${soldN(t.key)}</td><td>${E((D.set.limits || {})[t.key] || "—")}</td></tr>`).join("")}</tbody></table><p class="hint">Spots with high views but nothing sold are your best ones to promote; spots with few views can be dropped from packages.</p></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">best-times</span></div><div class="body"><div class="toolbar"><select id="hm"><option value="v">Views</option><option value="c">Clicks</option></select><span class="hint">Last 30 days · hours are Kenya time (EAT). Darker = more. Only counts from this version on.</span></div><div id="hmout">${heatHTML(heat.v)}</div></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">posts-by-ad-clicks</span></div><div class="body tbl-wrap"><table class="tbl"><thead><tr><th>Page</th><th>Ad views</th><th>Ad clicks</th><th>CTR</th></tr></thead><tbody>${pgRows.map(([p, x]) => `<tr><td class="mono">${E(p)}</td><td>${x.v}</td><td>${x.c}</td><td>${ctr(x)}</td></tr>`).join("") || `<tr><td colspan="4" class="hint">Needs pages with at least 20 ad views.</td></tr>`}</tbody></table></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">ab-tests</span></div><div class="body">${Object.entries(ab).map(([g, list]) => { const ok = list.every((x) => x.v >= 100), best = list.slice().sort((a, b) => b.c / (b.v || 1) - a.c / (a.v || 1))[0]; return `<h3>${E(g)}</h3><table class="tbl"><thead><tr><th>Variant</th><th>Views</th><th>Clicks</th><th>CTR</th></tr></thead><tbody>${list.map((x) => `<tr><td>${E(x.a.headline)}${ok && x === best ? ' <span class="pill live">winner</span>' : ""}</td><td>${x.v}</td><td>${x.c}</td><td>${ctr(x)}</td></tr>`).join("")}</tbody></table><p class="hint">${ok ? "Every variant has 100+ views, so the winner is reliable enough to keep." : "Wait until each variant has 100+ views before choosing a winner."}</p>`; }).join("") || `<p class="hint">No A/B tests yet. Give two ads the same “A/B test group” name in the ad form.</p>`}</div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">sales-funnel</span></div><div class="body"><div class="cards"><div class="stat"><b>${F.acc}</b><span>Sponsor accounts</span></div><div class="stat"><b>${F.started}</b><span>Requests started · ${pct(F.started, F.acc)}</span></div><div class="stat"><b>${F.sub}</b><span>Payment sent · ${pct(F.sub, F.started)}</span></div><div class="stat"><b>${F.ver}</b><span>Verified · ${pct(F.ver, F.sub)}</span></div><div class="stat"><b>${F.ren}</b><span>Renewed · ${pct(F.ren, buyers)}</span></div></div></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">weekly-digests</span></div><div class="body"><p class="hint" style="margin-top:0">Last 7 days for every running campaign, as a ready WhatsApp message. Tap, check, send.</p><div class="tbl-wrap"><table class="tbl"><tbody id="dg"></tbody></table></div></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">renewal-and-upsell-ideas</span></div><div class="body"><p class="hint" style="margin-top:0">Sponsors whose campaign is running or ended in the last 14 days. Good results → offer the next package; weak results → offer help first.</p><div class="tbl-wrap"><table class="tbl"><tbody id="up"></tbody></table></div></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">share-links</span></div><div class="body"><p class="hint" style="margin-top:0">A private link a sponsor can open without logging in (e.g. to show their boss). It shows a snapshot that refreshes whenever you open this admin page. Anyone with the link can see it, so only send it to the sponsor.</p><div class="tbl-wrap"><table class="tbl"><tbody>${shareable.map(([rid, r]) => { const t = (D.ful[rid] || {}).share; return `<tr><td>${E(r.sponsor_name || "")} <span class="hint">${E(r.package_name || "")} · ${E(r.start || "")} → ${E(r.end || "")}</span></td><td class="act">${t ? `<button class="btn sm" data-copy="${E(t)}" type="button">Copy link</button> <button class="btn sm danger" data-unshare="${E(rid)}" type="button">Turn off</button>` : `<button class="btn sm primary" data-share="${E(rid)}" type="button">Create link</button>`}</td></tr>`; }).join("") || `<tr><td class="hint">No running or finished campaigns yet.</td></tr>`}</tbody></table></div></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">month-end-payments</span></div><div class="body"><div class="toolbar"><input type="month" id="me" value="${ym}"><button class="btn" id="me_csv" type="button">Download CSV</button><button class="btn" id="me_pr" type="button">Print</button></div><div id="meout"></div></div></div>`;
+    // digests + upsell drafts
+    const avgCtr = (() => { let v = 0, c = 0; Object.values(st).forEach((d) => { const x = EO_ADS.summarize(asObj(d), from, today); v += x.v; c += x.c; }); return v >= 200 ? (c / v) * 100 : Number(D.aud && D.aud.avg_ctr) || null; })();
+    const dgRows = [], upRows = [], pkSorted = Object.entries(D.pk).filter(([, p]) => p.active).sort((a, b) => (a[1].price || 0) - (b[1].price || 0));
+    Object.entries(D.reqs).forEach(([rid, r]) => {
+      const run = r.status === "live" && r.end && r.end >= today, recent = ["live", "expired"].includes(r.status) && r.end && r.end < today && r.end >= addDays(today, -14);
+      if (!run && !recent) return;
+      const ids = reqAds(rid), w7 = EO_ADS.summarize(sumDays(ids, st), addDays(today, -6), today), all = EO_ADS.summarize(sumDays(ids, st), r.start || addDays(today, -29), r.end < today ? r.end : today);
+      const first = String(r.sponsor_name || "").split(" ")[0] || "there", ph = r.sponsor_phone;
+      if (run) {
+        const top = ids.map((id) => ({ h: (D.ads[id] || {}).headline, x: EO_ADS.summarize(asObj(st[id]), addDays(today, -6), today) })).sort((a, b) => b.x.c - a.x.c)[0];
+        const msg = `Hello ${first}, your weekly ad report (${(D.ads[ids[0]] || {}).headline || "your ad"}): ${w7.v} views and ${w7.c} clicks in the last 7 days (click rate ${w7.ctr.toFixed(2)}%${avgCtr ? ", site average " + avgCtr.toFixed(2) + "%" : ""}).${w7.ld ? " " + w7.ld + " people started a WhatsApp chat with you." : ""}${top && top.x.c ? ` Best ad: "${top.h}".` : ""} Your campaign runs until ${r.end}. Reply here if you want changes.`;
+        dgRows.push(`<tr><td><strong>${E(r.sponsor_name || "")}</strong><br><span class="hint">${w7.v} views · ${w7.c} clicks · until ${E(r.end)}</span></td><td class="act">${ph ? `<a class="btn sm primary" href="${E(wa(ph, msg))}" target="_blank" rel="noopener">WhatsApp digest</a>` : '<span class="hint">no phone</span>'}</td></tr>`);
+      }
+      const good = all.v >= 100 && avgCtr && all.ctr >= avgCtr, nxt = pkSorted.find(([k, p]) => (p.price || 0) > (Number(r.price) || 0));
+      const msg2 = good
+        ? `Hello ${first}, your ad did well: ${all.v} views and ${all.c} clicks (${all.ctr.toFixed(2)}%), above our ${avgCtr.toFixed(2)}% average. ${nxt ? `Want even more reach? Our ${nxt[1].name} package adds ${(Number(nxt[1].max_ads) || 1)} ads${nxt[1].socials ? " and social posts" : ""}.` : "Shall we run it again?"}`
+        : `Hello ${first}, your ad had ${all.v} views and ${all.c} clicks so far. We can improve it: a clearer headline, a stronger picture or a WhatsApp button usually helps. Want us to refresh it for free when you renew?`;
+      upRows.push(`<tr><td><strong>${E(r.sponsor_name || "")}</strong> <span class="pill ${good ? "live" : "pending"}">${good ? "doing well" : all.v < 100 ? "too early" : "below average"}</span><br><span class="hint">${all.v} views · ${all.c} clicks · ${all.ctr.toFixed(2)}% · ${run ? "ends " + E(r.end) : "ended " + E(r.end)}</span></td><td class="act">${ph ? `<a class="btn sm" href="${E(wa(ph, msg2))}" target="_blank" rel="noopener">WhatsApp</a>` : ""}</td></tr>`);
+    });
+    $("#dg").innerHTML = dgRows.join("") || `<tr><td class="hint">No running campaigns.</td></tr>`;
+    $("#up").innerHTML = upRows.join("") || `<tr><td class="hint">Nothing to suggest yet.</td></tr>`;
+    $("#hm").onchange = (e) => ($("#hmout").innerHTML = heatHTML(heat[e.target.value]));
+    const meRows = () => rev.filter((x) => x.date.startsWith($("#me").value)).sort((a, b) => a.date.localeCompare(b.date));
+    const mePaint = () => { const r = meRows(); $("#meout").innerHTML = `<table class="tbl"><thead><tr><th>Date</th><th>Sponsor</th><th>Type</th><th>Detail</th><th>KES</th></tr></thead><tbody>${r.map((x) => `<tr><td>${E(x.date)}</td><td>${E(x.sponsor)}</td><td>${E(x.kind)}</td><td>${E(x.ref)}</td><td>${x.amount}</td></tr>`).join("") || `<tr><td colspan="5" class="hint">No payments in this month.</td></tr>`}</tbody><tfoot><tr><th colspan="4">Total</th><th>${r.reduce((n, x) => n + x.amount, 0)}</th></tr></tfoot></table>`; };
+    $("#me").onchange = mePaint; mePaint();
+    $("#me_csv").onclick = () => csvDown(`payments-${$("#me").value}.csv`, [["Date", "Sponsor", "Type", "Detail", "KES"]].concat(meRows().map((x) => [x.date, x.sponsor, x.kind, x.ref, x.amount])));
+    $("#me_pr").onclick = () => printHTML("Ad payments — " + $("#me").value, $("#meout").innerHTML);
+    pane.querySelectorAll("[data-share]").forEach((b) => (b.onclick = async () => {
+      const rid = b.dataset.share, t = Array.from(crypto.getRandomValues(new Uint8Array(12)), (x) => x.toString(36).padStart(2, "0")).join("").slice(0, 20);
+      try { await A.set("ad_share/" + t, await buildShare(rid)); await A.update("sponsor_fulfil/" + rid, { share: t }); D.ful[rid] = Object.assign({}, D.ful[rid], { share: t }); A.toast("Link created ✓"); analyticsTab(); } catch (e) { A.toast(e.message, true); }
+    }));
+    pane.querySelectorAll("[data-unshare]").forEach((b) => (b.onclick = async () => { const rid = b.dataset.unshare, t = D.ful[rid].share; try { await A.del("ad_share/" + t); await A.update("sponsor_fulfil/" + rid, { share: null }); D.ful[rid].share = null; A.toast("Link turned off"); analyticsTab(); } catch (e) { A.toast(e.message, true); } }));
+    pane.querySelectorAll("[data-copy]").forEach((b) => (b.onclick = () => { const u = location.origin + "/report.html?t=" + b.dataset.copy; (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => A.toast("Link copied ✓"), () => prompt("Copy this link:", u)); }));
+  }
+
+  // auto-disable: when a package has run out, switch its ads off and mark the request expired
+  async function applyPauses() {
+    for (const [rid, p] of Object.entries(D.pause || {})) {
+      const r = D.reqs[rid]; if (!r || p.applied || p.until_ms > Date.now()) continue;
+      const days = Math.max(0, Math.min(60, Math.ceil((p.until_ms - p.from_ms) / 864e5)));
+      try {
+        if (r.end && days) { const ne = addDays(r.end, days); await A.update("sponsor_requests/" + rid, { end: ne, updated: Date.now() }); r.end = ne; for (const id of reqAds(rid)) await A.update("ads/" + id, { end: ne }); }
+        await A.update("ad_pause/" + rid, { applied: true, days }); p.applied = true;
+        A.toast(`Pause of ${days} day(s) added to ${r.sponsor_name || rid}'s campaign`);
+      } catch {}
+    }
+  }
+  async function refreshShares() {
+    for (const [rid, F] of Object.entries(D.ful)) { if (F && F.share && D.reqs[rid]) { try { await A.set("ad_share/" + F.share, await buildShare(rid)); } catch {} } }
+  }
+  async function sweepExpired() {
+    await applyPauses();
+    let n = 0;
+    for (const [rid, r] of Object.entries(D.reqs)) {
+      if (r.status !== "live" || !r.end || r.end >= today) continue;
+      if (D.pause && D.pause[rid] && !D.pause[rid].applied) continue;
+      try { for (const id of reqAds(rid)) if (String(D.ads[id].active) !== "no") await A.update("ads/" + id, { active: "no" }); await A.update("sponsor_requests/" + rid, { status: "expired", updated: Date.now() }); n++; } catch {}
+    }
+    if (n) { A.toast(n + " finished campaign(s) switched off"); await load(); }
+  }
+  await load();
+  await sweepExpired();
+  await publishAvailability();
+  refreshShares();
+  const tabs = [["overview", "Overview"], ["requests", "Requests & payments"], ["ads", "All ads"], ["calendar", "Calendar"], ["types", "Ad types (on/off)"], ["packages", "Packages"], ["coupons", "Coupons"], ["sponsors", "Sponsors"], ["analytics", "Analytics"], ["metrics", "Metrics & revenue"], ["tools", "Tools"], ["log", "Log"]];
+  const map = { overview, requests, ads: adsTab, calendar: calendarTab, types: typesTab, packages: packagesTab, coupons: couponsTab, sponsors: sponsorsTab, analytics: analyticsTab, metrics: metricsTab, tools: toolsTab, log: logTab };
+  A.tabs($("#tabs"), tabs, (k) => map[k]());
+})();
+</script>
+</body>
+</html>

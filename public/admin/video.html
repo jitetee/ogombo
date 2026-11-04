@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video studio — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+<style>
+.vs{display:grid;grid-template-columns:minmax(260px,380px) 1fr;gap:1.2rem;align-items:start}
+@media(max-width:860px){.vs{grid-template-columns:1fr}}
+.vs-prev{position:sticky;top:.5rem;z-index:5;background:var(--bg,#0b120f)}
+@media(max-width:860px){.vs-prev{top:0;padding-bottom:.4rem}}
+.vs-stage{background:#000;border:1px solid var(--panel-border);border-radius:6px;display:flex;justify-content:center;align-items:center;max-height:68vh;overflow:hidden}
+.vs-stage canvas{max-width:100%;max-height:68vh;display:block}
+@media(max-width:860px){.vs-stage,.vs-stage canvas{max-height:42vh}}
+.vs-bar{display:flex;gap:.4rem;align-items:center;margin-top:.5rem}
+.vs-bar input[type=range]{flex:1;min-width:0}
+.vs-strip{display:flex;gap:.4rem;overflow-x:auto;padding:.5rem 0}
+.vs-chip{flex:0 0 auto;border:1px solid var(--panel-border);background:var(--panel);color:var(--ink);border-radius:4px;padding:.3rem .55rem;font:inherit;font-size:.78rem;cursor:pointer;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vs-chip.on{border-color:var(--crt-green);color:var(--crt-green)}
+.vs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem}
+.vs-ed .field{margin-bottom:.7rem}
+.vs-ed textarea{min-height:5rem}
+.vs-row{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin:.5rem 0}
+.vs-note{font-size:.8rem;color:var(--ink-dim)}
+.vs-prog{height:.6rem;background:var(--panel-border);border-radius:3px;overflow:hidden;margin:.5rem 0}
+.vs-prog i{display:block;height:100%;width:0;background:var(--crt-green)}
+.vs-poses{display:flex;flex-wrap:wrap;gap:.3rem;max-height:140px;overflow:auto}
+.vs-poses button{border:1px solid var(--panel-border);background:var(--panel);color:var(--ink);border-radius:4px;padding:.15rem .4rem;font-size:.75rem;cursor:pointer}
+.vs-poses button.on{border-color:var(--crt-green);color:var(--crt-green)}
+</style>
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1rem"><span class="kicker">VIDEO.EXE</span><h1>Video studio</h1><p class="hint">Build a short video from scenes (title, bullets, big number, narrator, outro with QR), add a Kenyan voice, music and captions, then render an MP4 right here in your browser. Portrait, square or landscape.</p></section>
+<div class="vs">
+  <div class="vs-prev">
+    <div class="vs-stage"><canvas id="cv"></canvas></div>
+    <div class="vs-bar"><button class="btn sm primary" id="play" type="button">▶ Play</button><input type="range" id="seek" min="0" max="1000" value="0"><span class="mono vs-note" id="tm">0:00</span></div>
+    <div class="vs-strip" id="strip"></div>
+  </div>
+  <div class="vs-ed"><div id="tabs"></div><div id="pane"></div></div>
+</div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/vendor/qrcode.js"></script>
+<script src="/js/qr.js"></script>
+<script src="/js/vendor/mp4-muxer.js"></script>
+<script src="/js/video/engine.js"></script>
+<script src="/js/video/tts.js"></script>
+<script src="/js/video/render.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("video");
+  const V = EO_VID, T = EO_TTS, E = A.esc, $ = (s, r) => (r || document).querySelector(s);
+  const curAudF = () => ((P.audio === "music" || P.audio === "none") ? {} : aud);
+  let P = V.newProject(), cur = 0, aud = {}, music = null, musicName = "", imgs = {}, assets = null, mixBuf = null, mixSig = "", voices = [], poses = [], dirty = true;
+  const cv = $("#cv"), ctx = cv.getContext("2d");
+  const LS = "eo_video_draft";
+  try { const d = JSON.parse(localStorage.getItem(LS) || "null"); if (d && d.scenes) P = Object.assign(V.newProject(), d); } catch {}
+  try { const list = await (await fetch("/js/video/packs/index.json")).json(); for (const f of list) await new Promise((res) => { const sc2 = document.createElement("script"); sc2.src = "/js/video/packs/" + f; sc2.onload = sc2.onerror = res; document.head.append(sc2); }); } catch {}
+  if (!P.voice || !P.voice.name) P.voice = Object.assign({}, P.voice, { name: T.FREE[0].name, languageCode: "en-US", rate: 1, pitch: 0 });
+  fetch("/assets/narrators/index.json").then((r) => r.json()).then((j) => { poses = j.poses || []; if (tab === "scenes") pane(); }).catch(() => {});
+
+  const save = () => { dirty = true; try { localStorage.setItem(LS, JSON.stringify(P)); } catch {} };
+  const sc = () => P.scenes[cur];
+  const fmt = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+
+  // ---- assets + preview
+  async function reload() {
+    const store = { imgs };
+    for (const s of P.scenes) if (s.imgKey && !imgs[s.imgKey] && /^(\/|https?:)/.test(s.imgKey)) imgs[s.imgKey] = await V.loadImage(s.imgKey);
+    assets = await V.loadAssets(P, store, curAudF());
+  }
+  const LOW = Math.min(innerWidth, screen.width || 999) < 700;
+  function sizeCanvas() { const z = V.outSize(Object.assign({}, P, { quality: LOW ? 0.27 : 0.4 })); if (cv.width !== z.w || cv.height !== z.h) { cv.width = z.w; cv.height = z.h; } }
+  let t = 0.9, playing = false, handle = null, t0 = 0, aSrc = null;
+  const total = () => V.timeline(P, curAudF()).total || 0;
+  function frame() { sizeCanvas(); if (assets) { assets.aud = curAudF(); assets.tl = null; V.draw(ctx, P, t, assets); } $("#tm").textContent = fmt(t) + " / " + fmt(total()); $("#seek").value = total() ? Math.round((t / total()) * 1000) : 0; }
+  async function play() {
+    if (playing) return stop();
+    await ensureMix(); if (t >= total() - 0.05) t = 0;
+    playing = true; $("#play").textContent = "⏸ Pause"; t0 = performance.now() - t * 1000;
+    if (mixBuf) aSrc = T.play(mixBuf, t);
+    let lastDraw = 0; const step = () => { if (!playing) return; const nowMs = performance.now(); if (LOW && nowMs - lastDraw < 30) { handle = requestAnimationFrame(step); return; } lastDraw = nowMs; t = (nowMs - t0) / 1000; if (t >= total()) { t = total(); stop(); frame(); return; } frame(); handle = requestAnimationFrame(step); };
+    step();
+  }
+  function stop() { playing = false; $("#play").textContent = "▶ Play"; cancelAnimationFrame(handle); if (aSrc) aSrc.stop(); aSrc = null; }
+  async function ensureMix() {
+    const tl = V.timeline(P, curAudF()); const sig = JSON.stringify([tl.map((x) => [x.s.id, x.start.toFixed(2), x.a ? x.a.t1 : 0, x.s.layout]), P.music, musicName, P.audio, P.sfx]);
+    if (sig === mixSig) return;
+    mixBuf = P.audio === "none" ? null : await T.mix(P, tl, curAudF(), music); mixSig = sig;
+  }
+  $("#play").onclick = play;
+  $("#seek").oninput = (e) => { const was = playing; stop(); t = (e.target.value / 1000) * total(); frame(); if (was) play(); };
+  const refresh = async () => { stop(); await reload(); frame(); strip(); };
+
+  function strip() {
+    const tl = V.timeline(P, curAudF()), box = $("#strip"); box.innerHTML = "";
+    P.scenes.forEach((s, i) => { const b = document.createElement("button"); b.type = "button"; b.className = "vs-chip" + (i === cur ? " on" : ""); b.textContent = `${i + 1}. ${s.title || s.num || s.narration || V.LAYOUTS[s.layout]}`.slice(0, 40); b.onclick = () => { cur = i; stop(); t = tl[i].start + 0.9; frame(); strip(); pane(); }; box.append(b); });
+  }
+
+  // ---- form helpers
+  const el = (h) => { const d = document.createElement("div"); d.innerHTML = h; return d.firstElementChild; };
+  function field(label, node, hint) { const f = el(`<div class="field"><label>${E(label)}${hint ? ` <span class="hint">${E(hint)}</span>` : ""}</label></div>`); f.append(node); return f; }
+  function inp(val, on, attrs) { const i = document.createElement("input"); i.value = val == null ? "" : val; Object.assign(i, attrs || {}); i.oninput = () => { on(i.value); save(); lazy(); }; return i; }
+  function area(val, on, attrs) { const i = document.createElement("textarea"); i.value = val || ""; Object.assign(i, attrs || {}); i.oninput = () => { on(i.value); save(); lazy(); }; return i; }
+  function sel(opts, val, on) { const s = document.createElement("select"); Object.entries(opts).forEach(([k, l]) => s.add(new Option(l, k, false, String(k) === String(val)))); s.onchange = () => { on(s.value); save(); refresh(); }; return s; }
+  let lz = 0; const lazy = () => { clearTimeout(lz); lz = setTimeout(async () => { await reload(); frame(); strip(); }, 250); };
+
+  // ---- tabs
+  let tab = "scenes";
+  const TABS = [["scenes", "Scenes"], ["style", "Style"], ["audio", "Voice & music"], ["export", "Export"], ["projects", "Save / open"]];
+  A.tabs($("#tabs"), TABS, (k) => { tab = k; pane(); });
+  function pane() { const h = $("#pane"); h.innerHTML = ""; ({ scenes: tScenes, style: tStyle, audio: tAudio, export: tExport, projects: tProjects })[tab](h); }
+
+  // ---------- SCENES ----------
+  function tScenes(h) {
+    const bar = el(`<div class="vs-row"></div>`);
+    bar.append(A.btn("+ Scene", "sm primary", () => { P.scenes.splice(cur + 1, 0, V.newScene("title")); cur = Math.min(cur + 1, P.scenes.length - 1); save(); refresh().then(pane); }),
+      A.btn("Duplicate", "sm", () => { const s = sc(); if (!s) return; const c = JSON.parse(JSON.stringify(s)); c.id = V.newId(); P.scenes.splice(cur + 1, 0, c); cur++; save(); refresh().then(pane); }),
+      A.btn("◀", "sm", () => { if (cur > 0) { [P.scenes[cur - 1], P.scenes[cur]] = [P.scenes[cur], P.scenes[cur - 1]]; cur--; save(); refresh().then(pane); } }),
+      A.btn("▶", "sm", () => { if (cur < P.scenes.length - 1) { [P.scenes[cur + 1], P.scenes[cur]] = [P.scenes[cur], P.scenes[cur + 1]]; cur++; save(); refresh().then(pane); } }),
+      A.btn("Delete", "sm danger", async () => { if (!sc() || !(await A.confirm("Delete this scene?"))) return; P.scenes.splice(cur, 1); cur = Math.max(0, cur - 1); save(); refresh().then(pane); }),
+      A.btn("Import…", "sm", importMenu));
+    h.append(el(`<div class="vs-row"></div>`)); $(".vs-row:last-child", h).append(A.btn("🎬 Make a video from a content card", "primary", cardPicker));
+    h.append(bar);
+    const s = sc(); if (!s) { h.append(el(`<p class="hint">No scenes yet. Press <b>+ Scene</b>, or <b>Import…</b> to turn a script, blog post or content card into scenes.</p>`)); return; }
+    const L = s.layout;
+    h.append(field("Layout", sel(V.LAYOUTS, L, (v) => { s.layout = v; setTimeout(pane, 0); })));
+    const show = (a) => a.includes(L);
+    if (show(["title", "bullets", "quote", "narrator", "image", "outro", "whiteboard", "checklist", "chat"])) h.append(field(L === "quote" ? "Quote / fact" : "Heading", inp(s.title, (v) => (s.title = v))));
+    if (show(["title", "quote", "narrator", "image", "outro", "number"])) h.append(field(L === "quote" ? "Said by" : "Sub text", area(s.sub, (v) => (s.sub = v), { rows: 2 })));
+    if (show(["bullets", "whiteboard", "checklist", "chat"])) h.append(field(L === "chat" ? "Messages" : "Points", area((s.lines || []).join("\n"), (v) => (s.lines = v.split("\n").map((x) => x.trim()).filter(Boolean)), { rows: 5 }), "one per line"));
+    if (show(["number"])) { h.append(field("Number", inp(s.num, (v) => (s.num = v)), "e.g. 85% or 1,200 or 3")); h.append(field("What it means", inp(s.label, (v) => (s.label = v)))); }
+    if (show(["image"])) {
+      const f = document.createElement("input"); f.type = "file"; f.accept = "image/*"; f.onchange = async () => { const file = f.files[0]; if (!file) return; const k = "local:" + file.name; imgs[k] = await V.loadImage(URL.createObjectURL(file)); s.imgKey = k; save(); refresh(); };
+      h.append(field("Photo", inp(s.imgKey, (v) => (s.imgKey = v)), "a /assets/… path or https:// link — or pick a file below (files picked here are not saved with the project)")); h.append(f);
+    }
+    if (show(["outro"])) { h.append(field("Call to action", inp(s.cta, (v) => (s.cta = v)), "e.g. Follow for more")); h.append(field("QR code goes to", inp(s.qr, (v) => (s.qr = v)), "a short code like ghtyui, a /page or https:// link — empty = no QR")); }
+    if (show(["narrator", "title", "bullets", "quote", "number", "image", "outro", "whiteboard"])) {
+      const pb = el(`<div class="field"><label>Narrator pose <span class="hint">(shown beside the text; none = no narrator)</span></label><div class="vs-poses"></div></div>`), box = $(".vs-poses", pb);
+      const mk = (n, label) => { const b = document.createElement("button"); b.type = "button"; b.textContent = label; if ((s.pose || "") === n) b.className = "on"; b.onclick = () => { s.pose = n; save(); refresh().then(pane); }; box.append(b); };
+      mk("", "none"); poses.forEach((p) => mk(p.n, (p.s || "") + " " + p.n.replace(/-/g, " ")));
+      h.append(pb);
+      h.append(field("Narrator sits on", sel({ "": "Project default", none: "Just the narrator", soap: "Soap bubble", blob: "Blob", circle: "Circle", card: "Contact card (channel ribbon)" }, s.plate || "", (v) => (s.plate = v))));
+      h.append(field("Narrator side", sel({ right: "Right", left: "Left" }, s.posePos || "right", (v) => (s.posePos = v))));
+    }
+    h.append(field("Illustration (non-talking, human-less version)", sel(Object.assign({ "": "Automatic from the text" }, V.ICON_KEYS), s.icon || "", (v2) => (s.icon = v2)), "shown instead of the narrator"));
+    if (L === "whiteboard") h.append(field("Doodle at the end", sel(V.DOODLES, s.doodle || "", (v) => (s.doodle = v)), "drawn by the marker after the writing"));
+    h.append(field("What the narrator says", area(s.narration, (v) => (s.narration = v), { rows: 4 }), "this is spoken and shown as captions; leave empty for a silent scene"));
+    const g = el(`<div class="vs-grid"></div>`);
+    g.append(field("Seconds", inp(s.dur || "", (v) => (s.dur = Math.max(0, Math.min(60, Number(v) || 0))), { type: "number", min: 0, max: 60, placeholder: "auto" }), "empty = from the narration length"));
+    g.append(field("Text animation", sel(Object.assign({ "": "Use project default" }, V.ANIMS), s.anim || "", (v) => (s.anim = v))));
+    g.append(field("Background", sel(Object.assign({ "": "Use project default" }, V.BGS), s.bg || "", (v) => (s.bg = v))));
+    g.append(field("Transition in", sel({ up: "Float up (smooth)", fade: "Fade", slide: "Slide", zoom: "Zoom", zoomthru: "Zoom through", wipe: "Wipe", circle: "Circle reveal", doors: "Split doors" }, s.trans || "up", (v) => (s.trans = v))));
+    h.append(g);
+  }
+
+  // ---------- import ----------
+  const plain = (html) => { const d = document.createElement("div"); d.innerHTML = String(html || "").replace(/<\/(p|li|h\d|div|br)>/gi, "$&\n").replace(/<br\s*\/?>/gi, "\n"); return (d.textContent || "").replace(/ /g, " "); };
+  const pickPose = (txt) => { const w = txt.toLowerCase(); let best = null, sc_ = 0; poses.filter((p) => p.a).forEach((p) => { const n = p.k.split(" ").filter((k) => k.length > 3 && w.includes(k)).length; if (n > sc_) { sc_ = n; best = p; } }); return best ? best.n : "open-hands"; };
+  function fromScript(text, title, qr) {
+    const paras = text.split(/\n\s*\n|\n/).map((x) => x.trim()).filter(Boolean).slice(0, 14);
+    if (!paras.length) return A.toast("Nothing to import", true);
+    const out = []; const first = V.newScene("title"); first.title = title || paras[0].slice(0, 70); first.narration = title ? "" : paras.shift(); first.dur = 3; out.push(first);
+    paras.forEach((p, i) => { const s = V.newScene("narrator"); s.sub = p.length > 170 ? p.slice(0, 167).replace(/\s+\S*$/, "") + "…" : p; s.narration = p; s.pose = pickPose(p); s.posePos = i % 2 ? "left" : "right"; s.trans = ["fade", "slide", "zoom"][i % 3]; out.push(s); });
+    const o = V.newScene("outro"); o.title = "Thank you"; o.cta = "Follow for more"; o.qr = qr || ""; o.narration = "Thank you for watching. Follow for more."; o.pose = "hands-together-thanks"; out.push(o);
+    P.scenes = out; cur = 0; aud = {}; save(); refresh().then(pane);
+  }
+
+  // ---- one-tap: choose a content card from the site and get a finished video script
+  let cardIdx = null;
+  const clipWords = (txt, n) => { const ss = String(txt || "").replace(/\s+/g, " ").trim().split(/(?<=[.!?])\s+/); let out = [], w = 0; for (const x of ss) { const c = x.split(" ").length; if (out.length && w + c > n) break; out.push(x); w += c; } return out.join(" "); };
+  const shortLine = (x, n) => { x = String(x).replace(/[.!?]+$/, "").trim(); if (x.length <= n) return x; const cut = x.search(/[,;:—(]\s?/); if (cut > 14 && cut <= n) return x.slice(0, cut).trim(); return x.slice(0, n - 1).replace(/\s+\S*$/, "") + "…"; };
+  function cardToProject(card, slug) {
+    const doc = new DOMParser().parseFromString("<body>" + (card.body || "") + "</body>", "text/html"), secs = [{ h: "", items: [], paras: [] }];
+    [...doc.body.children].forEach((n) => { const tg = n.tagName; if (/^H[1-4]$/.test(tg)) secs.push({ h: n.textContent.trim(), items: [], paras: [] }); else if (tg === "UL" || tg === "OL") secs[secs.length - 1].items.push(...[...n.querySelectorAll("li")].map((li) => li.textContent.trim()).filter(Boolean)); else if (n.textContent.trim()) secs[secs.length - 1].paras.push(n.textContent.trim().replace(/\s+/g, " ")); });
+    let summary = (secs[0].paras[0] || card.caption || "").replace(/^in short:\s*/i, ""); if (!secs[0].paras.length && card.caption) summary = card.caption;
+    const short = card.title.replace(/\s[—–-]\s.*$/, ""), out = [], poseFor = (t) => pickPose(t), PS = ["left", "right"], TR = ["up", "slide", "zoom", "wipe", "circle", "doors"], NUM = ["One", "Two", "Three", "Four", "Five"];
+    const add = (o) => { const sc2 = Object.assign(V.newScene(o.layout), o); sc2.posePos = o.posePos || PS[out.length % 2 ? 0 : 1]; sc2.trans = o.trans || TR[out.length % TR.length]; if (!sc2.pose && sc2.layout !== "checklist") sc2.pose = poseFor(sc2.narration); if (!sc2.pose) sc2.pose = "clipboard-side"; out.push(sc2); };
+    add({ layout: "title", title: short, sub: shortLine(card.caption || "", 90), narration: clipWords(summary, 36), pose: "wave-hello", anim: "stamp", trans: "up" });
+    let k = 0; secs.slice(1).filter((x) => (x.paras.length || x.items.length) && !/what the card shows|^sources?|^references?|disclaimer/i.test(x.h)).slice(0, 4).forEach((x) => {
+      const lett = x.paras.map((q) => q.split(/\s(?=[A-Z]\s[-–]\s)/)).find((arr) => arr.length >= 3 && arr.every((q) => /^[A-Z]\s[-–]\s/.test(q)));
+      if (lett) { const it = lett.slice(0, 6); add({ layout: "checklist", title: shortLine(x.h, 40), lines: it.map((q) => shortLine(q.split(/:/)[0].replace(/\s[-–]\s/, " – "), 52)), narration: it.map((q) => { const [a1, ...r] = q.split(/:\s*/); return a1.replace(/^[A-Z]\s[-–]\s/, (z) => z[0] + ", ") + (r.length ? ": " + r.join(": ").split(/[;.]/)[0].trim() : ""); }).join(". ") + "." }); k++; return; }
+      const text = x.paras.join(" "), narr = clipWords(text, 40), sents = narr.split(/(?<=[.!?])\s+/).filter(Boolean);
+      if (x.items.length >= 2) { const it = x.items.slice(0, 5); add({ layout: "checklist", title: shortLine(x.h || "Key points", 40), lines: it.map((q) => shortLine(q, 58)), narration: it.map((q, i) => NUM[i] + ", " + shortLine(q, 60)).join(". ") + "." }); }
+      else if (k % 3 === 0 && sents.length >= 2) add({ layout: "bullets", title: shortLine(x.h, 44), lines: sents.slice(0, 3).map((q) => shortLine(q, 56)), narration: narr });
+      else if (k % 3 === 1) add({ layout: "quote", title: shortLine(sents[0] || narr, 110), sub: shortLine(x.h, 40), narration: narr });
+      else add({ layout: "narrator", title: shortLine(x.h, 40), sub: shortLine(narr, 150), narration: narr });
+      k++;
+    });
+    add({ layout: "narrator", title: "Read more", sub: "The full card is on my website. The link is in the description.", narration: "Want the full card? The link is in the description, so read more there. Follow for more.", pose: "point-at-you", posePos: "right" });
+    const np = Object.assign(V.newProject(), { name: card.title, scenes: out, hook: { text: short.split(/\s+/).slice(0, 6).join(" "), dur: 1.8 }, cover: { title: short, sub: shortLine(card.caption || "", 80), pose: "", plate: "" }, end: { title: "Read the full card", sub: "Link in the description", cta: "Subscribe", qr: "https://ezra-ogombo.web.app/content/" + slug }, voice: P.voice, music: P.music, audio: "full", capStyle: "box" });
+    return np;
+  }
+  async function cardPicker() {
+    const w = document.createElement("div");
+    w.innerHTML = `<p class="hint">Tap a content card and the whole video is built for you: hook, scenes, voice-over, and a closing line telling viewers the link to read more is in the description. This replaces the scenes you have now.</p><div class="field"><input id="q" placeholder="Search cards…" autocomplete="off"></div><div id="cl" style="max-height:50vh;overflow:auto"></div>`;
+    const m = A.modal("Make a video from a content card", w, []);
+    const cl = $("#cl", w), q = $("#q", w); cl.textContent = "Loading cards…";
+    try { if (!cardIdx) cardIdx = (await (await fetch("/data/content-index.json")).json()).items || []; } catch { cl.textContent = "Could not load the card list."; return; }
+    const paint = () => {
+      const f = q.value.trim().toLowerCase(), rows = cardIdx.filter((x) => !f || (x.t + " " + (x.c || "")).toLowerCase().includes(f)).slice(0, 40); cl.innerHTML = "";
+      rows.forEach((x) => { const r = document.createElement("button"); r.type = "button"; r.className = "vs-chip"; r.style.cssText = "display:flex;gap:.6rem;align-items:center;width:100%;max-width:none;text-align:left;margin:.2rem 0;white-space:normal"; r.innerHTML = `<img src="${E(x.i || "")}" loading="lazy" alt="" style="width:54px;height:54px;object-fit:cover;border-radius:4px;flex:0 0 auto"><span>${E(x.t)}</span>`;
+        r.onclick = async () => { r.textContent = "Building…"; try { const card = await A.get("content_highlights/" + x.s); if (!card || !card.body) throw new Error("Card not found"); stop(); P = cardToProject(card, x.s); cur = 0; aud = {}; music = null; if (P.music && P.music.src) { try { music = await T.musicFromUrl(P.music.src); musicName = P.music.src; } catch {} } save(); m.close(); await refresh(); pane(); A.toast("Video built. Check the preview, then Export → Render BOTH versions."); } catch (e) { A.toast(e.message, true); r.textContent = x.t; } };
+        cl.append(r); });
+      if (!rows.length) cl.textContent = "No match.";
+    };
+    q.oninput = paint; paint();
+  }
+  function importMenu() {
+    const w = document.createElement("div");
+    w.innerHTML = `<p class="hint">This replaces the scenes you have now. Each paragraph becomes one narrator scene, with a title and a thank-you scene added.</p>
+      <div class="field"><label>Paste a script (blank line between paragraphs)</label><textarea id="sc" rows="6"></textarea></div>
+      <div class="field"><label>Video title</label><input id="st" maxlength="80"></div>
+      <div class="field"><label>QR on the last scene <span class="hint">(short code or /page — optional)</span></label><input id="sq"></div>
+      <div class="vs-row"><button class="btn" id="bp" type="button">Pick a blog post</button><button class="btn" id="bc" type="button">Pick a content card</button></div><div id="pk"></div>`;
+    const go = A.btn("Make scenes", "primary", () => { fromScript($("#sc", w).value, $("#st", w).value.trim(), $("#sq", w).value.trim()); m.close(); });
+    const m = A.modal("Import", w, [go]);
+    const list = async (node, base, bodyF) => {
+      const pk = $("#pk", w); pk.textContent = "Loading…"; const d = (await A.get(node)) || {}; pk.innerHTML = "";
+      Object.entries(d).filter(([, v]) => v && v.title).slice(0, 80).forEach(([k, v]) => { const b = A.btn(v.title.slice(0, 60), "sm", async () => { $("#sc", w).value = plain(bodyF(v)).split("\n").map((x) => x.trim()).filter(Boolean).slice(0, 14).join("\n\n"); $("#st", w).value = v.title.slice(0, 80); const code = await A.ensureShort(base + k, v.title); $("#sq", w).value = code || base + k; }); b.style.margin = "2px"; pk.append(b); });
+    };
+    $("#bp", w).onclick = () => list("blog_posts", "/blog/", (v) => v.content || v.excerpt);
+    $("#bc", w).onclick = () => list("content_highlights", "/content/", (v) => (v.caption ? "<p>" + v.caption + "</p>" : "") + (v.body || ""));
+  }
+
+  // ---------- STYLE ----------
+  function tStyle(h) {
+    h.append(field("Name", inp(P.name, (v) => (P.name = v))));
+    h.append(field("Shape", sel(Object.fromEntries(Object.entries(V.FORMATS).map(([k, f]) => [k, f.label])), P.format, (v) => (P.format = v))));
+    h.append(field("Colours", sel(Object.fromEntries(V.THEMES.map((x, i) => [i, x[0]])), P.theme, (v) => (P.theme = Number(v)))));
+    h.append(field("Font", sel(Object.fromEntries(Object.entries(V.FONTS).map(([k, f]) => [k, f.label])), P.font, (v) => (P.font = v))));
+    h.append(field("Text animation", sel(V.ANIMS, P.anim, (v) => (P.anim = v))));
+    h.append(field("Background", sel(V.BGS, P.bg, (v) => (P.bg = v))));
+    h.append(field("Caption style", sel({ box: "Boxed (karaoke highlight)", outline: "Outlined, no box", bigword: "One big word at a time" }, P.capStyle || "box", (v) => (P.capStyle = v))));
+    P.hook = P.hook || { text: "", dur: 1.8 }; h.append(field("Opening hook (2-second claim before scene 1)", inp(P.hook.text, (v) => (P.hook.text = v)), "e.g. Stop re-reading your notes. Empty = none"));
+    const sx = el(`<label class="vs-row"><input type="checkbox"> Sound effects (whoosh between scenes, pop on text, ding on the end screen)</label>`); $("input", sx).checked = P.sfx !== false; $("input", sx).onchange = (e) => { P.sfx = e.target.checked; save(); mixSig = ""; }; h.append(sx);
+    h.append(field("Frame rate", sel({ 60: "60 fps — smoothest (slower to render)", 30: "30 fps — faster, smaller" }, P.fps || 30, (v) => (P.fps = Number(v)))));
+    h.append(field("Animation speed", sel({ 0.75: "Calm", 1: "Normal", 1.3: "Snappy" }, P.motion || 1, (v) => (P.motion = Number(v)))));
+    h.append(field("Voice visualiser", sel({ bars: "Bars", wave: "Wave", none: "None" }, P.viz, (v) => (P.viz = v))));
+    h.append(field("Handle shown at the bottom", inp(P.handle, (v) => (P.handle = v))));
+    const cb = (label, key) => { const l = el(`<label class="vs-row"><input type="checkbox"> ${E(label)}</label>`), c = $("input", l); c.checked = !!P[key]; c.onchange = () => { P[key] = c.checked; save(); refresh(); }; return l; };
+    h.append(field("Narrator sits on", sel({ none: "Just the narrator (clean)", soap: "Soap bubble", blob: "Blob", circle: "Circle", card: "Contact card (channel ribbon)" }, P.plate || "none", (v) => (P.plate = v))));
+    h.append(field("Lip-sync host skin tone", (() => { const c = document.createElement("input"); c.type = "color"; c.value = P.hostSkin || "#8a5638"; c.oninput = () => { P.hostSkin = c.value; save(); lazy(); }; return c; })()));
+    h.append(el(`<h3>Cover (first frames = thumbnail)</h3>`));
+    P.cover = P.cover || {}; h.append(field("Cover title", inp(P.cover.title, (v) => (P.cover.title = v)), "empty = first scene's heading"), field("Cover sub text", inp(P.cover.sub, (v) => (P.cover.sub = v))));
+    h.append(el(`<h3>End screen</h3>`)); P.end = P.end || {}; P.socials = P.socials || [];
+    h.append(field("End title", inp(P.end.title, (v) => (P.end.title = v))), field("Button text", inp(P.end.cta, (v) => (P.end.cta = v)), "e.g. Subscribe or Follow"), field("QR goes to", inp(P.end.qr, (v) => (P.end.qr = v)), "short code, /page or https:// link"));
+    const sh = el(`<div class="field"><label>Social accounts shown <span class="hint">(leave the text empty to hide one)</span></label></div>`);
+    Object.entries(V.SOCIALS).forEach(([k, name]) => { const it = P.socials.find((x) => x.k === k); const i = inp(it ? it.h : "", (v) => { let o = P.socials.find((x) => x.k === k); if (!o) { o = { k, h: "" }; P.socials.push(o); } o.h = v; }, { placeholder: name + " handle or link text" }); i.style.marginBottom = ".3rem"; sh.append(i); });
+    h.append(sh);
+    h.append(cb("End screen added automatically after the last scene", "endscreen"), cb("Round logo watermark, bottom right", "watermark"));
+    h.append(cb("Captions (words highlight as they are spoken)", "captions"), cb("Progress bar on top", "progress"), cb("Site logo on the QR / outro", "logo"));
+  }
+
+  // ---------- VOICE & MUSIC ----------
+  async function tAudio(h) {
+    const key = inp(T.keyGet(), () => {}, { type: "password", placeholder: "Google Cloud API key (kept in this browser only)", autocomplete: "off" });
+    key.oninput = null; key.onchange = () => T.keySet(key.value);
+    h.append(field("Google text-to-speech key", key, "stored only in this browser, never in the database"));
+    const vr = el(`<div class="vs-row"></div>`);
+    vr.append(A.btn("Load voices", "sm primary", async (e) => { T.keySet(key.value); e.target.textContent = "Loading…"; try { voices = await T.listVoices(); A.toast(voices.length + " voices (Kenyan first)"); } catch (x) { A.toast(x.message, true); } e.target.textContent = "Load voices"; pane(); }));
+    h.append(vr);
+    const vs = document.createElement("select"); vs.add(new Option("Choose a voice…", ""));
+    T.FREE.concat(voices).forEach((v) => vs.add(new Option(`${v.languageCode} · ${v.type}${v.gender ? " · " + v.gender.toLowerCase() : ""}${/^(free|piper):/.test(v.name) ? "" : " · " + v.name}`, v.name, false, v.name === P.voice.name)));
+    if (P.voice.name && !T.FREE.concat(voices).some((x) => x.name === P.voice.name)) vs.add(new Option(P.voice.name + " (saved)", P.voice.name, true, true));
+    vs.onchange = () => { const v = T.FREE.concat(voices).find((x) => x.name === vs.value); if (v) { P.voice.name = v.name; P.voice.languageCode = v.languageCode; } save(); };
+    h.append(el(`<p class="vs-note"><b>No key needed:</b> the “Free” voices at the top are a natural-sounding English neural voice that runs inside your browser. The first time it downloads about 140 MB (then it is remembered), and a one-minute video takes a few minutes to voice. Google voices need the key above.</p>`));
+    h.append(field("Voice", vs, "sw-KE / en-KE are the Kenyan ones, when Google offers them to your key"));
+    const g = el(`<div class="vs-grid"></div>`);
+    g.append(field("Speed", inp(P.voice.rate, (v) => (P.voice.rate = Math.max(0.5, Math.min(1.6, Number(v) || 1))), { type: "number", step: 0.05, min: 0.5, max: 1.6 })));
+    g.append(field("Pitch", inp(P.voice.pitch, (v) => (P.voice.pitch = Math.max(-8, Math.min(8, Number(v) || 0))), { type: "number", step: 1, min: -8, max: 8 })));
+    h.append(g);
+    const st = el(`<p class="vs-note" id="vst"></p>`);
+    const gen = A.btn("Generate voice for all scenes", "primary", async (e) => {
+      if (!P.voice.name) return A.toast("Choose a voice first", true);
+      e.target.disabled = true; let n = 0;
+      try {
+        for (const s of P.scenes) { const txt = (s.narration || "").trim(); if (!txt || (aud[s.id] && aud[s.id].narr === txt && aud[s.id].voice === P.voice.name + P.voice.rate + P.voice.pitch)) continue; st.textContent = `Voicing scene ${P.scenes.indexOf(s) + 1}…`; const b = await T.synth(txt, P.voice); aud[s.id] = Object.assign(T.analyse(b, txt), { voice: P.voice.name + P.voice.rate + P.voice.pitch }); n++; }
+        st.textContent = n ? `Done — ${n} scene(s) voiced. Scene lengths now follow the voice.` : "Everything is already voiced."; await refresh();
+      } catch (x) { st.textContent = ""; A.toast(x.message, true); }
+      e.target.disabled = false;
+    });
+    h.append(A.btn("▶ Hear this voice", "sm", async (e) => { if (!P.voice.name) return A.toast("Choose a voice first", true); e.target.disabled = true; st.textContent = "Loading voice (first time is slow)…"; try { const b = await T.synth("Hello, this is how your narrator sounds. Welcome to the channel!", P.voice); const a = T.analyse(b, ""); const tl = { total: a.t1 - a.t0 + 0.2 }; const m = await T.mix({ music: { vol: 0 } }, Object.assign([{ a, start: 0, lead: 0 }], { total: tl.total }), {}, null); T.play(m, 0); st.textContent = ""; } catch (x) { st.textContent = ""; A.toast(x.message, true); } e.target.disabled = false; }));
+    h.append(el(`<div class="vs-row"></div>`)); $(".vs-row:last-child", h).append(gen, A.btn("Hear scene in phone voice", "sm", () => { const s = sc(); if (s && s.narration) T.browserSay(s.narration, P.voice.languageCode || "sw-KE") || A.toast("Not supported here", true); }));
+    h.append(st, el(`<p class="vs-note">Same text + same voice is cached in this browser, so re-generating costs nothing. Phone voice is only for listening — it can't be recorded into the video.</p>`));
+    const tracks = await (async () => { try { return (await (await fetch("/assets/music/index.json")).json()).tracks; } catch { return []; } })();
+    const ms = document.createElement("select"); ms.add(new Option("No built-in music", "")); tracks.forEach((x) => ms.add(new Option(x.n, "/assets/music/" + x.f, false, P.music.src === "/assets/music/" + x.f)));
+    ms.onchange = async () => { P.music.src = ms.value; save(); mixSig = ""; if (ms.value) { try { music = await T.musicFromUrl(ms.value); musicName = ms.value; A.toast("Music ready"); } catch (x) { A.toast(x.message, true); } } else { music = null; musicName = ""; } };
+    h.append(field("Built-in music", ms, "original tracks made for this site — free to use, no copyright claims"));
+    const mf = document.createElement("input"); mf.type = "file"; mf.accept = "audio/*"; mf.onchange = async () => { if (!mf.files[0]) return; music = await T.musicFromFile(mf.files[0]); musicName = mf.files[0].name; mixSig = ""; A.toast("Music loaded: " + musicName); };
+    h.append(field("Background music", mf, "pick a file you have the right to use; it is not saved with the project"));
+    h.append(field("Music volume", inp(P.music.vol, (v) => (P.music.vol = Math.max(0, Math.min(1, Number(v) || 0))), { type: "number", step: 0.02, min: 0, max: 1 })));
+    const dk = el(`<label class="vs-row"><input type="checkbox"> Lower the music while the voice speaks</label>`), dc = $("input", dk); dc.checked = !!P.music.duck; dc.onchange = () => { P.music.duck = dc.checked; save(); mixSig = ""; }; h.append(dk);
+    const sf = document.createElement("input"); sf.type = "file"; sf.accept = "audio/*";
+    sf.onchange = async () => { const s = sc(); if (!s || !sf.files[0]) return; aud[s.id] = Object.assign(await T.fromFile(sf.files[0], s.narration), { voice: "own" }); A.toast("Your recording is used for this scene"); refresh(); };
+    h.append(field("Or use your own recording for the selected scene", sf, "the narration text above is used for captions"));
+  }
+
+  // ---------- EXPORT ----------
+  function tExport(h) {
+    const tl = V.timeline(P, aud), sz = V.outSize(P);
+    h.append(el(`<p class="vs-note">Length ${fmt(tl.total || 0)} · ${sz.w}×${sz.h} · ${tl.filter((x) => x.a).length}/${P.scenes.filter((s) => (s.narration || "").trim()).length} narrated scenes have a voice.</p>`));
+    h.append(field("Quality", sel({ 0.667: "720p-ish (fast, small)", 1: "Full size (1080)", 0.5: "Draft (very fast)" }, P.quality, (v) => (P.quality = Number(v)))));
+    h.append(el(`<div class="vs-row"></div>`)); $(".vs-row:last-child", h).append(A.btn("Download thumbnail (PNG)", "sm", async () => { await reload(); assets.tl = null; assets.aud = aud; const c = document.createElement("canvas"), z = V.outSize(P); c.width = z.w; c.height = z.h; V.draw(c.getContext("2d"), P, 0.05, assets); const a = document.createElement("a"); a.download = (P.name || "video").replace(/[^\w-]+/g, "-") + "-thumbnail.png"; a.href = c.toDataURL("image/png"); a.click(); }));
+    h.append(field("Sound", sel({ full: "Talking version: voice + captions + music + effects", music: "Non-talking version: on-screen text + music + effects (no voice)", none: "Completely silent file (no audio track)" }, P.audio || "full", (v) => (P.audio = v))));
+    const nc = el(`<label class="vs-row"><input type="checkbox"> Non-talking version: also show the narration as captions</label>`); $("input", nc).checked = P.silentCaps !== false; $("input", nc).onchange = (e) => { P.silentCaps = e.target.checked; save(); };
+    const nh = el(`<label class="vs-row"><input type="checkbox"> Non-talking version: no human narrator, use illustrations instead (human-less)</label>`); $("input", nh).checked = P.noHuman !== false; $("input", nh).onchange = (e) => { P.noHuman = e.target.checked; save(); };
+    h.append(field("Non-talking version design", sel({ visual: "Visual explainer: progress steps, cards, gauges, no narrator, no captions (recommended)", same: "Same design as the talking one (narrator/icons + captions)" }, P.design || "visual", (v) => { P.design = v; save(); })));
+    h.append(nc, nh, el(`<p class="vs-note">The two options below only apply when the non-talking design is "Same design".</p>`), el(`<p class="vs-note">Tip: "Render BOTH versions" makes the talking video and the non-talking one in one go, and downloads each.</p>`));
+    const pr = el(`<div class="vs-prog"><i></i></div>`), st = el(`<p class="vs-note"></p>`), out = el(`<div></div>`);
+    let ctl = null;
+    const renderMode = async (mode, suffix) => {
+      P.audio = mode; mixSig = "";
+      if (mode === "full") { const key = P.voice.name + P.voice.rate + P.voice.pitch, todo = P.scenes.filter((s) => (s.narration || "").trim()); if (!P.voice.name && todo.length) throw new Error("Choose a voice first (Voice & music tab)"); for (let i = 0; i < todo.length; i++) { const s = todo[i], txt = s.narration.trim(); if (aud[s.id] && aud[s.id].narr === txt && aud[s.id].voice === key) continue; st.textContent = `Voicing scene ${i + 1} of ${todo.length}… (the first time loads the voice, a few minutes)`; aud[s.id] = Object.assign(T.analyse(await T.synth(txt, P.voice), txt), { voice: key }); } }
+      await reload(); assets.aud = curAudF(); st.textContent = "Mixing audio…"; await ensureMix();
+      const web = !EO_RENDER.supported(); st.textContent = web ? "This browser has no MP4 encoder — recording in real time (WebM)…" : "Rendering frames…";
+      const blob = await (web ? EO_RENDER.renderWebM : EO_RENDER.renderMP4)(P, assets, mixBuf, { signal: ctl.signal, onProgress: (x) => { $("i", pr).style.width = Math.round(x * 100) + "%"; st.textContent = (suffix ? suffix.slice(1) + ": " : "") + (web ? "Recording " : "Rendering ") + Math.round(x * 100) + "%"; } });
+      const url = URL.createObjectURL(blob), name = (P.name || "video").replace(/[^\w-]+/g, "-").toLowerCase() + (suffix || "") + (web ? ".webm" : ".mp4");
+      st.textContent = `Done — ${(blob.size / 1048576).toFixed(1)} MB`;
+      const vv = document.createElement("video"); vv.src = url; vv.controls = true; vv.style.cssText = "max-width:100%;max-height:50vh;margin:.5rem 0;background:#000;display:block"; const a = document.createElement("a"); a.href = url; a.download = name; a.className = "btn primary"; a.textContent = "Download " + name; out.append(a, vv); setTimeout(() => a.click(), 300);
+    };
+    const runModes = async (list) => { stop(); go.disabled = both.disabled = true; cancel.hidden = false; out.innerHTML = ""; ctl = new AbortController(); const keep = P.audio; try { for (const [m, sfx] of list) await renderMode(m, sfx); } catch (x) { st.textContent = ""; if (x.message !== "Cancelled") A.toast(x.message, true); else st.textContent = "Cancelled"; } P.audio = keep; mixSig = ""; go.disabled = both.disabled = false; cancel.hidden = true; };
+    const go = A.btn("Render this version", "primary", () => runModes([[P.audio || "full", ""]])), both = A.btn("Render BOTH versions", "primary", () => runModes([["full", "-voice"], ["music", "-no-voice"]])), cancel = A.btn("Cancel", "sm danger", () => ctl && ctl.abort()); cancel.hidden = true;
+    h.append(el(`<div class="vs-row"></div>`)); $(".vs-row:last-child", h).append(go, both, cancel);
+    h.append(pr, st, out, el(`<p class="vs-note">Keep this tab open and in front while it renders. A one-minute 1080p short takes roughly 1–3 minutes on a phone, less on a computer.</p>`));
+  }
+
+  // ---------- SAVE / OPEN ----------
+  const TEMPLATES = {
+    "Quick tips — hook, 3 tips, call to action": { name: "Quick tips", hook: "Stop doing this one thing.", capStyle: "outline", scenes: [
+      { layout: "title", title: "3 quick tips", sub: "Save this for later", pose: "wave-hello", anim: "stamp", narration: "Here are three quick tips you can use today." },
+      { layout: "number", num: "1", label: "Your first tip", pose: "point-up-one", trans: "zoomthru", narration: "Tip one. Say what it is in one short sentence." },
+      { layout: "number", num: "2", label: "Your second tip", pose: "point-up-side", trans: "wipe", narration: "Tip two. Keep each tip short and clear." },
+      { layout: "checklist", title: "Remember", lines: ["Tip one", "Tip two", "Tip three"], pose: "thumbs-up", trans: "circle", narration: "Tick them off one by one, and you are done." } ] },
+    "Announcement — big news with a date": { name: "Announcement", hook: "Big news is here!", capStyle: "bigword", scenes: [
+      { layout: "title", title: "Something new is coming", sub: "Friday, 7 PM", pose: "cheer-arms-up", anim: "blur", narration: "We have something new, and it starts this Friday." },
+      { layout: "bullets", title: "What to expect", lines: ["Reason one", "Reason two", "Reason three"], pose: "point-at-you", trans: "doors", narration: "Here is what you can expect, and why you should not miss it." } ] },
+    "Myth vs fact — chat style": { name: "Myth vs fact", hook: "Is this really true?", capStyle: "box", scenes: [
+      { layout: "chat", title: "Group chat", lines: ["them: Did you hear that this is true?", "me: Let me check the facts.", "them: So is it a myth?"], pose: "", trans: "up", narration: "A friend sent this message, so let's check the facts." },
+      { layout: "quote", title: "The fact: put the correct answer here.", sub: "Ezra Ogombo", pose: "hand-on-chest", anim: "letters", trans: "wipe", narration: "Here is the correct answer, in simple words." } ] },
+  };
+  // ---- JSON import: accepts a full project or a short hand-written script file
+  function normalize(d) {
+    const P2 = Object.assign(V.newProject(), d); delete P2._help;
+    const vs = d.voice; P2.voice = Object.assign({ name: T.FREE[0].name, languageCode: "en-US", rate: 1, pitch: 0 }, typeof vs === "string" ? {} : vs || {});
+    if (typeof vs === "string") { const m = vs.match(/^male\s*(\d)$/i); P2.voice.name = m && T.FREE[+m[1] - 1] ? T.FREE[+m[1] - 1].name : /^piper:|^en-|^sw-/.test(vs) ? vs : T.FREE[0].name; if (!/^piper:/.test(P2.voice.name)) P2.voice.languageCode = P2.voice.name.split("-").slice(0, 2).join("-"); }
+    if (!/^(piper:|[a-z]{2,3}-[A-Za-z]{2,4}-)/.test(P2.voice.name)) P2.voice.name = T.FREE[0].name;
+    const ms = d.music; P2.music = Object.assign({ vol: 0.16, duck: true, src: "" }, typeof ms === "object" && ms ? ms : {});
+    if (typeof ms === "string") P2.music.src = /^(none|off|)$/i.test(ms) ? "" : ms.startsWith("/") ? ms : "/assets/music/" + ms.replace(/\.mp3$/, "") + ".mp3";
+    if (ms === false || ms === null) P2.music.src = "";
+    if (typeof d.theme === "string") { const i = V.THEMES.findIndex((x) => x[0].toLowerCase() === d.theme.toLowerCase()); P2.theme = i < 0 ? 0 : i; }
+    if (!V.FORMATS[P2.format]) P2.format = "short"; if (!/^(full|music|none)$/.test(P2.audio)) P2.audio = "full"; P2.hook = Object.assign({ text: "", dur: 1.8 }, typeof d.hook === "string" ? { text: d.hook } : d.hook || {}); P2.sfx = d.sfx !== false; P2.silentCaps = d.silentCaps !== false; P2.noHuman = d.noHuman !== false; if (!/^(box|outline|bigword)$/.test(P2.capStyle)) P2.capStyle = "box";
+    P2.fps = P2.fps === 30 ? 30 : 60; P2.quality = Number(P2.quality) || 1;
+    P2.scenes = (d.scenes || []).map((sc) => { const s = Object.assign(V.newScene(sc.layout || "title"), sc, { id: sc.id || V.newId() }); if (typeof s.lines === "string") s.lines = s.lines.split("\n").map((x) => x.trim()).filter(Boolean); s.lines = (s.lines || []).map(String); s.narration = String(s.narration || s.say || ""); s.dur = Number(s.dur) || 0; if (!V.LAYOUTS[s.layout]) s.layout = "title"; return s; });
+    P2.socials = (Array.isArray(d.socials) ? d.socials : P2.socials).filter((x) => x && V.SOCIALS[x.k]); P2.design = d.design === "same" ? "same" : "visual"; P2.cover = Object.assign({ title: "", sub: "", pose: "", plate: "" }, d.cover || {}); P2.end = Object.assign({ title: "Thanks for watching!", sub: "", cta: "Subscribe", qr: "" }, d.end || {});
+    if (!P2.scenes.length) throw new Error("The file has no scenes");
+    return P2;
+  }
+  async function runJob(h) {
+    const st = el(`<p class="vs-note"></p>`), pr = el(`<div class="vs-prog"><i></i></div>`), out = el(`<div></div>`); h.append(el(`<h3>Rendering "${E(P.name)}"</h3>`), st, pr, out);
+    try {
+      stop(); if (P.music && P.music.src) { try { music = await T.musicFromUrl(P.music.src); musicName = P.music.src; } catch {} }
+      const key = P.voice.name + P.voice.rate + P.voice.pitch, todo = P.audio === "full" || !P.audio ? P.scenes.filter((s) => (s.narration || "").trim()) : [];
+      for (let i = 0; i < todo.length; i++) { const s = todo[i], txt = s.narration.trim(); if (aud[s.id] && aud[s.id].narr === txt && aud[s.id].voice === key) continue; st.textContent = `Voicing scene ${i + 1} of ${todo.length}… (the first time loads the voice, a few minutes)`; $("i", pr).style.width = Math.round((i / todo.length) * 30) + "%"; aud[s.id] = Object.assign(T.analyse(await T.synth(txt, P.voice), txt), { voice: key }); }
+      await reload(); assets.aud = curAudF(); st.textContent = "Mixing audio…"; mixSig = ""; await ensureMix(); strip();
+      const web = !EO_RENDER.supported();
+      const blob = await (web ? EO_RENDER.renderWebM : EO_RENDER.renderMP4)(P, assets, mixBuf, { onProgress: (x) => { $("i", pr).style.width = Math.round(30 + x * 70) + "%"; st.textContent = "Rendering " + Math.round(x * 100) + "%"; } });
+      const url = URL.createObjectURL(blob), name = (P.name || "video").replace(/[^\w-]+/g, "-").toLowerCase() + (web ? ".webm" : ".mp4");
+      st.textContent = `Done — ${(blob.size / 1048576).toFixed(1)} MB`; const a = document.createElement("a"); a.href = url; a.download = name; a.className = "btn primary"; a.textContent = "Download " + name; out.append(a); setTimeout(() => a.click(), 300);
+    } catch (x) { st.textContent = "Stopped: " + x.message; A.toast(x.message, true); }
+  }
+  async function tProjects(h) {
+    const row = el(`<div class="vs-row"></div>`);
+    row.append(A.btn("Save to my site", "primary", async () => {
+      const id = P._id || ("p" + Date.now().toString(36)); P._id = id; const copy = JSON.parse(JSON.stringify(P)); copy.scenes.forEach((s) => { if (/^local:/.test(s.imgKey)) s.imgKey = ""; });
+      try { await A.set("video_projects/" + id, { name: P.name || "Untitled", updated: Date.now(), data: JSON.stringify(copy) }); save(); A.toast("Saved"); pane(); } catch (x) { A.toast(x.message, true); }
+    }), A.btn("Download .json", "sm", () => A.download((P.name || "video").replace(/[^\w-]+/g, "-") + ".json", JSON.stringify(P, null, 1), "application/json")),
+      A.btn("New video", "sm danger", async () => { if (!(await A.confirm("Start a new empty video? Unsaved changes are lost."))) return; P = V.newProject(); aud = {}; cur = 0; save(); refresh().then(pane); }));
+    const f = document.createElement("input"); f.type = "file"; f.accept = ".json"; f.onchange = async () => { try { const d = JSON.parse(await f.files[0].text()); if (!d.scenes) throw 0; P = Object.assign(V.newProject(), d); aud = {}; cur = 0; save(); refresh().then(pane); } catch { A.toast("Not a video project file", true); } };
+    const tsel = document.createElement("select"); tsel.add(new Option("Choose a template…", "")); Object.keys(TEMPLATES).forEach((k) => tsel.add(new Option(k, k)));
+    tsel.onchange = async () => { if (!tsel.value) return; if (P.scenes.length && !(await A.confirm("Replace the current scenes with this template?"))) { tsel.value = ""; return; } P = normalize(JSON.parse(JSON.stringify(TEMPLATES[tsel.value]))); aud = {}; cur = 0; save(); await refresh(); pane(); };
+    h.append(el(`<h3>Start from a template</h3>`), tsel);
+    const imp = document.createElement("input"); imp.type = "file"; imp.accept = ".json,application/json"; const ar = el(`<label class="vs-row"><input type="checkbox" checked> Render automatically after importing (voice → video → download)</label>`);
+    imp.onchange = async () => { try { const d = JSON.parse(await imp.files[0].text()); P = normalize(d); aud = {}; cur = 0; save(); await refresh(); A.toast("Imported: " + P.name + " (" + P.scenes.length + " scenes)"); if ($("input", ar).checked && d.render === "both") { tab = "export"; $("#tabs [data-t=export]").click(); setTimeout(() => [...$("#pane").querySelectorAll("button")].find((b) => /BOTH/.test(b.textContent)).click(), 200); } else if ($("input", ar).checked) { pane(); runJob($("#pane")); } else pane(); } catch (x) { A.toast("Could not import: " + (x.message || "not valid JSON"), true); } };
+    h.append(el(`<h3>Import a video script (JSON)</h3><p class="vs-note">A .json file with your scenes and settings. It fills the studio and can render the video by itself.</p>`), imp, ar, el(`<hr>`));
+    h.append(row, field("Open a .json file", f), el(`<h3>Saved on the site</h3>`));
+    const box = el(`<div></div>`); h.append(box); box.textContent = "Loading…";
+    try {
+      const d = (await A.get("video_projects")) || {}; box.innerHTML = "";
+      const rows = Object.entries(d).sort((a, b) => (b[1].updated || 0) - (a[1].updated || 0)); if (!rows.length) box.innerHTML = `<p class="hint">Nothing saved yet.</p>`;
+      rows.forEach(([id, v]) => { const r = el(`<div class="vs-row"><b>${E(v.name)}</b><span class="vs-note">${new Date(v.updated || 0).toLocaleString()}</span></div>`); r.append(A.btn("Open", "sm", () => { try { P = Object.assign(V.newProject(), JSON.parse(v.data)); P._id = id; aud = {}; cur = 0; save(); refresh().then(pane); } catch { A.toast("Could not open", true); } }), A.btn("Delete", "sm danger", async () => { if (await A.confirm("Delete " + v.name + "?")) { await A.del("video_projects/" + id); pane(); } })); box.append(r); });
+    } catch (x) { box.textContent = "Could not load: " + x.message; }
+  }
+
+  if (P.music && P.music.src) { try { music = await T.musicFromUrl(P.music.src); musicName = P.music.src; } catch {} }
+  window.EO_STUDIO = { normalize };
+  await refresh(); pane();
+})();
+</script>
+</body>
+</html>

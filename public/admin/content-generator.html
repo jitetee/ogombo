@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content studio — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+<style>
+.gen{display:grid;gap:1rem;grid-template-columns:minmax(0,1fr)}
+@media(min-width:960px){.gen{grid-template-columns:minmax(0,520px) minmax(0,1fr);align-items:start}.cvw{position:sticky;top:4.5rem}}
+#cv{width:100%;height:auto;border:2px solid var(--panel-border);border-radius:4px;background:#fff;touch-action:none;cursor:pointer}
+.ctl label{display:block;font-size:.8rem;color:var(--ink-dim);margin-top:.6rem}
+.ctl input[type=text],.ctl select,.ctl textarea{width:100%;padding:.45rem;background:var(--bg);border:1px solid var(--panel-border);border-radius:3px;color:var(--ink);font-family:inherit;box-sizing:border-box}
+.ctl input[type=color]{width:100%;height:34px;padding:0;border:1px solid var(--panel-border);background:none}
+.ctl input[type=range]{width:100%}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}
+.cal-row{display:grid;grid-template-columns:105px 1fr auto;gap:.4rem;align-items:center;margin-top:.3rem;font-size:.82rem}.ctl h3{margin:1.2rem 0 .2rem;font-size:.95rem;color:var(--amber)}
+</style>
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">STUDIO.EXE</span><h1>Content studio</h1>
+<p class="hint">Design social posts like Canva: pick a content type and one of 50 designs, edit any text, colors, cards, footer, narrator pose and QR code. Tap text on the preview to jump to its field; drag the narrator or QR to move them. Narrator images live in <code>/admin/narrators/</code>.</p></section>
+<div class="gen">
+<div class="cvw" style="position:relative"><div id="safeov" hidden style="position:absolute;pointer-events:none;border:2px dashed rgba(255,90,90,.9);box-sizing:border-box"></div><canvas id="cv" width="1080" height="1080"></canvas>
+<p id="err" class="hint" style="color:#ff7b7b"></p><div class="row-links" style="margin-top:.8rem"><button class="btn primary" id="rn" type="button">▶ Render</button><select id="xq" style="width:auto"><option value="1">Normal quality</option><option value="2">2× sharp</option></select><button class="btn" id="dl" type="button">⬇ Download PNG</button><button class="btn" id="allsz" type="button">⬇ All sizes (ZIP)</button><label style="display:inline-flex;gap:.3rem;align-items:center"><input type="checkbox" id="safe" style="width:auto"> Safe-area guide</label><button class="btn" id="batch" type="button" hidden>⬇ Download all from dataset</button></div></div>
+<div class="ctl crt-window"><div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label">controls</span></div><div class="body">
+<h3>Content</h3>
+<label>Content type</label><select id="type"></select>
+<div id="dsw" hidden><label>Pick from dataset</label><select id="ds"></select></div>
+<label>Design (50)</label><select id="design"></select>
+<label>Top line</label><input type="text" data-k="head" id="f-head">
+<label>Title</label><input type="text" data-k="title" id="f-title">
+<label>Subtitle</label><input type="text" data-k="sub" id="f-sub">
+<label>Body — blank line separates cards; first line of a card is its heading</label><textarea data-k="body" id="f-body" rows="9"></textarea>
+<label>Number of cards / rows: <b id="nv"></b></label><input type="range" min="1" max="6" data-k="n" id="f-n">
+<label>Banner strip under the header (optional)</label><input type="text" data-k="ban" id="f-ban">
+<label>Body panel heading (news / announcement types)</label><input type="text" data-k="bhd" id="f-bhd">
+<label>Tip panel text (use | for several bullets)</label><input type="text" data-k="tip" id="f-tip">
+<label>Footer text (your handles or a pearl)</label><input type="text" data-k="footer" id="f-footer">
+<h3>Format and brand</h3>
+<label>Post size</label><select data-k="fmt"><option value="sq">Square 1080×1080</option><option value="port">Portrait 1080×1350</option><option value="a4">A4 portrait (print) 1080×1527</option><option value="story">Story 1080×1920</option><option value="land">Landscape 1920×1080</option><option value="yt">YouTube / wide 1280×720</option><option value="fb">Link/Facebook 1200×630</option><option value="thumb">Blog thumbnail 1200×630 (title + narrator)</option></select>
+<div class="g2"><div><label>Heading font</label><select data-k="hf" class="fonts"></select></div><div><label>Body font</label><select data-k="bf" class="fonts"></select></div></div>
+<div class="row-links" style="margin-top:.5rem"><button class="btn" id="bsave" type="button">★ Save brand kit (colours, layers, logo, footer)</button><button class="btn" id="bapply" type="button">Apply brand kit</button></div>
+<h3>Theme colours</h3><p class="hint">Change these four to recolor all three layers at once; then fine-tune each layer below.</p>
+<div class="g4"><div><label>Main</label><input type="color" data-k="p" data-theme="1"></div><div><label>Accent</label><input type="color" data-k="a" data-theme="1"></div><div><label>Page</label><input type="color" data-k="bg" data-theme="1"></div><div><label>Text</label><input type="color" data-k="t" data-theme="1"></div></div>
+<label><input type="checkbox" data-k="mc"> Multicolor cards</label><label><input type="checkbox" data-k="dec"> Decorations (shapes, narrator halo)</label>
+<div class="row-links"><button class="btn" id="rcol" type="button">↺ Reset layer colours to theme</button><button class="btn" id="rpos" type="button">↺ Auto-place narrator / QR / sticker</button></div>
+<h3>Layer 1 · Header</h3>
+<div class="g2"><div><label>Height</label><input type="range" min="90" max="260" data-k="hh"></div><div><label>Corner roundness</label><input type="range" min="0" max="70" data-k="hr"></div></div>
+<div class="g4"><div><label>Bar</label><input type="color" data-k="hp"></div><div><label>Title text</label><input type="color" data-k="ht"></div><div><label>Top line / accent</label><input type="color" data-k="ha"></div></div>
+<label><input type="checkbox" data-k="gr"> Soft gradient on bars</label><label>Topic emoji (one only)</label><select data-k="emo"><option value="circle">Inside the card (circle)</option><option value="header">In the header</option><option value="footer">In the footer chip</option><option value="none">No emoji</option></select>
+<h3>Layer 2 · Body</h3>
+<label>Layout</label><select data-k="lay"><option value="L">Narrator left · panels right</option><option value="R">Narrator right · panels left</option><option value="stack">Stacked (narrator at bottom)</option></select>
+<label>Background</label><select data-k="bgm" id="bgm"><option value="none">Plain</option><option value="dots">Dots</option><option value="stripes">Stripes</option><option value="cross">Medical crosses</option><option value="/assets/theatre-lights.jpg">Theatre lights</option><option value="/assets/theatre-instruments.jpg">Theatre instruments</option><option value="/assets/theatre-portrait.jpg">Theatre portrait</option><option value="custom">My uploaded photo…</option></select>
+<div class="g2"><div><label>Upload background photo</label><input type="file" id="bgf" accept="image/*"></div><div><label>Photo blur</label><input type="range" min="0" max="20" data-k="bgb"></div></div>
+<label>Photo fade (page colour over the photo)</label><input type="range" min="0.3" max="1" step="0.02" data-k="bgd">
+<div class="g4"><div><label>Panel fill</label><input type="color" data-k="pn"></div><div><label>Panel border / heading</label><input type="color" data-k="pc"></div><div><label>Heading on bar</label><input type="color" data-k="ph"></div><div><label>Tip panel</label><input type="color" data-k="tc"></div></div>
+<label>Panel roundness</label><input type="range" min="0" max="50" data-k="pr">
+<label>Tip panel heading (clear it for none). Tip text: use <b>|</b> to split bullets</label><input type="text" data-k="tiph" id="f-tiph">
+<h3>Layer 3 · Footer</h3>
+<div class="g2"><div><label>Height</label><input type="range" min="56" max="150" data-k="fh"></div><div><label>Corner roundness</label><input type="range" min="0" max="60" data-k="fr"></div></div>
+<div class="g4"><div><label>Bar</label><input type="color" data-k="fp"></div><div><label>Text</label><input type="color" data-k="ft"></div><div><label>Label chip</label><input type="color" data-k="fc"></div></div>
+<label>Label (e.g. DID YOU KNOW?, PEARL:)</label><input type="text" data-k="fl" id="f-fl">
+<h3>Narrator</h3>
+<label>Pose</label><select data-k="nar" id="nar"></select>
+<div class="g2"><div><label>Size</label><input type="range" min="120" max="700" data-k="ns"></div><div><label><input type="checkbox" data-k="flip"> Flip left/right</label></div></div>
+<label>Sticker (thumbs-up, clipboard…)</label><select data-k="sk"><option value="none">None</option><option>👍</option><option>✅</option><option>❓</option><option>📋</option><option>💉</option><option>⚠️</option><option>🧼</option><option>⭐</option><option>❤️</option><option>🎉</option><option>🩺</option><option>📌</option></select>
+<label>Sticker size</label><input type="range" min="60" max="300" data-k="sks">
+<h3>Logo / watermark</h3>
+<label><input type="checkbox" data-k="lg"> Show logo</label>
+<div class="g2"><div><label>Source</label><select data-k="lgs"><option value="avatar">Ezra avatar</option><option value="custom">My upload</option></select></div><div><label>Upload image</label><input type="file" id="lgf" accept="image/*"></div></div>
+<div class="g2"><div><label>Size</label><input type="range" min="30" max="260" data-k="ls"></div><div><label>Opacity</label><input type="range" min="0.2" max="1" step="0.05" data-k="lo"></div></div>
+<h3>QR code</h3>
+<label><input type="checkbox" data-k="qr"> Show QR code</label>
+<label>Links to</label><select data-k="qrt" id="qrt"></select>
+<div id="qrcw" hidden><label>Custom path or full URL</label><input type="text" data-k="qrc" placeholder="/materials or https://…"></div>
+<label>QR size</label><input type="range" min="90" max="300" data-k="qs">
+<h3>Carousel slides</h3>
+<div class="row-links" id="slides"></div>
+<div class="row-links" style="margin-top:.5rem"><button class="btn" id="sadd" type="button">＋ Add slide</button><button class="btn" id="sdel" type="button">Delete slide</button><button class="btn" id="szip" type="button">⬇ All slides (ZIP)</button></div>
+<label><input type="checkbox" id="snum" checked> Number slides (1/5)</label>
+<h3>Content calendar</h3>
+<div class="g2"><div><label>Start date</label><input type="date" id="cstart"></div><div><label>Days</label><select id="cdays"><option>7</option><option>14</option><option>30</option></select></div></div>
+<label><input type="checkbox" id="crot" checked> Different design each day</label>
+<div class="row-links" style="margin-top:.5rem"><button class="btn" id="cplan" type="button">Plan</button><button class="btn" id="czip" type="button" hidden>⬇ Plan as ZIP</button></div><div id="cal"></div>
+<h3>Presets</h3>
+<select id="pre"></select><div class="g2"><input type="text" id="pname" placeholder="Preset name"><button class="btn" id="psave" type="button">Save preset</button></div>
+<div class="row-links" style="margin-top:.4rem"><button class="btn" id="pload" type="button">Load</button><button class="btn" id="pdel" type="button">Delete</button></div>
+</div></div></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/db.js"></script>
+<script src="/js/vendor/qrcode.js"></script>
+<script src="/js/qr.js"></script>
+<script src="/js/card-renderer.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async()=>{
+await A.guard("content-generator");
+const $=id=>document.getElementById(id),W=1080;
+const {PN,PAL,STY}=EO_CARD;let NAR=EO_CARD.poses;
+const FOOT="FB @ezraogombo  •  IG @ezraogombo  •  ezra-ogombo.web.app";
+const wish=(id,l,ic,t,s,b)=>[id,l,"B",ic,"",t,s,b,""];
+// [id,label,kind(T table,P panels,L list,Q quiz,B big,N news),icon,top line,title,subtitle,body,tip]
+const TY=[
+["table","Quick Reference Table","T","📋","INSIDE THE OPERATING THEATRE","QUICK REFERENCE","Know the numbers","Item | Detail | Note\nRow one | Value | Note\nRow two | Value | Note\nRow three | Value | Note","Save this post"],
+["vitals","Normal Vital Signs Table","T","❤️","NURSING BASICS","NORMAL VITAL SIGNS","Adults at rest","Vital sign | Normal range | Unit\nTemperature | 36.5 – 37.5 | °C\nPulse | 60 – 100 | beats/min\nRespiration | 12 – 20 | breaths/min\nBlood pressure | 120/80 | mmHg\nSpO2 | 95 – 100 | %","Always document and report changes"],
+["timetable","Study Timetable","T","🗓️","STUDY SMART","WEEKLY TIMETABLE","Plan your week","Time | Mon | Wed | Fri\n6–8 am | Anatomy | Revision | Anatomy\n2–4 pm | Theatre tech | Past papers | Theatre tech\n7–9 pm | Pharmacology | Notes | Quiz","Consistency beats cramming"],
+["word","Word of the Day","D","📖","INSIDE THE OPERATING THEATRE","WORD OF THE DAY","Ezra's glossary","A short, clear definition goes here.\n\nAn example sentence goes here.","Say it out loud 3 times!"],
+["spell","Spelling Challenge","B","✍️","INSIDE THE OPERATING THEATRE","SPELLING CHALLENGE","Fill the missing letters","A _ E P S _ S","Comment your answer 👇"],
+["quiz","Pop Quiz","Q","❓","INSIDE THE OPERATING THEATRE","POP QUIZ","Pick one","Your question here?\nOption one\nOption two\nOption three\nOption four","Comment your answer — we'll share it!"],
+["quizans","Quiz Answer Reveal","B","✅","INSIDE THE OPERATING THEATRE","ANSWER","Question here","The right answer","Did you get it right?"],
+["mnem","Mnemonic","L","🧠","INSIDE THE OPERATING THEATRE","MNEMONIC","Remember it easily","First line\nSecond line\nThird line\nFourth line","Repeat it daily!"],
+["chk","Checklist","L","☑️","INSIDE THE OPERATING THEATRE","CHECKLIST","Tick every box","Check item one\nCheck item two\nCheck item three\nCheck item four","Check • Confirm • Communicate"],
+["steps","Step-by-step Guide","L","🪜","INSIDE THE OPERATING THEATRE","HOW TO DO IT","Follow in order","Prepare your items\nPerform step one\nPerform step two\nConfirm and document","Practice makes perfect"],
+["dodont","Do & Don't","P","⚖️","INSIDE THE OPERATING THEATRE","DO & DON'T","Know the difference","DO\nKeep hands inside sleeves\nAsk if unsure\n\nDON'T\nTouch the sterile field\nRush the count","Safety first"],
+["myth","Myth vs Fact","P","🔎","INSIDE THE OPERATING THEATRE","MYTH vs FACT","Set the record straight","MYTH\nWrite the common myth here\n\nFACT\nWrite the correct fact here","Share to educate others"],
+["compare","Comparison","P","🆚","INSIDE THE OPERATING THEATRE","A vs B","Spot the difference","OPTION A\nPoint one\nPoint two\n\nOPTION B\nPoint one\nPoint two","Which do you use?"],
+["tf","True or False","B","🤔","INSIDE THE OPERATING THEATRE","TRUE OR FALSE?","Vote in the comments","Write the statement here.","Answer tomorrow!"],
+["blank","Fill in the Blank","B","🧩","INSIDE THE OPERATING THEATRE","FILL IN THE BLANK","Complete the sentence","The ______ is used to stop bleeding.","Comment your answer"],
+["didyou","Did You Know?","B","💡","INSIDE THE OPERATING THEATRE","DID YOU KNOW?","Quick fact","Write the surprising fact here.","Tag a classmate"],
+["tipday","Tip of the Day","B","⭐","INSIDE THE OPERATING THEATRE","TIP OF THE DAY","Small habit, big difference","Write your tip here.","Save this post"],
+["study","Study Tips","L","🎓","STUDY SMART","STUDY TIPS","Exam season is here","Study in short focused blocks\nTeach the topic to a friend\nDo past papers\nSleep before the exam","You've got this"],
+["exam","Exam Good Luck","B","🍀","EXAMS","GOOD LUCK!","Give it your best","Wishing every student calm, focus and great marks in the exams.","Believe in your preparation"],
+["results","Results Out","B","📢","RESULTS","RESULTS ARE OUT","Check your portal","Congratulations to everyone who worked hard. Keep going!",""],
+["abbr","Abbreviation of the Day","B","🔤","INSIDE THE OPERATING THEATRE","ABBREVIATION","What does it stand for?","ABC = Airway, Breathing, Circulation","Learn one a day"],
+["instr","Instrument of the Day","P","🔧","INSIDE THE OPERATING THEATRE","INSTRUMENT OF THE DAY","Know your tray","USE\nWhat it is used for\n\nHANDLING\nHow to pass and hold it\n\nCARE\nCleaning and storage","Handle with care"],
+["drug","Drug of the Day","P","💊","PHARMACOLOGY","DRUG OF THE DAY","Know before you give","CLASS\nDrug class\n\nUSE\nMain indication\n\nWATCH FOR\nKey side effects","Always check the 5 rights"],
+["safety","Safety Alert","L","⚠️","SAFETY ALERT","ALWAYS REMEMBER","Protect patient and staff","Check identity and site\nCount sharps and swabs\nReport every incident\nSpeak up if unsure","Check • Confirm • Communicate"],
+["hygiene","Hand Hygiene Reminder","L","🧼","HAND HYGIENE","WASH YOUR HANDS","5 moments","Before touching a patient\nBefore a clean procedure\nAfter body fluid exposure\nAfter touching a patient\nAfter touching surroundings","Clean hands save lives"],
+["anat","Anatomy Fact","B","🦴","ANATOMY","ANATOMY FACT","Know your body","Write the anatomy fact here.","Can you name it?"],
+["timeline","Timeline","L","🕒","INSIDE THE OPERATING THEATRE","THE TIMELINE","What happens when","Before surgery\nDuring surgery\nImmediately after\nRecovery and discharge","Know each phase"],
+["qa","Ask Me Anything","B","🙋","Q & A","ASK ME ANYTHING","Nursing, theatre and study life","Drop your questions in the comments and I will answer them.","Be bold, ask"],
+["poll","This or That Poll","Q","🗳️","POLL","THIS OR THAT?","Vote now","Which do you prefer?\nOption A\nOption B","Vote in the comments"],
+wish("nurses","Nurses Week Wishes","👩‍⚕️","HAPPY NURSES WEEK","Thank you for caring","To every nurse who gives care, comfort and courage every single day — we see you and we thank you."),
+wish("nursesday","International Nurses Day","🕯️","HAPPY NURSES DAY","12 May","Nurses are the heartbeat of healthcare. Thank you for your service."),
+wish("midwives","Midwives Day","🤱","HAPPY MIDWIVES DAY","Guardians of new life","Thank you for bringing hope into the world, one birth at a time."),
+wish("doctors","Doctors' Day","🩺","HAPPY DOCTORS' DAY","Thank you doctors","Gratitude for your skill, sacrifice and long hours."),
+wish("hday","Happy Birthday","🎂","HAPPY BIRTHDAY!","Name here","Wishing you good health, success and joy in the year ahead."),
+wish("congrats","Congratulations","🎉","CONGRATULATIONS!","Well done","Your hard work has paid off. We are proud of you."),
+wish("grad","Graduation","🎓","HAPPY GRADUATION","Class of 2026","A new chapter begins. Go and heal the world."),
+wish("welcome","Welcome","👋","WELCOME!","Glad you're here","Welcome to the theatre family. Learn, ask and grow."),
+wish("thanks","Thank You","🙏","THANK YOU","From all of us","Thank you for your support, shares and kind words."),
+wish("shout","Shout-out","📣","SHOUT-OUT!","Name here","A big shout-out for outstanding work, teamwork and kindness."),
+wish("gm","Good Morning Team","🌅","GOOD MORNING","Have a safe shift","Wishing every team a calm, safe and productive shift."),
+wish("weekend","Weekend Wishes","🌴","HAPPY WEEKEND","Rest and recharge","Rest well, you've earned it. See you Monday."),
+wish("monday","Monday Motivation","💪","MONDAY MOTIVATION","New week, new goals","Small steps every day add up to big results."),
+wish("month","Happy New Month","📅","HAPPY NEW MONTH","Fresh start","May this month bring health, wins and peace."),
+wish("xmas","Merry Christmas","🎄","MERRY CHRISTMAS","Season's greetings","Wishing you joy, peace and safe celebrations."),
+wish("newyear","Happy New Year","🎆","HAPPY NEW YEAR","New year, new goals","Here's to health, growth and success this year."),
+wish("eid","Eid Mubarak","🌙","EID MUBARAK","Blessed celebrations","Wishing you and your family joy and blessings."),
+wish("easter","Happy Easter","🐣","HAPPY EASTER","Hope and renewal","Wishing you a peaceful and joyful Easter."),
+wish("holiday","Public Holiday Greeting","🇰🇪","HAPPY HOLIDAY","Enjoy the day","Enjoy the day safely. To our colleagues on duty, thank you."),
+wish("quote","Inspirational Quote","💬","QUOTE OF THE DAY","Keep going","\"Write the quote here.\""),
+["news","Breaking News","N","🚨","BREAKING NEWS","HEADLINE GOES HERE","Date • Source","Write the key facts here.\n\nAdd the second paragraph here.","Share with your colleagues"],
+["health","Health News","N","🩻","HEALTH NEWS","HEALTH UPDATE","What you need to know","What happened.\n\nWhy it matters.\n\nWhat to do.","Stay informed"],
+["event","Major Event","N","📅","MAJOR EVENT","EVENT NAME","Date • Venue • Time","What the event is about.\n\nWho should attend.\n\nHow to register.","Scan the QR to register"],
+["whoday","Awareness Day","P","🌍","AWARENESS DAY","WORLD HEALTH DAY","Date here","THEME\nThis year's theme\n\nWHY IT MATTERS\nShort reason\n\nWHAT YOU CAN DO\nOne action","Spread awareness"],
+["announce","Announcement","N","📢","ANNOUNCEMENT","IMPORTANT NOTICE","Please read","Write the announcement here.","Share with your class"],
+["deadline","Deadline Reminder","B","⏰","REMINDER","DEADLINE: DATE","Don't miss it","Write what is due and how to submit it.","Submit early"],
+["newpost","New Blog Post","N","📝","NEW ON THE BLOG","POST TITLE HERE","Read now","One or two lines teasing what the post covers.","Scan to read"],
+["newmat","New Study Materials","L","📚","STUDY MATERIALS","NEW NOTES AVAILABLE","Download now","Unit one notes\nUnit two notes\nPast papers\nTemplates","Scan to download"],
+["past","Past Papers Available","L","📄","PAST PAPERS","PAST PAPERS","Practice makes perfect","Year one papers\nYear two papers\nMarking guides\nRevision tips","Scan to download"],
+["cyber","Cyber & Document Services","L","🖨️","SERVICES","CYBER SERVICES","Fast and affordable","Printing and photocopy\nTyping and CV writing\nScanning and lamination\nOnline applications","Walk in or message us"],
+["throw","Throwback","B","📷","THROWBACK","THROWBACK THURSDAY","Remember this?","Write the memory here.",""],
+["meet","Meet the Narrator","B","🧑‍⚕️","MEET EZRA","HELLO, I'M EZRA","Surgical instructor","Short intro about who you are and what you share.","Follow for more"],
+["group","Study Group Invite","N","👥","JOIN US","STUDY GROUP","Learn together","When we meet.\n\nWhat we cover.\n\nHow to join.","Scan the QR to join"],
+["down","Download / Scan QR","B","📲","SCAN ME","GET IT HERE","Scan the QR code","Tell people what they will find when they scan.","Free and easy"]
+];
+const TYM=Object.fromEntries(TY.map(t=>[t[0],t]));
+const BAN={safety:"⚠ ALWAYS: CHECK • CONFIRM • COMMUNICATE",hygiene:"🧼 CLEAN HANDS SAVE LIVES",news:"🚨 BREAKING NEWS",health:"🩺 HEALTH ALERT",event:"📅 SAVE THE DATE",dodont:"✔ DO  •  ✘ DON'T",vitals:"❤️ KNOW YOUR NUMBERS"};
+const BHD={news:"THE DETAILS",health:"WHAT TO KNOW",event:"EVENT DETAILS",announce:"PLEASE NOTE",newpost:"ABOUT THE POST",group:"HOW IT WORKS"};
+const DSK={word:"g",spell:"g",quiz:"q",quizans:"q",mnem:"m",chk:"m"};
+const PAGES=[["Home","/"],["Blog","/blog"],["Content","/content"],["Study materials","/materials"],["Writing","/writing"],["About","/about"],["Contact","/contact"],["CV","/cv"],["Order","/order"],["Search","/search"]];
+const S=EO_CARD.defaults();
+let DATA=null,BASE="https://ezra-ogombo.web.app",R=[],NB=null,QB=null,LB=null,SK=null;
+const QT=PAGES.concat([["Custom…","custom"]]);
+const tmo=(p,ms)=>Promise.race([Promise.resolve(p).catch(()=>null),new Promise(r=>setTimeout(()=>r(null),ms))]);
+if(!CanvasRenderingContext2D.prototype.roundRect)CanvasRenderingContext2D.prototype.roundRect=function(X,Y,w,h,r){r=Math.min(r,w/2,h/2);this.moveTo(X+r,Y);this.arcTo(X+w,Y,X+w,Y+h,r);this.arcTo(X+w,Y+h,X,Y+h,r);this.arcTo(X,Y+h,X,Y,r);this.arcTo(X,Y,X+w,Y,r);this.closePath()};
+const showErr=m=>{$("err").textContent=m?"⚠ "+m:""};
+window.addEventListener("error",e=>showErr(e.message));
+const cv=$("cv");let VT={k:1,ox:0},SL=[],cur=-1;const FM=EO_CARD.FM;
+const getD=()=>{const f=FM[S.fmt]||FM.sq;return f[0]!=1080?0:f[1]-1080};
+const lines=()=>S.body.split("\n").map(l=>l.trim()).filter(Boolean);
+function safeBox(){const o=$("safeov");if(!$("safe").checked){o.hidden=true;return}const st=S.fmt=="story",t=st?.13:.06,bt=st?.18:.06,sd=.06;o.hidden=false;o.style.left=cv.offsetLeft+cv.offsetWidth*sd+"px";o.style.top=cv.offsetTop+cv.offsetHeight*t+"px";o.style.width=cv.offsetWidth*(1-2*sd)+"px";o.style.height=cv.offsetHeight*(1-t-bt)+"px"}
+function render(){try{safeBox();const i=EO_CARD.draw(cv,S,{base:BASE,onImage:render});R=i.R;NB=i.NB;QB=i.QB;LB=i.LB;SK=i.SK;VT=i.VT;if(cur>=0)SL[cur]=JSON.parse(JSON.stringify(S));showErr("")}catch(e){showErr("Render problem: "+e.message)}}
+// ---- controls
+$("type").innerHTML=TY.map(t=>`<option value="${t[0]}">${t[1]}</option>`).join("");
+$("design").innerHTML=Array.from({length:50},(_,i)=>`<option value="${i}">${String(i+1).padStart(2,"0")} · ${PN[i%10]} · ${STY[Math.floor(i/10)%5]}</option>`).join("");
+$("nar").innerHTML='<option value="none">No narrator</option>'+NAR.map(n=>`<option>${n}</option>`).join("");
+$("qrt").innerHTML=QT.map(q=>`<option value="${q[1]}">${q[0].replace(/</g,"&lt;")}</option>`).join("");
+document.querySelectorAll(".fonts").forEach(e=>e.innerHTML=["Arial","Georgia","Trebuchet MS","Verdana","Tahoma","Palatino Linotype","Impact","Courier New","Times New Roman"].map(f=>`<option>${f}</option>`).join(""));
+const all=()=>document.querySelectorAll("[data-k]");
+function sync(){all().forEach(e=>{const v=S[e.dataset.k];if(e.type=="checkbox")e.checked=!!v;else e.value=v});$("nv").textContent=S.n;$("qrcw").hidden=S.qrt!="custom";$("type").value=S.type;$("design").value=S.design;render()}
+function grow(){const k=S.kind;if(k=="P"){const sec=S.body.split(/\n\s*\n/).filter(s=>s.trim());while(sec.length<S.n)sec.push("NEW CARD\nEdit this text");S.body=sec.join("\n\n")}
+else if(k=="L"||k=="Q"||k=="T"){const L=lines(),need=S.n+(k=="L"?0:1);while(L.length<need)L.push(k=="Q"?"New option":k=="T"?"New row | – | –":"New item");S.body=L.join("\n")}}
+function count(){const k=S.kind;return Math.max(1,Math.min(6,k=="P"?S.body.split(/\n\s*\n/).filter(s=>s.trim()).length:(k=="Q"||k=="T")?lines().length-1:k=="L"?lines().length:3))}
+function design(i){EO_CARD.design(S,i)}
+function applyType(id,keepLook){const t=TYM[id];S.type=id;S.kind=t[2];S.icon=t[3];S.head=t[4];S.title=t[5];S.sub=t[6];S.body=t[7];S.tip=t[8];S.ban=BAN[id]||"";S.emo=S.kind=="B"||S.kind=="D"?"circle":"none";S.sk="none";S.bhd=BHD[id]||"";S.n=count();
+$("dsw").hidden=!DSK[id]||!DATA;$("batch").hidden=$("dsw").hidden;if(!$("dsw").hidden)fillDs();sync()}
+function items(){const k=DSK[S.type];return!DATA?[]:k=="g"?DATA.glossary.map(g=>[g.term,g]):k=="q"?DATA.quizzes.map(q=>[q.question.slice(0,60),q]):DATA.mnemonics.map(m=>[m.title,m])}
+function fillDs(){$("ds").innerHTML=items().map((r,i)=>`<option value="${i}">${r[0].replace(/</g,"&lt;")}</option>`).join("");useItem(0)}
+function useItem(i){const it=(items()[i]||[])[1];if(!it)return;const t=S.type;
+if(t=="word"){S.title=it.term.toUpperCase();S.body=it.definition}
+if(t=="spell"){S.body=it.term.toUpperCase().split("").map((c,j)=>j%3==1&&c!=" "?"_":c).join(" ");S.sub="Hint: "+it.definition.split(" ").slice(0,6).join(" ")+"…"}
+if(t=="quiz"){S.body=[it.question,...it.options].join("\n");S.n=it.options.length}
+if(t=="quizans"){S.sub=it.question;S.body=it.answer}
+if(t=="mnem"||t=="chk"){S.title=it.title;S.body=it.items.join("\n");S.n=Math.min(6,it.items.length)}
+sync()}
+all().forEach(e=>e.addEventListener("input",()=>{const k=e.dataset.k;S[k]=e.type=="checkbox"?e.checked:e.type=="range"||e.type=="number"?+e.value:e.value;if(e.dataset.theme){EO_CARD.recolor(S);sync();return}if(k=="n")grow();$("nv").textContent=S.n;$("qrcw").hidden=S.qrt!="custom";if(k=="n")$("f-body").value=S.body;render()}));
+$("type").onchange=e=>applyType(e.target.value);
+$("design").onchange=e=>{design(e.target.value);sync()};
+$("ds").onchange=e=>useItem(+e.target.value);
+// ---- click to edit + drag
+let drag=null;const pt=e=>{const b=cv.getBoundingClientRect();return[((e.clientX-b.left)*cv.width/b.width-VT.ox)/VT.k,((e.clientY-b.top)*cv.height/b.height)/VT.k]};
+const inb=(b,p)=>b&&p[0]>=b.x&&p[0]<=b.x+b.w&&p[1]>=b.y&&p[1]<=b.y+b.h;
+cv.addEventListener("pointerdown",e=>{const p=pt(e);
+const hit=[["q",QB],["k",SK],["l",LB],["n",NB]].find(([k,b])=>inb(b,p));
+if(hit){drag=[hit[0],p[0]-hit[1].x,p[1]-hit[1].y];cv.setPointerCapture(e.pointerId)}else{const r=R.find(r=>inb(r,p));if(r){const f=$(r.f);f.scrollIntoView({block:"center",behavior:"smooth"});f.focus()}}});
+cv.addEventListener("pointermove",e=>{if(!drag)return;const p=pt(e),k=drag[0],X=p[0]-drag[1],Yv=p[1]-drag[2];
+if(k=="l"){S.lx=X;S.ly=Yv}else{const sd=S.lay!="stack",m=sd?{q:["sqx","sqy"],k:["ssx","ssy"],n:["snx","sny"]}[k]:{q:["qx","qy"],k:["skx","sky"],n:["nx","ny"]}[k];S[m[0]]=X;S[m[1]]=sd?Yv:Yv-getD()}render()});
+cv.addEventListener("pointerup",()=>{drag=null});
+// ---- export helpers
+const slug=t=>(t||"post").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,50);
+const blob=async(t,q)=>{const sc=+$("xq").value||1;if(sc!=1){EO_CARD.scale=sc;render()}const b=await new Promise(r=>cv.toBlob(r,t||"image/png",q));if(sc!=1){EO_CARD.scale=1;render()}return b};
+const dl=(b,name)=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)};
+const CT=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+const crc32=u=>{let c=-1;for(let i=0;i<u.length;i++)c=CT[(c^u[i])&255]^(c>>>8);return(c^-1)>>>0};
+async function zipBlob(files){const enc=new TextEncoder(),parts=[],cd=[];let off=0,cs=0;
+for(const [name,b] of files){const u=new Uint8Array(await b.arrayBuffer()),nm=enc.encode(name),crc=crc32(u);
+const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(12,0x21,true);h.setUint32(14,crc,true);h.setUint32(18,u.length,true);h.setUint32(22,u.length,true);h.setUint16(26,nm.length,true);parts.push(h.buffer,nm,u);
+const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(14,0x21,true);c.setUint32(16,crc,true);c.setUint32(20,u.length,true);c.setUint32(24,u.length,true);c.setUint16(28,nm.length,true);c.setUint32(42,off,true);cd.push(c.buffer,nm);cs+=46+nm.length;off+=30+nm.length+u.length}
+const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+return new Blob([...parts,...cd,e.buffer],{type:"application/zip"})}
+$("safe").onchange=safeBox;
+$("rn").onclick=()=>{render();cv.scrollIntoView({block:"center",behavior:"smooth"})};
+$("dl").onclick=async()=>{dl(await blob(),"ezra-"+slug(S.title)+".png")};
+$("allsz").onclick=()=>lock(async()=>{const F=[];for(const f of ["sq","port","story","land"]){S.fmt=f;render();F.push(["ezra-"+slug(S.title)+"-"+f+".png",await blob()])}dl(await zipBlob(F),"ezra-"+slug(S.title)+"-all-sizes.zip")});
+const lock=async(fn)=>{const bak=JSON.parse(JSON.stringify(S)),bc=cur;cur=-1;try{return await fn()}finally{Object.assign(S,bak);S.sn="";cur=bc;sync();drawChips()}};
+$("batch").onclick=()=>lock(async()=>{const n=items().length,F=[];for(let i=0;i<n;i++){useItem(i);S.sn="";render();F.push(["ezra-"+S.type+"-"+String(i+1).padStart(2,"0")+"-"+slug(S.title)+".png",await blob()])}dl(await zipBlob(F),"ezra-"+S.type+"-dataset.zip")});
+// ---- carousel
+function drawChips(){$("slides").innerHTML=SL.length?SL.map((_,i)=>`<button type="button" class="btn${i==cur?" primary":""}" data-i="${i}">${i+1}</button>`).join(""):'<span class="hint">No slides yet — design one, then tap Add slide.</span>'}+(SL.length?'<span class="hint" style="flex-basis:100%">Tap ＋ Add slide to copy the selected slide as the next one, then edit the copy.</span>':"")
+$("slides").onclick=e=>{const i=e.target.dataset&&e.target.dataset.i;if(i==null)return;cur=+i;Object.assign(S,SL[cur]);sync();drawChips()};
+$("sadd").onclick=()=>{SL.push(JSON.parse(JSON.stringify(S)));cur=SL.length-1;drawChips()};
+$("sdel").onclick=()=>{if(cur<0)return;SL.splice(cur,1);cur=Math.min(cur,SL.length-1);if(cur>=0){Object.assign(S,SL[cur]);sync()}drawChips()};
+$("szip").onclick=()=>{if(!SL.length)return showErr("Add at least one slide first.");const L=SL.slice();lock(async()=>{const F=[];for(let i=0;i<L.length;i++){Object.assign(S,L[i]);S.sn=$("snum").checked&&L.length>1?(i+1)+"/"+L.length:"";render();F.push(["slide-"+String(i+1).padStart(2,"0")+"-"+slug(S.title)+".png",await blob()])}dl(await zipBlob(F),"ezra-carousel.zip")})};
+// ---- calendar planner
+const WK=["tipday","monday","word","quiz","mnem","didyou","weekend"];
+const OBS={"1-1":["newyear"],"4-7":["whoday","WORLD HEALTH DAY"],"5-1":["holiday","HAPPY LABOUR DAY"],"5-5":["midwives"],"5-6":["nurses"],"5-12":["nursesday"],"6-1":["holiday","HAPPY MADARAKA DAY"],"9-17":["whoday","WORLD PATIENT SAFETY DAY"],"10-15":["hygiene"],"10-20":["holiday","HAPPY MASHUJAA DAY"],"12-12":["holiday","HAPPY JAMHURI DAY"],"12-25":["xmas"]};
+const TYOPT=TY.map(t=>`<option value="${t[0]}">${t[1]}</option>`).join("");
+let PL=[];const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+$("cstart").value=ymd(new Date());
+function plan(){const [y,m,d]=$("cstart").value.split("-").map(Number);if(!y)return showErr("Pick a start date.");const n=+$("cdays").value,ci={};PL=[];
+for(let i=0;i<n;i++){const dt=new Date(y,m-1,d+i),o=OBS[(dt.getMonth()+1)+"-"+dt.getDate()];let id=o?o[0]:dt.getDate()==1?"month":WK[dt.getDay()];ci[id]=ci[id]||0;PL.push({date:ymd(dt),dow:dt.toLocaleDateString("en",{weekday:"short"}),id,title:o&&o[1]||"",idx:ci[id]++})}
+drawPlan()}
+function drawPlan(){$("cal").innerHTML=PL.map((p,i)=>`<div class="cal-row"><span>${p.date} ${p.dow}</span><select data-ci="${i}">${TYOPT.replace(`value="${p.id}"`,`value="${p.id}" selected`)}</select><button type="button" class="btn" data-open="${i}">Edit</button></div>`).join("");$("czip").hidden=!PL.length}
+$("cal").addEventListener("change",e=>{const i=e.target.dataset.ci;if(i!=null){PL[i].id=e.target.value;PL[i].title=""}});
+function applyPost(p,i){applyType(p.id);if(DSK[p.id]&&DATA){const L=items();if(L.length){$("ds").value=p.idx%L.length;useItem(p.idx%L.length)}}if(p.title){S.title=p.title;sync()}if($("crot").checked&&i!=null)design((base0+i*7)%50);sync()}
+let base0=0;
+$("cal").addEventListener("click",e=>{const i=e.target.dataset.open;if(i!=null){base0=S.design;applyPost(PL[i],+i);scrollTo({top:0,behavior:"smooth"})}});
+$("cplan").onclick=plan;
+$("czip").onclick=()=>{const L=PL.slice();base0=S.design;lock(async()=>{const F=[];for(let i=0;i<L.length;i++){applyPost(L[i],i);S.sn="";render();F.push([L[i].date+"-"+L[i].id+"-"+slug(S.title)+".png",await blob()])}dl(await zipBlob(F),"ezra-content-plan.zip")})};
+// ---- presets and brand
+const LS={get:k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){showErr("Could not save in this browser.")}}};
+function drawPre(){const P=LS.get("eo_presets")||{};$("pre").innerHTML=Object.keys(P).map(n=>`<option>${n.replace(/</g,"&lt;")}</option>`).join("")||"<option value=''>No presets yet</option>"}
+$("psave").onclick=()=>{const n=$("pname").value.trim();if(!n)return showErr("Type a preset name first.");const P=LS.get("eo_presets")||{};const c=JSON.parse(JSON.stringify(S));c.sn="";P[n]=c;LS.set("eo_presets",P);drawPre();$("pre").value=n};
+$("pload").onclick=()=>{const P=LS.get("eo_presets")||{},c=P[$("pre").value];if(!c)return;cur=-1;Object.assign(S,c);$("dsw").hidden=!DSK[S.type]||!DATA;$("batch").hidden=$("dsw").hidden;if(!$("dsw").hidden)$("ds").innerHTML=items().map((r,i)=>`<option value="${i}">${r[0].replace(/</g,"&lt;")}</option>`).join("");sync();drawChips()};
+$("pdel").onclick=()=>{const P=LS.get("eo_presets")||{};delete P[$("pre").value];LS.set("eo_presets",P);drawPre()};
+const BK=["p","a","bg","t","hf","bf","footer","fl","lg","lgs","ls","lo","lx","ly","lay","hh","fh","hr","fr","pr","hp","ht","ha","fp","ft","fc","pn","pc","ph","tc","gr","dec","mc","nar","bgm","bgb","bgd"];
+$("bsave").onclick=()=>{const b={};BK.forEach(k=>b[k]=S[k]);LS.set("eo_brand",b);showErr("")};
+$("bapply").onclick=()=>{const b=LS.get("eo_brand");if(!b)return showErr("Save your brand colors first.");Object.assign(S,b);if(!b.hp)EO_CARD.recolor(S);sync()};
+$("rcol").onclick=()=>{EO_CARD.recolor(S);sync()};
+$("rpos").onclick=()=>{Object.assign(S,{snx:null,sny:null,sqx:null,sqy:null,ssx:null,ssy:null,nx:20,ny:765,qx:870,qy:760,skx:262,sky:780});sync()};
+$("bgf").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{EO_CARD.bg.src=r.result;S.bgm="custom";sync()};r.readAsDataURL(f)};
+// ---- logo upload
+$("lgf").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{EO_CARD.logo.src=r.result;S.lgs="custom";S.lg=true;sync()};r.readAsDataURL(f)};
+drawChips();drawPre();
+design(0);applyType("word");window.__studio={S,TY,design,applyType,render,sync,items,useItem,fillDs,set:o=>Object.assign(S,o)};
+EO_CARD.loadPoses().then(p=>{NAR=p;const c=S.nar;$("nar").innerHTML='<option value="none">No narrator</option>'+p.map(n=>`<option>${n}</option>`).join("");$("nar").value=c;p.forEach(n=>EO_CARD.ready({nar:n}));render()});
+(async()=>{DATA=await tmo(EO_DB.getNode("content_generator"),6000);
+if(DATA&&DSK[S.type]){$("dsw").hidden=false;$("batch").hidden=false;fillDs()}
+const st=await tmo(EO_DB.getNode("site_settings"),4000);if(st&&st.site_url)BASE=st.site_url.replace(/\/$/,"");
+for(const [node,pre] of [["blog_posts","/blog/"],["content_highlights","/content/"]]){const d=await tmo(EO_DB.getNode(node),4000);if(!d)continue;const ks=Array.isArray(d)?d.map(x=>x&&(x.slug||x._key)).filter(Boolean):Object.keys(d);ks.slice(0,80).forEach(k=>QT.splice(QT.length-1,0,[(pre=="/blog/"?"Post: ":"Card: ")+k,pre+k]))}
+const cur=S.qrt;$("qrt").innerHTML=QT.map(q=>`<option value="${q[1]}">${q[0].replace(/</g,"&lt;")}</option>`).join("");$("qrt").value=cur})();
+})();
+</script>
+</body>
+</html>

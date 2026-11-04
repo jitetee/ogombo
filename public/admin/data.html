@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data & settings — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">DATA.EXE</span><h1>Data &amp; settings</h1>
+<p class="hint">Site settings, every node of the database, backups, sitemap/SEO tools and admin accounts.</p></section>
+<div id="tabs"></div><div id="pane"></div>
+
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("data");
+  const pane = document.getElementById("pane");
+  const fld = (id, label, val, type, help) => `<div class="field"><label for="${id}">${A.esc(label)}</label>${type === "textarea" ? `<textarea id="${id}" rows="3">${A.esc(val)}</textarea>` : `<input id="${id}" type="${type || "text"}" value="${A.esc(val)}">`}${help ? `<small>${A.esc(help)}</small>` : ""}</div>`;
+  const v = (id) => document.getElementById(id).value.trim();
+
+  // ---------------- settings ----------------
+  async function settings() {
+    const [s, pay] = await Promise.all([A.get("site_settings"), A.get("payment")]).then((r) => r.map((x) => x || {}));
+    const mp = pay.mpesa || {}, w = s.whatsapp || {}, pp = s.per_page || {}, dl = s.downloads || {};
+    const socials = Object.entries(s.socials || {}), nav = A.rows(s.nav).sort((a, b) => (a.order || 0) - (b.order || 0));
+    pane.innerHTML = `<div class="grid2">
+      ${fld("s_name", "Site name", s.site_name)}${fld("s_url", "Site URL (used for SEO links & QR codes)", s.site_url, "url")}
+      ${fld("s_email", "Public email", s.email, "email")}${fld("s_og", "Default share image", s.default_og_image)}
+      <div style="grid-column:1/-1">${fld("s_tag", "Tagline", s.tagline)}${fld("s_desc", "Default SEO description", s.default_description, "textarea")}</div>
+      ${fld("w_nums", "WhatsApp numbers (one per line)", (w.numbers || []).join("\n"), "textarea")}${fld("w_primary", "Primary WhatsApp number", w.primary)}
+      <div style="grid-column:1/-1">${fld("w_msg", "Default WhatsApp message", w.message)}</div>
+      ${fld("pp_blog", "Blog posts per page", pp.blog, "number")}${fld("pp_content", "Content items per page", pp.content, "number")}${fld("pp_materials", "Materials per page", pp.materials, "number")}${fld("pp_comments", "Comments shown at a time", pp.comments, "number")}
+      <div class="field"><label><input type="checkbox" id="s_mod" style="width:auto" ${s.moderation ? "checked" : ""}> Approve comments before they appear</label></div>
+      ${fld("d_cv", "CV PDF — Drive link", dl.cv_pdf)}${fld("d_card", "Business card PDF — Drive link", dl.business_card_pdf)}
+      <div style="grid-column:1/-1">${fld("o_note", "Order confirmation note", (s.orders || {}).delivery_note, "textarea")}${fld("d_root", "Drive root folder link (for your reference)", (s.drive || {}).root_folder)}</div>
+    </div>
+    <h3>Social links</h3><div id="soc"></div><button class="btn sm" id="soc-add" type="button">+ Add</button>
+    <h3>Navigation</h3><div id="nav"></div><button class="btn sm" id="nav-add" type="button">+ Add</button>
+    <h3>M-Pesa / payments</h3><div class="grid2">${fld("p_type", "Payment type", mp.type)}${fld("p_biz", "Business name", mp.business_name)}${fld("p_till", "Till number", mp.till_number)}${fld("p_store", "Store number", mp.store_number)}${fld("p_phone", "Phone", mp.phone)}${fld("p_bms", "BuyMeSoda URL", pay.buymesoda_url, "url")}</div>
+    <p><button class="btn primary" id="save" type="button">Save settings</button></p>`;
+    const rowHtml = (cols, vals) => `<div class="kv-row" style="grid-template-columns:${cols.map(() => "1fr").join(" ")} auto">${cols.map((c, i) => `<input placeholder="${c}" value="${A.esc(vals[i] == null ? "" : vals[i])}">`).join("")}<button class="btn sm danger" type="button">✕</button></div>`;
+    const addRow = (host, cols, vals) => { host.insertAdjacentHTML("beforeend", rowHtml(cols, vals)); host.lastElementChild.querySelector("button").onclick = (e) => e.target.parentElement.remove(); };
+    const socH = document.getElementById("soc"), navH = document.getElementById("nav");
+    const SC = ["key (facebook)", "label", "url", "enabled (yes/no)"], NC = ["label", "url (/blog)", "order", "visible (yes/no)"];
+    socials.forEach(([k, o]) => addRow(socH, SC, [k, o.label, o.url, o.enabled === false ? "no" : "yes"]));
+    nav.forEach((n) => addRow(navH, NC, [n.label, n.url, n.order, n.visible === false ? "no" : "yes"]));
+    document.getElementById("soc-add").onclick = () => addRow(socH, SC, []); document.getElementById("nav-add").onclick = () => addRow(navH, NC, []);
+    document.getElementById("save").onclick = async () => {
+      const rowsOf = (h) => [...h.children].map((r) => [...r.querySelectorAll("input")].map((i) => i.value.trim()));
+      const soc = {}; rowsOf(socH).forEach(([k, l, u, e]) => { if (k && u) soc[A.slugify(k)] = { label: l || k, url: u, enabled: !/^n/i.test(e) }; });
+      const navO = {}; rowsOf(navH).forEach(([l, u, o, vis], i) => { if (l && u) navO["n" + (i + 1)] = { label: l, url: u, order: Number(o) || i + 1, visible: !/^n/i.test(vis) }; });
+      const nums = v("w_nums").split("\n").map((x) => x.trim()).filter(Boolean);
+      const out = Object.assign({}, s, { site_name: v("s_name"), site_url: v("s_url").replace(/\/$/, ""), email: v("s_email"), default_og_image: v("s_og"), tagline: v("s_tag"), default_description: v("s_desc"),
+        whatsapp: { numbers: nums, primary: v("w_primary") || nums[0] || "", message: v("w_msg") }, socials: soc, nav: navO,
+        per_page: { blog: +v("pp_blog") || 5, content: +v("pp_content") || 5, materials: +v("pp_materials") || 6, comments: +v("pp_comments") || 5 }, moderation: document.getElementById("s_mod").checked,
+        downloads: { cv_pdf: v("d_cv"), business_card_pdf: v("d_card") }, orders: { delivery_note: v("o_note") }, drive: Object.assign({}, s.drive, { root_folder: v("d_root") }) });
+      try { await A.set("site_settings", out); await A.set("payment", { buymesoda_url: v("p_bms"), mpesa: { type: v("p_type"), business_name: v("p_biz"), till_number: v("p_till"), store_number: v("p_store"), phone: v("p_phone") } }); A.toast("Settings saved ✓"); } catch (e) { A.toast(e.message, true); }
+    };
+  }
+
+  // ---------------- other collections (friendly CRUD) ----------------
+  function collections() {
+    const C = {
+      chatbot_faq: { node: "chatbot_faq", title: "chatbot answer", search: ["answer"], sort: () => 0, columns: [{ key: "keywords", label: "Keywords" }, { key: "answer", label: "Answer" }], fields: [{ key: "keywords", label: "Keywords", type: "tags", required: true, wide: true }, { key: "answer", label: "Answer", type: "textarea", required: true, wide: true }] },
+      occasions: { node: "occasions", title: "occasion", search: ["message"], sort: (a, b) => (a.date || "").localeCompare(b.date || ""), columns: [{ key: "date", label: "MM-DD" }, { key: "message", label: "Message" }], fields: [{ key: "date", label: "Date (MM-DD)", type: "text", required: true }, { key: "message", label: "Message", type: "text", required: true, wide: true }] },
+      milestones: { node: "milestones", title: "milestone", search: ["event"], sort: () => 0, columns: [{ key: "year", label: "Year" }, { key: "event", label: "Event" }], fields: [{ key: "year", label: "Year", type: "text", required: true }, { key: "event", label: "Event", type: "textarea", required: true, wide: true }] },
+      gallery: { node: "gallery", title: "gallery image", search: ["caption"], sort: () => 0, columns: [{ key: "src", label: "Image" }, { key: "caption", label: "Caption" }], fields: [{ key: "src", label: "Image path", type: "text", required: true }, { key: "caption", label: "Caption", type: "text" }] },
+      side_projects: { node: "side_projects", title: "side project", search: ["name"], sort: () => 0, columns: [{ key: "name", label: "Name" }, { key: "description", label: "Description" }], fields: [{ key: "name", label: "Name", type: "text", required: true }, { key: "description", label: "Description", type: "textarea", required: true, wide: true }] },
+    };
+    pane.innerHTML = `<div class="toolbar"><select id="cs">${Object.keys(C).map((k) => `<option>${k}</option>`).join("")}</select><span class="hint">Jokes, interests and cyber-café services are plain lists — edit them in the Node browser.</span></div><div id="cp"></div>`;
+    const go = () => A.crud(document.getElementById("cp"), C[document.getElementById("cs").value]);
+    document.getElementById("cs").onchange = go; go();
+  }
+
+  // ---------------- node browser (full CRUD on any path) ----------------
+  function browser() {
+    pane.innerHTML = `<div class="toolbar"><input id="bp" placeholder="path, e.g. profile or blog_posts/my-post" value=""><button class="btn primary" id="bl" type="button">Load</button><button class="btn" id="bu" type="button">↑ Up</button></div>
+      <p class="hint" id="bk"></p><div id="kids" class="row-links"></div><textarea class="code" id="bj" spellcheck="false" placeholder="Pick a node to see its JSON…"></textarea>
+      <div class="row-links" style="margin-top:.6rem"><button class="btn primary" id="bs" type="button">Save (replace this path)</button><button class="btn" id="ba" type="button">+ Add child</button><button class="btn danger" id="bd" type="button">Delete path</button></div>`;
+    const bp = document.getElementById("bp"), bj = document.getElementById("bj");
+    async function load(p) {
+      p = (p || "").replace(/^\/|\/$/g, ""); bp.value = p;
+      try {
+        const [d, kids] = await Promise.all([A.get(p), A.get(p, true)]);
+        bj.value = JSON.stringify(d, null, 2) ?? "null";
+        document.getElementById("bk").textContent = p ? `/${p}` : "/ (root)";
+        document.getElementById("kids").innerHTML = ""; 
+        if (kids && typeof kids === "object") Object.keys(kids).sort().forEach((k) => document.getElementById("kids").append(A.btn(k, "sm", () => load(p ? p + "/" + k : k))));
+      } catch (e) { A.toast(e.message, true); }
+    }
+    document.getElementById("bl").onclick = () => load(bp.value);
+    document.getElementById("bu").onclick = () => load(bp.value.split("/").slice(0, -1).join("/"));
+    document.getElementById("bs").onclick = async () => { let j; try { j = JSON.parse(bj.value); } catch { return A.toast("That isn't valid JSON", true); } if (!bp.value) return A.toast("Open a path first (the root can't be replaced here)", true); if (await A.confirm(`Replace /${bp.value} with this JSON?`)) { try { await A.set(bp.value, j); A.toast("Saved ✓"); load(bp.value); } catch (e) { A.toast(e.message, true); } } };
+    document.getElementById("bd").onclick = async () => { if (!bp.value) return; if (await A.confirm(`DELETE /${bp.value} and everything under it?`)) { await A.del(bp.value); A.toast("Deleted"); load(bp.value.split("/").slice(0, -1).join("/")); } };
+    document.getElementById("ba").onclick = async () => { const k = prompt("New child key (no spaces or . # $ [ ] /)"); if (!k) return; const val = prompt("Value as JSON (e.g. \"text\", 5, or {\"a\":1})", "{}"); try { await A.set((bp.value ? bp.value + "/" : "") + k, JSON.parse(val)); A.toast("Added"); load(bp.value); } catch (e) { A.toast(e.message, true); } };
+    load("");
+  }
+
+  // ---------------- tools ----------------
+  async function tools() {
+    pane.innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">sitemap.xml</span></div><div class="body"><p class="hint">Static hosting can't update the sitemap by itself. Generate it after publishing new posts/materials, replace <code>sitemap.xml</code> in the project and redeploy (<code>firebase deploy --only hosting</code>).</p><button class="btn primary" id="sm" type="button">Generate sitemap</button> <button class="btn" id="smd" type="button" hidden>Download sitemap.xml</button><textarea class="code" id="smt" style="min-height:160px;margin-top:.6rem" hidden></textarea></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">seo-check</span></div><div class="body"><button class="btn primary" id="seo" type="button">Run SEO check</button><div id="seor"></div></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">seed-missing</span></div><div class="body"><p class="hint">Copies nodes from <code>/data/seed-db.json</code> into the database ONLY where the node is empty. Nothing existing is overwritten.</p><button class="btn" id="sd" type="button">Seed missing nodes</button> <span id="sdr" class="hint"></span></div></div>
+      <div class="crt-window"><div class="titlebar"><span class="label">backup</span></div><div class="body"><p class="hint">Export every node to one JSON file, or restore from one (replaces the nodes contained in the file).</p><button class="btn primary" id="ex" type="button">Export backup</button> <input type="file" id="im" accept=".json" style="display:none"><button class="btn danger" id="imb" type="button">Restore from file…</button></div></div>`;
+    const pub = async (d) => { const s = await window.EO_SITE_SETTINGS(); return s; };
+    document.getElementById("sm").onclick = async () => {
+      const [s, blog, cont, mats, cats, books] = await Promise.all(["site_settings", "blog_posts", "content_highlights", "materials", "material_categories", "writing_projects"].map((n) => A.get(n))).then((r) => r.map((x) => x || {}));
+      const base = (s.site_url || location.origin).replace(/\/$/, ""), t = A.today(), urls = [];
+      const add = (p, pr, cf, lm) => urls.push(`  <url><loc>${base}${p}</loc>${lm ? `<lastmod>${lm}</lastmod>` : `<lastmod>${t}</lastmod>`}<changefreq>${cf}</changefreq><priority>${pr}</priority></url>`);
+      [["/", 1, "weekly"], ["/about", .8, "monthly"], ["/content", .9, "weekly"], ["/blog", .8, "weekly"], ["/writing", .6, "monthly"], ["/materials", .8, "weekly"], ["/cv", .6, "monthly"], ["/contact", .5, "yearly"], ["/privacy", .2, "yearly"]].forEach(([p, pr, cf]) => add(p, pr, cf));
+      const pubOK = (x) => x.status !== "draft" && x.status !== "hidden" && !(x.date && x.date > t);
+      Object.values(cats).forEach((c, i) => add("/materials/" + Object.keys(cats)[i], .7, "weekly"));
+      Object.entries(blog).filter(([, x]) => pubOK(x)).forEach(([k, x]) => add("/blog/" + k, .7, "yearly", x.updated || x.date));
+      Object.entries(cont).filter(([, x]) => pubOK(x)).forEach(([k]) => add("/content/" + k, .6, "yearly"));
+      Object.entries(books).forEach(([k]) => add("/writing/books/" + k, .5, "monthly"));
+      Object.entries(mats).filter(([, x]) => pubOK(x)).forEach(([k]) => add("/materials/item/" + k, .6, "monthly"));
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`;
+      const ta = document.getElementById("smt"); ta.hidden = false; ta.value = xml; const d = document.getElementById("smd"); d.hidden = false; d.onclick = () => A.download("sitemap.xml", xml, "application/xml"); A.toast(urls.length + " URLs");
+    };
+    document.getElementById("seo").onclick = async () => {
+      const [blog, cont, mats] = await Promise.all(["blog_posts", "content_highlights", "materials"].map((n) => A.get(n))).then((r) => r.map((x) => x || {}));
+      const issues = [], strip = (h) => (h || "").replace(/<[^>]+>/g, " ").trim(), wc = (h) => (strip(h) ? strip(h).split(/\s+/).length : 0);
+      Object.entries(blog).forEach(([k, p]) => { const i = []; if (!p.meta_description) i.push("no SEO description"); else if (p.meta_description.length > 165 || p.meta_description.length < 70) i.push(`SEO description ${p.meta_description.length} chars (aim 70–160)`); if ((p.title || "").length > 65) i.push("title over 65 chars"); if (!p.thumbnail) i.push("no featured image"); if (wc(p.content) < 300) i.push(`only ${wc(p.content)} words`); if (!(p.tags || []).length) i.push("no tags"); if (!/<img[^>]+alt="[^"]+"/.test(p.content || "") && /<img/.test(p.content || "")) i.push("image without alt text"); if (i.length) issues.push([`/blog/${k}`, i]); });
+      Object.entries(cont).forEach(([k, p]) => { const i = []; if (!p.caption || p.caption.length < 40) i.push("short caption"); if (!p.image) i.push("no image"); if (i.length) issues.push([`/content/${k}`, i]); });
+      Object.entries(mats).forEach(([k, m]) => { const i = []; if (!m.description || m.description.length < 60) i.push("short description"); if (m.status !== "draft" && m.access !== "paid" && !m.drive_url) i.push("free but no Drive link"); if (m.access === "paid" && !(m.price > 0)) i.push("paid but no price"); if (i.length) issues.push([`/materials/item/${k}`, i]); });
+      document.getElementById("seor").innerHTML = issues.length ? `<table class="tbl"><tbody>${issues.map(([p, i]) => `<tr><td><a href="${p}" target="_blank">${A.esc(p)}</a></td><td>${i.map(A.esc).join("; ")}</td></tr>`).join("")}</tbody></table>` : "<p>No issues found 🎉</p>";
+    };
+    document.getElementById("sd").onclick = async () => {
+      const seed = await (await fetch("/data/seed-db.json")).json(); let n = 0;
+      for (const [k, val] of Object.entries(seed)) { if ((await A.get(k, true)) == null) { await A.set(k, val); n++; } }
+      document.getElementById("sdr").textContent = `${n} node(s) seeded.`;
+    };
+    document.getElementById("ex").onclick = async () => { const keys = Object.keys(await A.get("", true)), out = {}; for (const k of keys) out[k] = await A.get(k); A.download(`ezra-ogombo-backup-${A.today()}.json`, JSON.stringify(out, null, 1), "application/json"); A.toast(keys.length + " nodes exported"); };
+    const im = document.getElementById("im"); document.getElementById("imb").onclick = () => im.click();
+    im.onchange = async () => { const f = im.files[0]; if (!f) return; let j; try { j = JSON.parse(await f.text()); } catch { return A.toast("Not valid JSON", true); } if (!(await A.confirm(`Restore ${Object.keys(j).length} node(s) from ${f.name}? Those nodes will be REPLACED.`))) return; for (const [k, val] of Object.entries(j)) await A.set(k, val); A.toast("Restored ✓"); };
+  }
+
+  // ---------------- admins ----------------
+  async function admins() {
+    const d = (await A.get("admins")) || {}, list = A.rows(d);
+    pane.innerHTML = `<p class="hint">Only people listed here can sign in to this console and write to the database. Create their login in Firebase → Authentication first, then paste their <b>User UID</b> here.</p><table class="tbl"><thead><tr><th>UID</th><th>Name</th><th>Email</th><th>Role</th><th></th></tr></thead><tbody>${list.map((a) => `<tr data-k="${A.esc(a._key)}"><td class="mono">${A.esc(a._key)}</td><td>${A.esc(a.name)}</td><td>${A.esc(a.email)}</td><td>${A.esc(a.role)}</td><td class="act"></td></tr>`).join("")}</tbody></table>
+      <h3>Add admin</h3><div class="grid2">${fld("a_uid", "Firebase UID", "")}${fld("a_name", "Name", "")}${fld("a_email", "Email", "", "email")}${fld("a_role", "Role", "editor")}</div><button class="btn primary" id="aa" type="button">Add admin</button>`;
+    pane.querySelectorAll("tr[data-k]").forEach((tr) => { const k = tr.dataset.k; if (k !== A.session.uid) tr.querySelector(".act").append(A.btn("Remove", "sm danger", async () => { if (await A.confirm("Remove this admin?")) { await A.del("admins/" + k); admins(); } })); });
+    document.getElementById("aa").onclick = async () => { if (!v("a_uid")) return A.toast("UID required", true); await A.set("admins/" + v("a_uid"), { name: v("a_name"), email: v("a_email"), role: v("a_role") || "editor", created: A.today() }); admins(); };
+  }
+
+  async function log() {
+    const d = (await A.get("audit_log", false, '&orderBy="$key"&limitToLast=150')) || {}, list = A.rows(d).sort((a, b) => b.ts - a.ts);
+    pane.innerHTML = `<table class="tbl"><thead><tr><th>When</th><th>Who</th><th>Action</th><th>Path</th></tr></thead><tbody>${list.map((l) => `<tr><td>${A.fmt(l.ts)}</td><td>${A.esc(l.email)}</td><td>${A.esc(l.op)}</td><td class="mono">${A.esc(l.path)}</td></tr>`).join("") || "<tr><td>Nothing yet.</td></tr>"}</tbody></table>`;
+  }
+  const map = { settings, collections, browser, tools, admins, log };
+  A.tabs(document.getElementById("tabs"), [["settings", "Site settings"], ["collections", "Other collections"], ["browser", "Node browser"], ["tools", "SEO · backup · tools"], ["admins", "Admins"], ["log", "Activity log"]], (k) => map[k]());
+})();
+</script>
+</body>
+</html>
