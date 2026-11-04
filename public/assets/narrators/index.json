@@ -1,0 +1,329 @@
+{
+ "_help": "To add a pose: drop name.png (transparent) in this folder and add {n:name, k:keywords it suits, s:sticker emoji, a:1 if it may be auto-picked}. No other code change needed.",
+ "poses": [
+  {
+   "n": "arms-crossed",
+   "k": "firm rule boundary boundaries professional discipline",
+   "s": "\ud83d\uded1",
+   "a": 1
+  },
+  {
+   "n": "arms-wide",
+   "k": "welcome everyone all open community join",
+   "s": "\ud83e\udd17",
+   "a": 1
+  },
+  {
+   "n": "cheer-arms-up",
+   "k": "congrat win celebrate success pass passed result graduation achievement happy",
+   "s": "\ud83c\udf89",
+   "a": 1
+  },
+  {
+   "n": "clipboard-side",
+   "k": "count counts swab sponge documentation audit record",
+   "s": "\ud83d\udccb",
+   "a": 0
+  },
+  {
+   "n": "clipboard-write",
+   "k": "notes checklist chart document documentation record form audit report",
+   "s": "\ud83d\udccb",
+   "a": 1
+  },
+  {
+   "n": "closeup-top-down",
+   "k": "close",
+   "s": "",
+   "a": 0
+  },
+  {
+   "n": "full-body-point",
+   "k": "full body wide",
+   "s": "",
+   "a": 0
+  },
+  {
+   "n": "full-body-reach-up",
+   "k": "full body tall up",
+   "s": "",
+   "a": 0
+  },
+  {
+   "n": "gloves",
+   "k": "hygiene wash hands glove gloves infection sterile aseptic gowning gown scrub asepsis",
+   "s": "\ud83e\uddfc",
+   "a": 1
+  },
+  {
+   "n": "hand-on-chest",
+   "k": "honest sincere oath promise ethics ethical pledge confidentiality professional",
+   "s": "\ud83e\udd1d",
+   "a": 1
+  },
+  {
+   "n": "hand-on-forehead",
+   "k": "tired headache exam difficult hard pressure fatigue burnout stress",
+   "s": "\ud83d\ude13",
+   "a": 1
+  },
+  {
+   "n": "hand-to-head",
+   "k": "think confused forgot remember mind",
+   "s": "\ud83e\udd14",
+   "a": 0
+  },
+  {
+   "n": "hands-clasped",
+   "k": "please prayer pray patient consent trust",
+   "s": "\ud83d\ude4f",
+   "a": 1
+  },
+  {
+   "n": "hands-down-present",
+   "k": "rules dont avoid never mistake stop common errors wrong",
+   "s": "\u26a0\ufe0f",
+   "a": 1
+  },
+  {
+   "n": "hands-on-head",
+   "k": "stress panic emergency complication hemorrhage bleeding mistake error crisis overwhelmed",
+   "s": "\ud83d\ude31",
+   "a": 1
+  },
+  {
+   "n": "hands-on-hips",
+   "k": "ready confident prepare setup preparation clean clearing boss",
+   "s": "\ud83d\udcaa",
+   "a": 1
+  },
+  {
+   "n": "hands-together-thanks",
+   "k": "thank thanks grateful please appreciate prayer blessing",
+   "s": "\ud83d\ude4f",
+   "a": 1
+  },
+  {
+   "n": "heart-hands",
+   "k": "love care caring nurses nurse week thank compassion kindness",
+   "s": "\u2764\ufe0f",
+   "a": 1
+  },
+  {
+   "n": "idea-lightbulb",
+   "k": "idea tip tips hint trick think creative thought",
+   "s": "\ud83d\udca1",
+   "a": 1
+  },
+  {
+   "n": "look-up-closeup",
+   "k": "dream future hope look",
+   "s": "",
+   "a": 0
+  },
+  {
+   "n": "neutral",
+   "k": "question normal general life story update daily",
+   "s": "",
+   "a": 1
+  },
+  {
+   "n": "ok-sign",
+   "k": "ok good perfect correct done fine approved checked",
+   "s": "\u2705",
+   "a": 1
+  },
+  {
+   "n": "open-hands",
+   "k": "question ask why unsure maybe explain what does mean",
+   "s": "\u2753",
+   "a": 1
+  },
+  {
+   "n": "palms-up",
+   "k": "stop wow hold halt careful attention surprise",
+   "s": "\u270b",
+   "a": 1
+  },
+  {
+   "n": "peace-sign",
+   "k": "peace luck good luck two second win",
+   "s": "\u270c\ufe0f",
+   "a": 1
+  },
+  {
+   "n": "phone-call-front",
+   "k": "call contact phone order service whatsapp cyber",
+   "s": "\ud83d\udcde",
+   "a": 1
+  },
+  {
+   "n": "phone-call-side",
+   "k": "call contact phone whatsapp reach talk",
+   "s": "\ud83d\udcde",
+   "a": 0
+  },
+  {
+   "n": "point-at-you",
+   "k": "you your must should need remember do",
+   "s": "\ud83d\udc49",
+   "a": 1
+  },
+  {
+   "n": "point-hip",
+   "k": "tip how to guide step steps lesson",
+   "s": "\ud83d\udca1",
+   "a": 1
+  },
+  {
+   "n": "point-profile",
+   "k": "next look there",
+   "s": "\ud83d\udc49",
+   "a": 0
+  },
+  {
+   "n": "point-right-closeup",
+   "k": "next click look",
+   "s": "\ud83d\udc49",
+   "a": 0
+  },
+  {
+   "n": "point-right-grin",
+   "k": "next see look here click read more",
+   "s": "\ud83d\udc49",
+   "a": 1
+  },
+  {
+   "n": "point-right-lean",
+   "k": "next click link read more see below look",
+   "s": "\ud83d\udc49",
+   "a": 0
+  },
+  {
+   "n": "point-side-front",
+   "k": "next see this that here",
+   "s": "\ud83d\udc49",
+   "a": 1
+  },
+  {
+   "n": "point-up-lean",
+   "k": "tip look up above",
+   "s": "\u261d\ufe0f",
+   "a": 0
+  },
+  {
+   "n": "point-up-one",
+   "k": "important remember note tip first one key point rule",
+   "s": "\u261d\ufe0f",
+   "a": 1
+  },
+  {
+   "n": "point-up-side",
+   "k": "tip idea remember",
+   "s": "\u261d\ufe0f",
+   "a": 0
+  },
+  {
+   "n": "salute",
+   "k": "respect honour honor thank service duty hero heroes",
+   "s": "\ud83c\udf96\ufe0f",
+   "a": 1
+  },
+  {
+   "n": "shocked-sparkles",
+   "k": "wow surprise shocking amazing fact did you know unbelievable",
+   "s": "\u26a1",
+   "a": 1
+  },
+  {
+   "n": "shrug-wide",
+   "k": "unknown unsure maybe confusion confused myth why",
+   "s": "\ud83e\udd37",
+   "a": 1
+  },
+  {
+   "n": "shush-quiet",
+   "k": "silence quiet secret confidential noise privacy",
+   "s": "\ud83e\udd2b",
+   "a": 1
+  },
+  {
+   "n": "stethoscope",
+   "k": "patient clinical nurse doctor health assess vital signs examination ward",
+   "s": "\ud83e\ude7a",
+   "a": 1
+  },
+  {
+   "n": "thinking-chin",
+   "k": "quiz question think consider decide why how test mcq pop",
+   "s": "\ud83e\udd14",
+   "a": 1
+  },
+  {
+   "n": "thumbs-up",
+   "k": "like good approve great best correct yes",
+   "s": "\ud83d\udc4d",
+   "a": 1
+  },
+  {
+   "n": "thumbs-up-both",
+   "k": "great awesome excellent success well done congratulations",
+   "s": "\ud83d\udc4d",
+   "a": 1
+  },
+  {
+   "n": "top-down-smile",
+   "k": "welcome hello hi",
+   "s": "\ud83d\ude0a",
+   "a": 0
+  },
+  {
+   "n": "wave-back-turned",
+   "k": "bye goodbye farewell see you",
+   "s": "\ud83d\udc4b",
+   "a": 0
+  },
+  {
+   "n": "wave-hello",
+   "k": "hello hi welcome greetings introduction meet intro",
+   "s": "\ud83d\udc4b",
+   "a": 1
+  },
+  {
+   "n": "worried",
+   "k": "worried fear anxiety risk danger infection complication pain",
+   "s": "\ud83d\ude1f",
+   "a": 1
+  },
+  {
+   "n": "write-on-board",
+   "k": "teach lesson class lecture board explain learn study notes",
+   "s": "\u270f\ufe0f",
+   "a": 0
+  },
+  {
+   "n": "write-pen-side",
+   "k": "write writing essay notes pen",
+   "s": "\u270f\ufe0f",
+   "a": 0
+  },
+  {
+   "n": "writing-notes-side",
+   "k": "notes writing study documentation",
+   "s": "\ud83d\udcdd",
+   "a": 0
+  },
+  {
+   "n": "hold-laptop",
+   "k": "website laptop computer screen show online channel",
+   "s": "",
+   "a": 0
+  },
+  {
+   "n": "hold-phone",
+   "k": "phone app mobile subscribe follow notification",
+   "s": "",
+   "a": 0
+  }
+ ]
+}

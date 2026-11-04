@@ -1,0 +1,2 @@
+Voice: Piper "en_US-libritts-high" (rhasspy/piper). Trained on LibriTTS, licence CC BY 4.0 — https://www.openslr.org/60/
+Credit: "LibriTTS corpus (Zen et al.), CC BY 4.0". Run in the browser with onnxruntime-web (MIT) and eSpeak NG (GPL-3.0) for phonemes.
