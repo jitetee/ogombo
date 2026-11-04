@@ -1,0 +1,133 @@
+{
+ "_help": "Hands for the drawing pen. tip = pixel of the pen tip in the png. rot 0 = arm comes up from the bottom. eraser = hand used for the wipe between scenes.",
+ "hands": [
+  {
+   "id": "marker-red",
+   "name": "Red marker",
+   "src": "/assets/whiteboard/hands/marker-red.png",
+   "tip": [
+    60,
+    131
+   ],
+   "rot": 0,
+   "scale": 0.9
+  },
+  {
+   "id": "marker-blue",
+   "name": "Blue marker",
+   "src": "/assets/whiteboard/hands/marker-blue.png",
+   "tip": [
+    60,
+    129
+   ],
+   "rot": 0,
+   "scale": 0.9
+  },
+  {
+   "id": "marker-black",
+   "name": "Black marker",
+   "src": "/assets/whiteboard/hands/marker-black.png",
+   "tip": [
+    60,
+    133
+   ],
+   "rot": 0,
+   "scale": 0.9
+  },
+  {
+   "id": "marker-yellow",
+   "name": "Yellow highlighter",
+   "src": "/assets/whiteboard/hands/marker-yellow.png",
+   "tip": [
+    62,
+    126
+   ],
+   "rot": 0,
+   "scale": 0.9
+  },
+  {
+   "id": "pencil",
+   "name": "Pencil",
+   "src": "/assets/whiteboard/hands/pencil.png",
+   "tip": [
+    51,
+    109
+   ],
+   "rot": 0,
+   "scale": 0.9
+  },
+  {
+   "id": "chalk",
+   "name": "Chalk",
+   "src": "/assets/whiteboard/hands/chalk.png",
+   "tip": [
+    64,
+    126
+   ],
+   "rot": 0,
+   "scale": 0.9
+  },
+  {
+   "id": "brush",
+   "name": "Paint brush",
+   "src": "/assets/whiteboard/hands/brush.png",
+   "tip": [
+    38,
+    91
+   ],
+   "rot": 0,
+   "scale": 0.9
+  },
+  {
+   "id": "pointer-stick",
+   "name": "Pointer stick",
+   "src": "/assets/whiteboard/hands/pointer-stick.png",
+   "tip": [
+    34,
+    33
+   ],
+   "rot": 0,
+   "scale": 0.9
+  },
+  {
+   "id": "point",
+   "name": "Pointing finger",
+   "src": "/assets/whiteboard/hands/point.png",
+   "tip": [
+    54,
+    107
+   ],
+   "rot": 0,
+   "scale": 0.9
+  },
+  {
+   "id": "pinch",
+   "name": "Pinch",
+   "src": "/assets/whiteboard/hands/pinch.png",
+   "tip": [
+    53,
+    186
+   ],
+   "rot": 0,
+   "scale": 0.9
+  }
+ ],
+ "erasers": [
+  {
+   "id": "eraser-a",
+   "src": "/assets/whiteboard/hands/eraser-a.png",
+   "tip": [
+    75,
+    170
+   ]
+  },
+  {
+   "id": "eraser-b",
+   "src": "/assets/whiteboard/hands/eraser-b.png",
+   "tip": [
+    90,
+    170
+   ]
+  }
+ ]
+}

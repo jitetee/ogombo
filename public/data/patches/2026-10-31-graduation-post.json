@@ -1,0 +1,37 @@
+{
+ "_patch": {
+  "id": "2026-10-31-graduation-post",
+  "name": "Blog post: I finally graduated",
+  "notes": "One new blog post. Nothing existing is changed. The thumbnail image ships with the site deploy (assets/blog), not this file.",
+  "date": "2026-10-31",
+  "modes": {
+   "blog_posts": "merge"
+  },
+  "changelog": [
+   {
+    "path": "blog_posts/i-finally-graduated-and-whats-next-for-this-channel",
+    "text": "New: I finally graduated, and what's next for this channel"
+   }
+  ]
+ },
+ "blog_posts": {
+  "i-finally-graduated-and-whats-next-for-this-channel": {
+   "slug": "i-finally-graduated-and-whats-next-for-this-channel",
+   "title": "I finally graduated, and what's next for this channel",
+   "date": "2026-10-31",
+   "excerpt": "A thank you, a short look back, and what to expect next from the channel and this website, now that I have finally graduated.",
+   "thumbnail": "/assets/blog/i-finally-graduated-and-whats-next-for-this-channel.jpg",
+   "tags": [
+    "graduation",
+    "update",
+    "channel"
+   ],
+   "content": "<p>I finally graduated. I have been typing that sentence in my head for a long time, and it still feels a little unreal to see it written down. So this post is a thank you, a small look back, and a promise about what this channel and website are going to be from here.</p>\n<h2>What graduating means to me</h2>\n<p>I studied the Diploma in Perioperative Theatre Technology at Reliance Africa School of Health Sciences in Kitale. Along the way I learned that good theatre work is made of small, careful habits: the checks before the patient arrives, the counts, the sterile technique, the pauses on the safety checklist. Nothing flashy. Just people doing the boring parts properly, every time.</p>\n<p>Graduating does not mean I know everything. It means I have a solid foundation, and now I get to keep learning in the open and share it with you.</p>\n<h2>Thank you</h2>\n<p>Thank you to my family, my lecturers, my classmates and everyone who read a post, watched a video, shared a card or sent a kind message. You made it easier to keep going on days when I did not feel like it.</p>\n<h2>What happens next on this channel</h2>\n<ul>\n<li><b>More episodes of Perioperative Theatre Technology.</b> The first ten episodes cover the overview, sterilisation, tables and diathermy, anaesthesia machines, instruments and sutures, infection prevention, positioning, counts and records, laparoscopic equipment and emergencies. More will follow.</li>\n<li><b>More content cards and study material</b> on this website, written in plain language so revision is quicker.</li>\n<li><b>More real talk.</b> Storytime videos about the journey: the lessons, the mistakes and the things I wish someone had told me.</li>\n<li><b>Your questions.</b> Tell me what you want explained next, and I will do my best to cover it.</li>\n</ul>\n<h2>A small request</h2>\n<p>Everything here is free to read and watch, and I want to keep it that way. If the site has helped you, you can support it with a small M-Pesa donation. If you read a lot of posts, you may see a gentle reminder to do that. It helps with hosting and with making new episodes and study cards.</p>\n<p>Now tell me: what would you like to see next? Leave a comment under the video, or message me through the contact page. The link to read more is always in the description.</p>\n<p>Stay humble, stay safe, and thank you for being here.</p>",
+   "status": "published",
+   "author": "Ezra Ogombo",
+   "meta_description": "Ezra Ogombo has finally graduated from the Diploma in Perioperative Theatre Technology. A thank you, a short look back, and what is next for the channel and website.",
+   "read_minutes": 3,
+   "updated": "2026-10-31"
+  }
+ }
+}

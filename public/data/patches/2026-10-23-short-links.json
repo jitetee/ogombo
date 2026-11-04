@@ -1,0 +1,124 @@
+{
+  "_patch": {
+    "id": "2026-10-23-short-links",
+    "name": "Short links (12 site sections)",
+    "notes": "Starter short links like /abcdef for the main pages. Add more in Admin -> Links.",
+    "date": "2026-10-23",
+    "modes": {
+      "short_links": "add"
+    },
+    "changelog": [
+      {
+        "path": "short_links/jjgunh",
+        "text": "New: /jjgunh -> /"
+      },
+      {
+        "path": "short_links/vnaqcp",
+        "text": "New: /vnaqcp -> /blog"
+      },
+      {
+        "path": "short_links/gknkvj",
+        "text": "New: /gknkvj -> /content"
+      },
+      {
+        "path": "short_links/vnbvpa",
+        "text": "New: /vnbvpa -> /materials"
+      },
+      {
+        "path": "short_links/erwpek",
+        "text": "New: /erwpek -> /writing"
+      },
+      {
+        "path": "short_links/bkhvqj",
+        "text": "New: /bkhvqj -> /about"
+      },
+      {
+        "path": "short_links/nzmbva",
+        "text": "New: /nzmbva -> /contact"
+      },
+      {
+        "path": "short_links/zjjyet",
+        "text": "New: /zjjyet -> /subscribe"
+      },
+      {
+        "path": "short_links/xztwzv",
+        "text": "New: /xztwzv -> /advertise"
+      },
+      {
+        "path": "short_links/yhmtjk",
+        "text": "New: /yhmtjk -> /sponsor/"
+      },
+      {
+        "path": "short_links/znajze",
+        "text": "New: /znajze -> /cv"
+      },
+      {
+        "path": "short_links/jhgdbm",
+        "text": "New: /jhgdbm -> /search"
+      }
+    ],
+    "sha256": "48778f716c214ed71601ddcc56f3cc05183bc7d463dc5f89e5f081872673c726"
+  },
+  "short_links": {
+    "jjgunh": {
+      "url": "/",
+      "title": "home",
+      "created": 1792800000000
+    },
+    "vnaqcp": {
+      "url": "/blog",
+      "title": "blog",
+      "created": 1792800000000
+    },
+    "gknkvj": {
+      "url": "/content",
+      "title": "content",
+      "created": 1792800000000
+    },
+    "vnbvpa": {
+      "url": "/materials",
+      "title": "materials",
+      "created": 1792800000000
+    },
+    "erwpek": {
+      "url": "/writing",
+      "title": "writing",
+      "created": 1792800000000
+    },
+    "bkhvqj": {
+      "url": "/about",
+      "title": "about",
+      "created": 1792800000000
+    },
+    "nzmbva": {
+      "url": "/contact",
+      "title": "contact",
+      "created": 1792800000000
+    },
+    "zjjyet": {
+      "url": "/subscribe",
+      "title": "subscribe",
+      "created": 1792800000000
+    },
+    "xztwzv": {
+      "url": "/advertise",
+      "title": "advertise",
+      "created": 1792800000000
+    },
+    "yhmtjk": {
+      "url": "/sponsor/",
+      "title": "sponsor portal",
+      "created": 1792800000000
+    },
+    "znajze": {
+      "url": "/cv",
+      "title": "cv",
+      "created": 1792800000000
+    },
+    "jhgdbm": {
+      "url": "/search",
+      "title": "search",
+      "created": 1792800000000
+    }
+  }
+}

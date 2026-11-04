@@ -1,0 +1,244 @@
+{
+ "name": "Channel trailer PC mockup",
+ "format": "short",
+ "pace": 1,
+ "scenes": [
+  {
+   "say": "This is my channel. Perioperative theatre technology, made simple, straight from the operating room.",
+   "hold": 0.9,
+   "items": [
+    {
+     "type": "text",
+     "x": 450,
+     "y": 40,
+     "text": "PERIOPERATIVE",
+     "size": 92,
+     "color": "#d7263d",
+     "align": "center",
+     "maxW": 860,
+     "cue": null
+    },
+    {
+     "type": "text",
+     "x": 450,
+     "y": 150,
+     "text": "THEATRE TECH",
+     "size": 92,
+     "color": "#d7263d",
+     "align": "center",
+     "maxW": 860,
+     "cue": null
+    },
+    {
+     "type": "narrator",
+     "pose": "hold-laptop",
+     "x": 0,
+     "y": 140,
+     "w": 900
+    },
+    {
+     "type": "image",
+     "src": "/assets/icons/icon-192.png",
+     "x": 250,
+     "y": 945,
+     "w": 150,
+     "cue": "my channel"
+    },
+    {
+     "type": "text",
+     "x": 420,
+     "y": 955,
+     "text": "EZRA OGOMBO",
+     "size": 44,
+     "maxW": 290,
+     "cue": "operating room"
+    },
+    {
+     "type": "text",
+     "x": 420,
+     "y": 1100,
+     "text": "@ezraogombo",
+     "size": 32,
+     "color": "#1b6ec2",
+     "cue": "made simple"
+    }
+   ]
+  },
+  {
+   "say": "Every week, short lessons. Instruments, patient safety checks, and how the whole team works together.",
+   "hold": 0.9,
+   "items": [
+    {
+     "type": "shape",
+     "shape": "box",
+     "x": 50,
+     "y": 230,
+     "w": 800,
+     "h": 600,
+     "color": "#222",
+     "lw": 10
+    },
+    {
+     "type": "shape",
+     "shape": "line",
+     "x": 50,
+     "y": 330,
+     "w": 800,
+     "h": 2,
+     "color": "#222",
+     "lw": 6
+    },
+    {
+     "type": "shape",
+     "shape": "line",
+     "x": 450,
+     "y": 830,
+     "w": 2,
+     "h": 110,
+     "color": "#222",
+     "lw": 10
+    },
+    {
+     "type": "shape",
+     "shape": "underline",
+     "x": 290,
+     "y": 935,
+     "w": 320,
+     "h": 30,
+     "color": "#222",
+     "lw": 10
+    },
+    {
+     "type": "text",
+     "x": 80,
+     "y": 262,
+     "text": "youtube.com/@ezraogombo",
+     "size": 40,
+     "color": "#1b6ec2"
+    },
+    {
+     "type": "icon",
+     "name": "scissors",
+     "x": 100,
+     "y": 380,
+     "w": 120,
+     "color": "#1b6ec2",
+     "cue": "instruments"
+    },
+    {
+     "type": "text",
+     "x": 260,
+     "y": 402,
+     "text": "INSTRUMENTS",
+     "size": 64,
+     "cue": "instruments",
+     "maxW": 540
+    },
+    {
+     "type": "icon",
+     "name": "clipboard-check",
+     "x": 100,
+     "y": 540,
+     "w": 120,
+     "color": "#1b6ec2",
+     "cue": "safety checks"
+    },
+    {
+     "type": "text",
+     "x": 260,
+     "y": 562,
+     "text": "SAFETY CHECKS",
+     "size": 64,
+     "cue": "safety checks",
+     "maxW": 540
+    },
+    {
+     "type": "icon",
+     "name": "users-group",
+     "x": 100,
+     "y": 700,
+     "w": 120,
+     "color": "#1b6ec2",
+     "cue": "team works together"
+    },
+    {
+     "type": "text",
+     "x": 260,
+     "y": 722,
+     "text": "TEAMWORK",
+     "size": 64,
+     "cue": "team works together",
+     "maxW": 540
+    },
+    {
+     "type": "narrator",
+     "pose": "point-up-side",
+     "x": 150,
+     "y": 1000,
+     "w": 600
+    }
+   ]
+  },
+  {
+   "say": "Watch the trailer, hit subscribe, and join the theatre family.",
+   "hold": 1.0,
+   "items": [
+    {
+     "type": "text",
+     "x": 450,
+     "y": 40,
+     "text": "JOIN THE",
+     "size": 92,
+     "color": "#d7263d",
+     "align": "center",
+     "maxW": 860,
+     "cue": null
+    },
+    {
+     "type": "text",
+     "x": 450,
+     "y": 150,
+     "text": "THEATRE FAMILY",
+     "size": 92,
+     "color": "#d7263d",
+     "align": "center",
+     "maxW": 860,
+     "cue": null
+    },
+    {
+     "type": "narrator",
+     "pose": "hold-phone",
+     "x": 50,
+     "y": 480,
+     "w": 800
+    },
+    {
+     "type": "icon",
+     "name": "bell-ringing",
+     "x": 690,
+     "y": 1080,
+     "w": 90,
+     "color": "#d7263d",
+     "cue": "subscribe"
+    },
+    {
+     "type": "tag",
+     "x": 70,
+     "y": 1280,
+     "text": "SUBSCRIBE",
+     "size": 84,
+     "cue": "hit subscribe"
+    },
+    {
+     "type": "text",
+     "x": 80,
+     "y": 1400,
+     "text": "@ezraogombo",
+     "size": 56,
+     "color": "#1b6ec2",
+     "cue": "watch the trailer"
+    }
+   ]
+  }
+ ]
+}

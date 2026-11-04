@@ -1,0 +1,89 @@
+{
+  "name": "Surgical safety checklist",
+  "format": "wide",
+  "pace": 1,
+  "scenes": [
+    {
+      "layout": "title",
+      "title": "WHY PAUSE?",
+      "subtitle": "Before the first cut",
+      "narrator": "thinking-chin",
+      "say": "Hey, theatre family. Ever wondered why we pause before the first cut?"
+    },
+    {
+      "layout": "steps",
+      "title": "THREE PAUSES",
+      "steps": [
+        {
+          "text": "SIGN IN",
+          "icon": "user-check",
+          "cue": "sign in"
+        },
+        {
+          "text": "TIME OUT",
+          "icon": "clock",
+          "cue": "time out"
+        },
+        {
+          "text": "SIGN OUT",
+          "icon": "clipboard-check",
+          "cue": "sign out"
+        }
+      ],
+      "say": "The WHO checklist has three pauses. Sign in, time out, and sign out."
+    },
+    {
+      "layout": "icons",
+      "title": "1. SIGN IN",
+      "icons": [
+        {
+          "icon": "user-check",
+          "label": "Patient",
+          "cue": "patient"
+        },
+        {
+          "icon": "map-pin",
+          "label": "Site",
+          "cue": "site"
+        },
+        {
+          "icon": "file-check",
+          "label": "Consent",
+          "cue": "consent"
+        },
+        {
+          "icon": "alert-triangle",
+          "label": "Allergies",
+          "cue": "allergies"
+        }
+      ],
+      "say": "Before anaesthesia we confirm the patient, the site, consent and allergies."
+    },
+    {
+      "layout": "bullets",
+      "title": "2. TIME OUT",
+      "bullets": [
+        {
+          "text": "Whole team stops",
+          "cue": "stops"
+        },
+        {
+          "text": "Introduce yourselves",
+          "cue": "introduces"
+        },
+        {
+          "text": "Confirm the plan",
+          "cue": "confirms"
+        }
+      ],
+      "narrator": "point-right-grin",
+      "say": "Before the first incision the whole team stops, introduces themselves, and confirms the plan."
+    },
+    {
+      "layout": "quote",
+      "text": "THREE PAUSES, ONE SAFER PATIENT",
+      "by": "@ezraogombo",
+      "say": "Three short pauses, one safer patient. Follow for more theatre tech."
+    }
+  ]
+}

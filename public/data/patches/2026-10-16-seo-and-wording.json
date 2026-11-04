@@ -1,0 +1,549 @@
+{
+  "_patch": {
+    "id": "2026-10-16-seo-and-wording",
+    "name": "SEO, identity, subscribe page, 10 new posts & 7 content cards",
+    "notes": "New search titles, one identity (Ezra Ogombo / @ezraogombo), graduate wording, 10 new blog posts, 7 new content cards, carpal-bone wording fix. Import so the live database matches the new HTML.",
+    "date": "2026-10-16",
+    "modes": {
+      "profile": "merge",
+      "status": "merge",
+      "blog_posts": "merge",
+      "content_highlights": "merge",
+      "chatbot_faq": "merge",
+      "milestones": "merge",
+      "site_settings": "merge",
+      "pages": "merge"
+    },
+    "changelog": [
+      {
+        "path": "profile",
+        "text": "Updated settings"
+      },
+      {
+        "path": "status",
+        "text": "Updated settings"
+      },
+      {
+        "path": "blog_posts/why-i-post-anatomy-mnemonics",
+        "text": "Updated: why-i-post-anatomy-mnemonics"
+      },
+      {
+        "path": "blog_posts/a-day-at-the-cyber-cafe",
+        "text": "Updated: a-day-at-the-cyber-cafe"
+      },
+      {
+        "path": "blog_posts/balancing-diploma-job-and-content",
+        "text": "Updated: balancing-diploma-job-and-content"
+      },
+      {
+        "path": "blog_posts/certified-medical-colleges-in-kitale",
+        "text": "Updated: certified-medical-colleges-in-kitale"
+      },
+      {
+        "path": "blog_posts/who-is-ezra-ogombo",
+        "text": "New: Who is Ezra Ogombo? Content creator and theatre technologist in Kenya"
+      },
+      {
+        "path": "blog_posts/how-i-turn-one-topic-into-a-mnemonic-a-reel-and-a-blog-post",
+        "text": "New: How one study topic becomes a mnemonic, a post and a blog article"
+      },
+      {
+        "path": "blog_posts/after-graduating-what-i-have-done-with-the-waiting-time",
+        "text": "New: After graduating: what I have done with the waiting time"
+      },
+      {
+        "path": "blog_posts/theatre-technologist-jobs-in-kenya-where-to-look",
+        "text": "New: Theatre technologist jobs in Kenya: where to look and how to avoid scams"
+      },
+      {
+        "path": "blog_posts/how-to-revise-for-a-theatre-technology-practical-exam",
+        "text": "New: How to revise for a theatre technology practical exam"
+      },
+      {
+        "path": "blog_posts/how-to-learn-surgical-instrument-names-fast",
+        "text": "New: How to learn surgical instrument names fast"
+      },
+      {
+        "path": "blog_posts/common-theatre-abbreviations-explained",
+        "text": "New: Common theatre and hospital abbreviations explained"
+      },
+      {
+        "path": "blog_posts/how-to-prepare-for-a-theatre-job-interview",
+        "text": "New: How to prepare for a theatre job interview"
+      },
+      {
+        "path": "blog_posts/free-tools-for-making-medical-graphics-and-videos-on-a-phone",
+        "text": "New: Free tools for making medical graphics and short videos on a phone"
+      },
+      {
+        "path": "blog_posts/how-to-start-a-health-education-page-in-kenya",
+        "text": "New: How to start a health education page in Kenya, responsibly"
+      },
+      {
+        "path": "content_highlights/carpal-bones-wrist",
+        "text": "Updated: carpal-bones-wrist"
+      },
+      {
+        "path": "content_highlights/layers-of-the-scalp-scalp-mnemonic",
+        "text": "New: Layers of the Scalp — SCALP Mnemonic"
+      },
+      {
+        "path": "content_highlights/word-of-the-day-haemostasis",
+        "text": "New: Word of the Day: Haemostasis"
+      },
+      {
+        "path": "content_highlights/word-of-the-day-asepsis",
+        "text": "New: Word of the Day: Asepsis"
+      },
+      {
+        "path": "content_highlights/team-shout-out-cssd-and-cleaning-staff",
+        "text": "New: Team Shout-Out: CSSD and Cleaning Staff"
+      },
+      {
+        "path": "content_highlights/new-on-the-site-join-the-list",
+        "text": "New: New on the Site: Join the Email List"
+      },
+      {
+        "path": "content_highlights/basic-general-surgery-set-example",
+        "text": "New: Basic General Surgery Set (Example)"
+      },
+      {
+        "path": "content_highlights/theatre-abbreviations-quick-list",
+        "text": "New: Theatre Abbreviations — Quick List"
+      },
+      {
+        "path": "chatbot_faq/faq002",
+        "text": "Updated: faq002"
+      },
+      {
+        "path": "chatbot_faq/faq003",
+        "text": "Updated: faq003"
+      },
+      {
+        "path": "milestones/mile002",
+        "text": "Updated: mile002"
+      },
+      {
+        "path": "milestones/mile005",
+        "text": "Updated: mile005"
+      },
+      {
+        "path": "site_settings",
+        "text": "Updated settings"
+      },
+      {
+        "path": "pages/home",
+        "text": "Updated: Ezra Ogombo (@ezraogombo) | Content Creator & Theatre Technologist"
+      },
+      {
+        "path": "pages/about",
+        "text": "Updated: About Ezra Ogombo (@ezraogombo) — Content Creator & Theatre Technologist"
+      },
+      {
+        "path": "pages/cv",
+        "text": "Updated: Ezra Ogombo CV — Perioperative Theatre Technologist & Content Creator"
+      },
+      {
+        "path": "pages/contact",
+        "text": "Updated: Contact Ezra Ogombo (@ezraogombo) — Message, WhatsApp & Socials"
+      },
+      {
+        "path": "pages/writing",
+        "text": "Updated: Writing & Books by Ezra Ogombo (@ezraogombo)"
+      },
+      {
+        "path": "pages/materials",
+        "text": "Updated: Study Materials — Notes, Past Papers & Study Units | Ezra Ogombo"
+      },
+      {
+        "path": "pages/content",
+        "text": "Updated: Medical Education Content by Ezra Ogombo (@ezraogombo)"
+      },
+      {
+        "path": "pages/blog",
+        "text": "Updated: Blog — Ezra Ogombo (@ezraogombo): Theatre Technology, Study Tips & Content Creation"
+      },
+      {
+        "path": "pages/subscribe",
+        "text": "New: Subscribe to Ezra Ogombo (@ezraogombo) — New Posts, Study Materials & Updates"
+      }
+    ],
+    "sha256": "1bd8d796fb5fdb6fa75826b31791c7ccfd7eb1c31373ed71813ba2db7dfdb075"
+  },
+  "profile": {
+    "tagline": "Content creator and Perioperative Theatre Technology graduate making medical education content for Instagram, TikTok, and Facebook.",
+    "current_job": {
+      "note": "Day job alongside content creation while I look for theatre practice roles. Handles printing, typing, online government services (KRA/eCitizen), and basic computer training for walk-in clients."
+    },
+    "education": [
+      {
+        "programme": "Diploma in Perioperative Theatre Technology",
+        "school": "Kitale, Kenya (institution on CV)",
+        "years": "2023 – 2025",
+        "detail": "Practical score 78%. Field attachment at Likuyani Sub-County Hospital, Feb–Apr 2024 — scrubbed in on caesarean section cases, sterilisation (CSSD), theatre setup and turnover, WHO Surgical Safety Checklist."
+      },
+      {
+        "programme": "KCSE",
+        "school": "Ekatsombero Secondary School",
+        "years": "2017 – 2020"
+      }
+    ]
+  },
+  "status": {
+    "note": "Currently: posting new anatomy content and open to theatre practice roles."
+  },
+  "blog_posts": {
+    "why-i-post-anatomy-mnemonics": {
+      "content": "<p>People assume the content comes after the studying — learn it first, then simplify it for a post. Honestly, half the time it's the other way around. I don't fully understand something until I've tried to explain it in one image with almost no words.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/why-i-post-anatomy-mnemonics-figure.jpg\" alt=\"One image test: Review a concept, Compress it, It fails?, Simplify again, Post &amp; learn\" loading=\"lazy\"><figcaption>Making a graphic doubles as a test of whether I really understand the topic.</figcaption></figure>\n      <h2>The Feynman thing, basically</h2>\n      <p>There's a well-known idea that you don't really know a concept until you can teach it simply. Making a graphic is a harsher version of that test than just talking, because a graphic has no room for hand-waving. If I can't fit the cranial nerves mnemonic onto one clean image, it usually means I don't actually have it memorized properly yet — I'm still leaning on notes.</p>\n      <h2>What surprised me about the audience</h2>\n      <p>I expected mostly classmates. Instead a good chunk of engagement comes from people further along than me — working nurses, other allied health students — correcting small details or adding context I didn't have. The comments have quietly become one of my better study resources.</p>\n      <h2>The actual workflow</h2>\n      <p>Pick a concept I'm reviewing anyway. Try to compress it. Fail the first attempt, usually. Simplify again. Post it. The studying and the content-making aren't two separate activities anymore — they're the same pass through the material, done properly once instead of twice.</p>\n<h2>What this means for how I study</h2><p>Because I treat every graphic as a test of my own understanding, I now study with a question in mind: could I fit this on one clean image? If not, I go back to the notes. That single question has done more for my revision than any timetable, because it forces me to find out what I really know and what I am only recognising.</p><h2>A suggestion if you are a student</h2><p>You do not need an audience to try this. Pick one topic from this week and try to explain it on a single page, with as few words as possible. If the page comes out cleanly, you understand it. If it does not, you have just found your next revision task, and you found it cheaply.</p>\n<h2>Why mnemonics specifically</h2>\n<p>A mnemonic is the simplest form of compression: a whole list squeezed into a sentence you can carry in your head. That makes it perfect for anatomy, where the lists are long and the exam questions are blunt. I also like that a good mnemonic is a little ridiculous, because the silly ones are the ones people remember. When a student comments that a sentence from a graphic came back to them during a test, that is the best feedback I can imagine, because it means the image did its job at the exact moment it was needed.</p>"
+    },
+    "a-day-at-the-cyber-cafe": {
+      "content": "<p>JULO Enterprises' cyber café is where I spend most weekdays right now — a temporary stop while I look for theatre practice roles properly. It's a smaller job than \"theatre technologist,\" but it's kept me sharp in a different way.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/a-day-at-the-cyber-cafe-figure.jpg\" alt=\"A day at the cyber café: Printing, Typing, Online services, Basic training, Customers\" loading=\"lazy\"><figcaption>The main kinds of work in a cyber café shift.</figcaption></figure>\n\n      <h2>What actually happens in a shift</h2>\n      <p>A typical day is printing and photocopying, typing up documents for people who'd rather not, and walking someone through their eCitizen or KRA returns filing step by step. Somewhere in there, someone's grandmother needs help checking her email for the first time, and that's usually the best part of the day.</p>\n\n      <h2>Why it's not wasted time</h2>\n      <p>Every machine that jams, every browser that won't cooperate, every \"why won't this print\" — it's small-scale troubleshooting, over and over. It's the same instinct I use editing a video for Instagram at home, just with a paper jam instead of a bad take.</p>\n\n      <h2>The overlap</h2>\n      <p>Patience under a queue of impatient customers isn't that different from patience in a sterile field. Different stakes, same discipline: stay calm, work the problem, don't skip a step because you're in a hurry.</p>\n<h2>The customers who stick with you</h2>\n<p>There's a woman who comes in every month to file her returns, and every month she apologizes for \"not being good with computers\" before I've even said anything. I've stopped correcting her mid-task and started just narrating what I'm doing as I go — turns out most people don't want to be handled, they want to understand, even a little. A few of them now type their own passwords instead of handing me their phone. That's the actual win, not the transaction fee.</p>\n<h2>What it's taught me about patience</h2>\n<p>Cyber café patience is a specific muscle. It's not the dramatic kind — nobody's yelling, mostly. It's the fortieth time explaining that a photo won't attach to an email because the file's too large, said in the same tone as the first time. I didn't have that muscle before this job. I do now, and I don't think it's a coincidence that it's the same muscle theatre work asks for.</p>\n<h2>The part that surprised me</h2>\n<p>I expected this job to feel like a pure delay — something to get through before \"real\" work starts. Instead it's quietly taught me how ordinary people actually interact with technology and bureaucracy, which is useful information for someone who's about to spend a career explaining medical things to worried people. Different subject matter, same skill.</p>\n<h2>If you are thinking of a similar job</h2><p>Expect repetition, and expect to learn from it. Learn the common problems and their fixes, keep calm with people who are anxious about technology, and be honest when you do not know the answer. Explaining as you work builds trust, and it makes people more confident next time.</p>"
+    },
+    "balancing-diploma-job-and-content": {
+      "content": "<p><em>Update: I graduated in December 2025. I wrote this while I was still in the diploma; the same rotation now applies to the cyber café, the job search and content.</em></p>\n<p>People sometimes ask how I \"manage\" all three — the diploma, the job, the content. The honest answer is imperfectly, and some weeks one of them quietly loses.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/balancing-diploma-job-and-content-figure.jpg\" alt=\"Rotation, not balance: Job shifts, Diploma, Content, Rest, Catch-up\" loading=\"lazy\"><figcaption>Order of priorities across the diploma, the job and content.</figcaption></figure>\n      <h2>What a real week looks like</h2>\n      <p>Cyber café shifts take priority because they're scheduled and someone's counting on me being there. Diploma coursework comes next because it has hard deadlines. Content gets whatever's left — which some weeks is a lot, and other weeks is one rushed post on a Sunday night.</p>\n      <h2>The trade-off I've made peace with</h2>\n      <p>Content is the one I let slip first when something has to give, and I used to feel guilty about that. I don't anymore — it's the one thing on the list that doesn't have someone else depending on it showing up on time. That makes it the safest place to absorb the pressure.</p>\n      <h2>What actually keeps all three alive</h2>\n      <p>Not balance, exactly — more like rotation. Something is always getting less attention than it deserves. The goal isn't to fix that, it's to make sure it's never the same thing two weeks running.</p>\n<h2>Rules that keep the rotation fair</h2><ul><li>Things with deadlines or with other people depending on me come first.</li><li>Content gets a fixed slot instead of \"whenever I have time\", even if the slot is short.</li><li>If one area gets squeezed, it gets a catch-up slot the next week.</li><li>Rest is not optional; it is part of the schedule.</li></ul><h2>A note on guilt</h2><p>Guilt is usually a signal that a value is being neglected, not that I am failing. When I feel it, I ask which of my commitments needs attention this week and adjust, instead of punishing myself. That small change has made the whole arrangement easier to sustain.</p>\n<h2>What I stopped pretending</h2>\n<p>I stopped pretending that I can give one hundred per cent to everything at once. Some days the honest plan is to attend class, do my shift, eat properly and sleep, and call that a win. Content waits, and so does the polishing of notes. When I allowed myself to say that out loud, the pressure dropped and, strangely, the work got better, because I was no longer doing three things badly out of fear of dropping one. If you are juggling something similar, decide in advance what slips first, tell the people who depend on you, and let the plan be good enough rather than perfect.</p>\n<h2>A small habit that helps</h2>\n<p>Every Sunday I write down the one thing in each area that must happen next week. Three lines, no more. It takes two minutes and removes most of the dread, because nothing important is left floating in my head.</p>"
+    },
+    "certified-medical-colleges-in-kitale": {
+      "content": "<p>If you finished KCSE and want a health career, Kitale has more options than most people expect. The harder part is knowing which colleges are properly registered and which programmes they are actually approved to teach. This guide lists the main medical and health colleges in Kitale, what each offers, and how to check any of them yourself.</p>\n<p><strong>Read this first:</strong> details below come from each institution's public pages and published lists at the time of writing (October 2026). Intakes, fees, entry grades and licences change. Always confirm with the college and the regulator before paying anything.</p>\n<h2>1. Kenya Medical Training College (KMTC), Kitale campus</h2>\n<p>KMTC is the national public medical training college, and the Kitale campus has been running since 2014. It has offered certificate and diploma programmes, including Diploma in Clinical Medicine and Surgery and Diploma in Nursing. KMTC usually runs two intakes a year, in March and September, and applications go through the official KMTC online portal (kmtc.ac.ke). Entry is by KCSE grade and subject cluster; the exact cut-offs change by programme and year.</p>\n<p>Why people pick it: public college, national reputation, and clear progression from certificate to diploma to higher diploma.</p>\n<h2>2. Equip Africa College of Medical &amp; Health Sciences</h2>\n<p>A private college on the Kitale–Eldoret road, near the museum. It is listed by TVETA as a registered and licensed private technical and vocational college (registration number TVETA/PRIVATE/TVC/0058/2018). Programmes published on its website have included Community Health at artisan, certificate and diploma levels, a Diploma in Environmental Health Management, and a certificate that prepares healthcare assistants for German hospitals. Its website lists fees per term, so ask for the current fee structure in writing.</p>\n<h2>3. Nzoia College of Nursing</h2>\n<p>A private nursing college off the Kitale–Wembe road. Its published programme is the Diploma in Kenya Registered Nursing, with a small cohort cap (published as a maximum of 120 trainees). TVETA listed it as registered and licensed under TVETA/PRIVATE/TVC/0106/2018. The licence published with that listing ran to 17 July 2023, so ask the college for its <em>current</em> licence and for proof that its nursing programme is approved by the Nursing Council of Kenya.</p>\n<h2>4. Reliance Africa School of Health Sciences</h2>\n<p>Reliance Africa School of Health Sciences is a medical college in Kitale. The school is also advertised on this site, so treat this entry with the same checking you would give any other. I could not find its full programme list or registration number in the public registers I checked, so I am not going to guess them. Before enrolling, ask the school for its registration and licence numbers, the list of programmes it is approved to teach and the regulator that approved each one. I have written a separate checklist for this: <a href=\"/blog/reliance-africa-school-of-health-sciences-what-to-check-before-you-apply\">Reliance Africa School of Health Sciences: what to check before you apply</a>.</p>\n<h2>How to check any health college</h2>\n<ul>\n<li><strong>Institution registration.</strong> Private technical colleges should appear on the TVETA register of registered and licensed institutions. Ask for the registration number and the licence expiry date, then check it.</li>\n<li><strong>Programme approval.</strong> A registered college is not automatically approved for every course. Nursing programmes need Nursing Council of Kenya approval. Clinical medicine programmes are overseen by the Clinical Officers Council. Ask which body approved the exact programme you want.</li>\n<li><strong>Exams and certificates.</strong> Ask who sets and issues the final exam and certificate (for example KNEC, CDACC or the college's own award) and whether it is recognised for licensing and employment.</li>\n<li><strong>Clinical placement.</strong> Health courses need hospital attachment. Ask which hospitals take the students, for how many weeks, and who pays.</li>\n<li><strong>Money.</strong> Get the fee structure in writing. Pay into the college's official account and keep every receipt. Never pay a personal number.</li>\n<li><strong>Visit.</strong> Walk through the labs and skills rooms, and talk to a current student or a recent graduate.</li>\n</ul>\n<h2>Which one should you choose?</h2>\n<p>If you qualify and want a public route, apply to KMTC first. If you miss the cut-off or the intake, a registered private college can be a good route, as long as the programme itself is approved. Whatever you choose, the question is not \"is it a medical college?\" but \"is this exact course approved, and will the certificate be accepted when I apply to be licensed or hired?\"</p>\n<p>Know of another registered health college in Kitale or Trans Nzoia? Send me a message through the <a href=\"/contact\">contact page</a> and I will check and add it.</p>"
+    },
+    "who-is-ezra-ogombo": {
+      "slug": "who-is-ezra-ogombo",
+      "title": "Who is Ezra Ogombo? Content creator and theatre technologist in Kenya",
+      "date": "2026-10-16",
+      "excerpt": "A plain introduction: who Ezra Ogombo (@ezraogombo) is, what he trained in, what he makes and where to find it.",
+      "thumbnail": "/assets/blog/who-is-ezra-ogombo.jpg",
+      "tags": [
+        "about",
+        "content-creator",
+        "kenya"
+      ],
+      "content": "<p>If you searched for \"ezraogombo\" or \"Ezra Ogombo\" and landed here, this is the short, honest answer to who I am and what this site is for.</p>\n<p>I am Ezra Ogombo, a Kenyan content creator and a graduate of the Diploma in Perioperative Theatre Technology (December 2025). I grew up around Matunda, Moi's Bridge, and I make medical education content that tries to be clear, accurate and easy to remember.</p>\n<h2>What I trained in</h2>\n<p>Perioperative theatre technology is the practical side of surgery: preparing the theatre, handling and counting instruments, keeping the sterile field safe and supporting the surgical team. My practical score was 78%, and I did my field attachment at Likuyani Sub-County Hospital between February and April 2024, where I worked on theatre setup and turnover, sterilisation (CSSD) and the WHO Surgical Safety Checklist.</p>\n<p>I also hold short certifications in quality improvement (Leeds Teaching Hospitals NHS Trust), basic life support and first aid, infection prevention and control, and theatre health and safety. The full list is on my <a href=\"/cv\">CV</a>.</p>\n<h2>What I make</h2>\n<ul>\n<li><strong>Content:</strong> anatomy mnemonics, OT quizzes and safety checklists, posted as @ezraogombo on Instagram, TikTok and Facebook. The best of it is collected on the <a href=\"/content\">content page</a>.</li>\n<li><strong>Blog posts:</strong> longer explanations on theatre practice, study skills and life after training, all on the <a href=\"/blog\">blog</a>.</li>\n<li><strong>Study materials:</strong> notes, past papers and study units, many of them free, on the <a href=\"/materials\">materials page</a>.</li>\n<li><strong>Books:</strong> five unfinished manuscripts, from a memoir to a study companion, listed under <a href=\"/writing\">writing</a>.</li>\n</ul>\n<h2>The other side of my week</h2>\n<p>I work at a cyber café doing printing, typing, online government services and basic computer training. I also like building things with code, which is why this website exists and why it keeps getting new features.</p>\n<h2>How to reach me</h2>\n<p>The fastest way is WhatsApp or the <a href=\"/contact\">contact page</a>. If you want new posts and materials by email, join the list on the <a href=\"/subscribe\">subscribe page</a>. Brands and colleges can see the options on the <a href=\"/advertise\">advertise page</a>.</p>\n<h2>Quick facts</h2>\n<ul><li>Name: Ezra Ogombo; handle: @ezraogombo.</li><li>Trained as a perioperative theatre technologist; graduated December 2025.</li><li>Creates medical education content for Kenyan and wider audiences.</li><li>Based in Matunda, Moi's Bridge, Kenya.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "A plain introduction: who Ezra Ogombo (@ezraogombo) is, what he trained in, what he makes and where to find it.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    },
+    "how-i-turn-one-topic-into-a-mnemonic-a-reel-and-a-blog-post": {
+      "slug": "how-i-turn-one-topic-into-a-mnemonic-a-reel-and-a-blog-post",
+      "title": "How one study topic becomes a mnemonic, a post and a blog article",
+      "date": "2026-10-16",
+      "excerpt": "A repeatable workflow for turning one topic into a mnemonic, a graphic, a short video and a blog post without starting from scratch each time.",
+      "thumbnail": "/assets/blog/how-i-turn-one-topic-into-a-mnemonic-a-reel-and-a-blog-post.jpg",
+      "tags": [
+        "content",
+        "workflow",
+        "mnemonics"
+      ],
+      "content": "<p>Making content every week is only possible if you stop treating each post as a new project. The trick is to pick one topic and let it become several things. Here is the workflow, with a worked example.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/how-i-turn-one-topic-into-a-mnemonic-a-reel-and-a-blog-post-figure.jpg\" alt=\"One topic, five outputs: Pick, Check, Compress, Design, Repurpose\" loading=\"lazy\"><figcaption>The workflow from topic to published pieces.</figcaption></figure>\n<h2>1. Pick one narrow topic</h2>\n<p>\"The heart\" is too big. \"The eight carpal bones\" is the right size. A narrow topic can be explained in one graphic and still has enough substance for a longer article later.</p>\n<h2>2. Check it against a reliable source</h2>\n<p>Before you make anything memorable, make sure it is correct. Use a textbook, lecture notes or a trusted guideline, and write down where the facts came from. A catchy mnemonic that teaches the wrong order is worse than no mnemonic.</p>\n<h2>3. Compress it into a memory aid</h2>\n<p>Write the list in order, take the first letters and build a sentence you can picture. For the carpal bones, a widely shared sentence is \"Some Lovers Try Positions That They Can't Handle\": scaphoid, lunate, triquetrum, pisiform in the proximal row, then trapezium, trapezoid, capitate, hamate in the distal row. Always test your mnemonic by reciting the list from the sentence, not the other way round.</p>\n<h2>4. Design the graphic and the caption</h2>\n<p>One idea per image, large text, strong contrast and a clear title. Put the answer on the image and the explanation in the caption. If you use a card maker, keep one style so people recognise your posts at a glance.</p>\n<h2>5. Repurpose</h2>\n<ul>\n<li>Post the graphic as a single image or a short carousel.</li>\n<li>Read the mnemonic aloud over a simple slide for a short video.</li>\n<li>Expand it into a blog post that adds the \"why\" and how to apply it.</li>\n<li>Add it to a study sheet or notes pack so people can download it.</li>\n</ul>\n<h2>6. Keep a log</h2>\n<p>Note what you posted, when, and which pieces people saved or shared. After a month you will see which kinds of topic work and can plan the next batch in one sitting.</p>\n<h2>Quick revision points</h2>\n<ul><li>Choose a narrow topic you can explain in one image.</li><li>Verify the facts before you make them catchy.</li><li>Test the mnemonic both ways.</li><li>One idea per graphic; keep one consistent style.</li><li>Reuse the same research for a video, an article and study notes.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "A repeatable workflow for turning one topic into a mnemonic, a graphic, a short video and a blog post without starting from scratch each time.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    },
+    "after-graduating-what-i-have-done-with-the-waiting-time": {
+      "slug": "after-graduating-what-i-have-done-with-the-waiting-time",
+      "title": "After graduating: what I have done with the waiting time",
+      "date": "2026-10-16",
+      "excerpt": "Graduating is not the same as starting work. Here is how I have used the waiting period to build skills, content and a portfolio.",
+      "thumbnail": "/assets/blog/after-graduating-what-i-have-done-with-the-waiting-time.jpg",
+      "tags": [
+        "graduate",
+        "career",
+        "kenya"
+      ],
+      "content": "<p>I graduated in December 2025. Like many graduates in Kenya, I found that finishing the diploma and starting theatre practice are two different milestones, with a gap between them. This is an honest look at how I have tried to use that gap.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/after-graduating-what-i-have-done-with-the-waiting-time-figure.jpg\" alt=\"Using the gap well: Work, Create, Build, Write, Apply\" loading=\"lazy\"><figcaption>Five ways to use the gap after graduation.</figcaption></figure>\n<h2>Working, even if it is not the dream job</h2>\n<p>I work at a cyber café. It is not theatre, but it pays for data and bus fare, it teaches patience with people, and it keeps me in a routine. Being busy beats waiting at home, and every job gives you something to talk about in an interview.</p>\n<h2>Creating consistently</h2>\n<p>Posting medical education content gave my week a rhythm. It also keeps what I learned fresh, because explaining a topic to strangers is the quickest way to find out what you actually understand.</p>\n<h2>Building something that lasts</h2>\n<p>Instead of only posting and moving on, I built this website, a library of study materials and a blog. A portfolio you control is more useful than scattered posts, because anyone can see the whole picture in one place.</p>\n<h2>Writing long things slowly</h2>\n<p>I work on several book manuscripts a page at a time. Long projects teach a different kind of patience from daily posting, and they remind me I am making something even when the job search is quiet.</p>\n<h2>Staying ready to apply</h2>\n<ul>\n<li>Keep certificates, transcripts, ID and statutory documents scanned and organised.</li>\n<li>Keep your CV current and short.</li>\n<li>Read job adverts weekly and apply to the ones that fit.</li>\n<li>Keep practising: revise the WHO checklist, instrument names and aseptic technique so you do not start from zero.</li>\n</ul>\n<h2>What I would tell another graduate</h2>\n<p>Do not measure yourself against someone who got placed quickly. Make a small plan for each week, keep learning in public if you are comfortable doing it, and remember that a gap with work, learning and a portfolio is far easier to explain than a gap with nothing in it.</p>\n<h2>Quick revision points</h2>\n<ul><li>Take work that keeps you busy while you search.</li><li>Create and publish on a schedule you can keep.</li><li>Build a portfolio you control.</li><li>Keep documents ready and skills fresh.</li><li>Compare your progress with your own last month.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "Graduating is not the same as starting work. Here is how I have used the waiting period to build skills, content and a portfolio.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    },
+    "theatre-technologist-jobs-in-kenya-where-to-look": {
+      "slug": "theatre-technologist-jobs-in-kenya-where-to-look",
+      "title": "Theatre technologist jobs in Kenya: where to look and how to avoid scams",
+      "date": "2026-10-16",
+      "excerpt": "Where health jobs are usually advertised in Kenya, what to prepare before you apply and how to spot fake job offers.",
+      "thumbnail": "/assets/blog/theatre-technologist-jobs-in-kenya-where-to-look.jpg",
+      "tags": [
+        "jobs",
+        "career",
+        "kenya"
+      ],
+      "content": "<p>Finding a first job after a diploma can feel like guessing. This guide covers where health jobs are commonly advertised in Kenya and how to protect yourself from scams. Check each advert yourself, because requirements and processes change.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/theatre-technologist-jobs-in-kenya-where-to-look-figure.jpg\" alt=\"Job search checklist: Look, Prepare, Verify, Apply, Follow up\" loading=\"lazy\"><figcaption>A simple job-search checklist.</figcaption></figure>\n<h2>Where adverts usually appear</h2>\n<ul>\n<li><strong>County governments:</strong> county public service boards advertise health vacancies on county websites, notice boards and in the newspapers.</li>\n<li><strong>National institutions:</strong> national and referral hospitals and public service bodies publish openings on their official websites.</li>\n<li><strong>Private and faith-based hospitals:</strong> many advertise on their own pages or social media, and some accept walk-in applications.</li>\n<li><strong>Programmes and NGOs:</strong> health projects advertise on their websites and on professional networks.</li>\n<li><strong>Networks:</strong> classmates, attachment supervisors and alumni often hear about openings before they are advertised.</li>\n</ul>\n<h2>Prepare before you see an advert</h2>\n<p>Scan your certificates, transcripts and national ID, and keep your KRA PIN and the other statutory details employers ask for. Before applying, confirm with your school and the relevant regulator which registration or licence your cadre needs, so you are not caught out at the last minute.</p>\n<h2>Write a short, honest CV</h2>\n<p>One or two pages: contact details, education, attachment experience, certifications, skills and referees. Do not claim skills you cannot show in a practical.</p>\n<h2>How to avoid scams</h2>\n<ul>\n<li>Never pay money to be \"shortlisted\", \"booked\" or \"given\" a job.</li>\n<li>Check the advert on the employer's official website or office before you send documents.</li>\n<li>Be careful with offers that arrive only through WhatsApp from a personal number.</li>\n<li>Do not send photos of your ID and certificates to unverified contacts.</li>\n</ul>\n<h2>Apply the way the advert says</h2>\n<p>Follow the instructions exactly: the right subject line, the right documents, the right deadline. Applications that ignore the instructions are often discarded without being read.</p>\n<h2>Follow up politely</h2>\n<p>After the deadline, a short and respectful message asking about progress is fine. Keep a list of where you applied and when.</p>\n<h2>Quick revision points</h2>\n<ul><li>Check county, national, private and faith-based sources weekly.</li><li>Keep documents scanned and your CV current.</li><li>Verify every advert; never pay for a job.</li><li>Follow the application instructions exactly.</li><li>Keep a list of every application.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "Where health jobs are usually advertised in Kenya, what to prepare before you apply and how to spot fake job offers.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    },
+    "how-to-revise-for-a-theatre-technology-practical-exam": {
+      "slug": "how-to-revise-for-a-theatre-technology-practical-exam",
+      "title": "How to revise for a theatre technology practical exam",
+      "date": "2026-10-16",
+      "excerpt": "A practical, step-by-step way to prepare for the hands-on part of a theatre technology exam: setup, instruments, aseptic technique and the checklist.",
+      "thumbnail": "/assets/blog/how-to-revise-for-a-theatre-technology-practical-exam.jpg",
+      "tags": [
+        "study",
+        "practical-exam",
+        "theatre"
+      ],
+      "content": "<p>Written exams reward what you remember. Practical exams reward what you can do calmly while someone watches. They need a different kind of revision, and starting early matters most.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/how-to-revise-for-a-theatre-technology-practical-exam-figure.jpg\" alt=\"Practical prep plan: Map, Rehearse, Time, Pair up, Review\" loading=\"lazy\"><figcaption>A five-step plan for practical exam prep.</figcaption></figure>\n<h2>1. Map what can be tested</h2>\n<p>List the tasks your school has taught: theatre setup, opening a pack without breaking sterility, gowning and gloving, instrument identification and passing, counts, positioning, specimen handling and turnover. Tick each one off as you can do it without prompts.</p>\n<h2>2. Say the steps aloud</h2>\n<p>Speak each procedure from start to finish, including the reason for each step. If you cannot explain why you do something, you are likely to forget it under pressure.</p>\n<h2>3. Rehearse with whatever you have</h2>\n<p>You do not need a full theatre to practise. Use a table, a clean cloth, wrapped items and printed instrument pictures. Practise the movement and order, then repeat it in the skills lab when you can.</p>\n<h2>4. Practise safety checks every time</h2>\n<ul>\n<li>The WHO Surgical Safety Checklist has three phases: sign in before induction, time out before skin incision and sign out before the patient leaves theatre.</li>\n<li>Counts are done at the start, before closure and at the end, according to your hospital's policy.</li>\n<li>Check pack integrity and expiry dates before opening anything sterile.</li>\n</ul>\n<h2>5. Work against the clock</h2>\n<p>Time one full setup, then try to do it a little faster without cutting corners. Speed comes from a fixed order, not from rushing.</p>\n<h2>6. Pair up and give feedback</h2>\n<p>Ask a classmate to watch you and note only breaks in sterility, missed steps and unclear communication. Then swap roles. Watching someone else is a good way to spot your own habits.</p>\n<h2>7. On the day</h2>\n<p>Arrive early, wash and dress carefully, breathe, and say aloud what you are doing. If you make a mistake that breaks sterility, stop, say so and fix it the correct way. Honest correction is better than hiding an error.</p>\n<h2>Quick revision points</h2>\n<ul><li>List every task that can be tested and tick it off.</li><li>Say each procedure aloud with its reasons.</li><li>Practise the WHO checklist phases and counts every time.</li><li>Time yourself, then improve the order before the speed.</li><li>Use peer feedback and correct errors honestly.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "A practical, step-by-step way to prepare for the hands-on part of a theatre technology exam: setup, instruments, aseptic technique and the checklist.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    },
+    "how-to-learn-surgical-instrument-names-fast": {
+      "slug": "how-to-learn-surgical-instrument-names-fast",
+      "title": "How to learn surgical instrument names fast",
+      "date": "2026-10-16",
+      "excerpt": "A method for learning instrument names by function, with examples of how to tell commonly confused pairs apart.",
+      "thumbnail": "/assets/blog/how-to-learn-surgical-instrument-names-fast.jpg",
+      "tags": [
+        "instruments",
+        "study",
+        "theatre"
+      ],
+      "content": "<p>A tray of instruments looks like a pile of similar silver objects until you know how to sort them. The fastest way to learn the names is to learn what each group does first, and then the individual names fall into place.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/how-to-learn-surgical-instrument-names-fast-figure.jpg\" alt=\"Learn by function: Cut, Grasp, Clamp, Hold open, Close\" loading=\"lazy\"><figcaption>Group instruments by what they do.</figcaption></figure>\n<h2>Step 1: sort by function</h2>\n<p>Almost every instrument fits one of these jobs: cutting, grasping, clamping, retracting, suturing or suctioning. When you pick up an unfamiliar instrument, ask \"what job is this built for?\"</p>\n<h2>Step 2: learn commonly confused pairs</h2>\n<ul>\n<li><strong>Mayo and Metzenbaum scissors:</strong> Mayo scissors are heavier and used for tougher tissue and for cutting sutures; Metzenbaum scissors are longer and finer for delicate dissection.</li>\n<li><strong>Toothed and non-toothed forceps:</strong> teeth give a firmer grip but are used where a little tissue damage is acceptable; smooth or atraumatic forceps are used where tissue must be handled gently.</li>\n<li><strong>Allis and Babcock forceps:</strong> both grasp tissue, but Babcock forceps are used for more delicate structures such as bowel.</li>\n</ul>\n<h2>Step 3: look at the features</h2>\n<p>Look at the tips, the length, the ratchet, the curve and the weight. Features explain use: a long slim instrument reaches deep, a curved tip goes around structures, and a ratchet lets it stay closed on its own.</p>\n<h2>Step 4: use pictures and flashcards</h2>\n<p>Photograph the instruments in your skills lab, put the name on the back and review the cards in short sessions over several days. Spaced repetition beats one long session.</p>\n<h2>Step 5: practise passing</h2>\n<p>Practise handing instruments the right way round, with the handle into the hand. The movements teach names faster than reading, because you link the name, the shape and the action.</p>\n<h2>A note on names</h2>\n<p>Names and sets vary between hospitals and regions. Follow your school's tray lists and the surgeon's preferences, and treat any memory aid as a helper, not a rule.</p>\n<h2>Quick revision points</h2>\n<ul><li>Sort by function before names.</li><li>Learn the commonly confused pairs side by side.</li><li>Use features to guess use.</li><li>Review flashcards in short, spaced sessions.</li><li>Practise passing instruments aloud with names.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "A method for learning instrument names by function, with examples of how to tell commonly confused pairs apart.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    },
+    "common-theatre-abbreviations-explained": {
+      "slug": "common-theatre-abbreviations-explained",
+      "title": "Common theatre and hospital abbreviations explained",
+      "date": "2026-10-16",
+      "excerpt": "A plain-English list of abbreviations you will meet in theatre, with what they stand for and why they matter.",
+      "thumbnail": "/assets/blog/common-theatre-abbreviations-explained.jpg",
+      "tags": [
+        "glossary",
+        "theatre",
+        "study"
+      ],
+      "content": "<p>Hospital notes, handovers and theatre lists are full of abbreviations. New staff and students often nod along without knowing what they mean. This list covers some of the most common ones.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/common-theatre-abbreviations-explained-figure.jpg\" alt=\"Seen every day: OT, CSSD, PACU, GA / LA, SSI\" loading=\"lazy\"><figcaption>Five abbreviations you will see daily.</figcaption></figure>\n<h2>Places and teams</h2>\n<ul>\n<li><strong>OT or OR:</strong> operating theatre or operating room.</li>\n<li><strong>CSSD:</strong> central sterile services department, where instruments are cleaned, packed and sterilised.</li>\n<li><strong>PACU:</strong> post-anaesthesia care unit, the recovery area after surgery.</li>\n<li><strong>ICU and HDU:</strong> intensive care unit and high dependency unit.</li>\n</ul>\n<h2>Anaesthesia and patient status</h2>\n<ul>\n<li><strong>GA:</strong> general anaesthesia.</li>\n<li><strong>LA:</strong> local anaesthesia.</li>\n<li><strong>NPO:</strong> nil per os, meaning nothing by mouth, used for fasting before surgery.</li>\n<li><strong>ASA class:</strong> a grading of a patient's physical status used by anaesthetists before surgery.</li>\n<li><strong>PONV:</strong> postoperative nausea and vomiting.</li>\n</ul>\n<h2>Safety and infection</h2>\n<ul>\n<li><strong>WHO SSC:</strong> the World Health Organization Surgical Safety Checklist.</li>\n<li><strong>SSI:</strong> surgical site infection.</li>\n<li><strong>PPE:</strong> personal protective equipment, such as gloves, masks, gowns and eye protection.</li>\n<li><strong>IPC:</strong> infection prevention and control.</li>\n</ul>\n<h2>Vital signs and monitoring</h2>\n<ul>\n<li><strong>BP, HR, RR:</strong> blood pressure, heart rate and respiratory rate.</li>\n<li><strong>SpO2:</strong> oxygen saturation measured by a pulse oximeter.</li>\n<li><strong>ECG:</strong> electrocardiogram, the heart's electrical trace.</li>\n</ul>\n<h2>How to learn them</h2>\n<p>Keep a small notebook of every abbreviation you meet, with the meaning and where you saw it. Ask when you are not sure, and never guess in a safety-critical setting. Some abbreviations differ between hospitals, so follow the local approved list.</p>\n<h2>Quick revision points</h2>\n<ul><li>Learn abbreviations by group: places, anaesthesia, safety, monitoring.</li><li>Keep a pocket glossary and add to it daily.</li><li>Ask if unsure; do not guess.</li><li>Follow your hospital's approved abbreviation list.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "A plain-English list of abbreviations you will meet in theatre, with what they stand for and why they matter.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    },
+    "how-to-prepare-for-a-theatre-job-interview": {
+      "slug": "how-to-prepare-for-a-theatre-job-interview",
+      "title": "How to prepare for a theatre job interview",
+      "date": "2026-10-16",
+      "excerpt": "A checklist for preparing for a health-sector interview: research, documents, likely questions, practical tasks and follow-up.",
+      "thumbnail": "/assets/blog/how-to-prepare-for-a-theatre-job-interview.jpg",
+      "tags": [
+        "interview",
+        "career",
+        "theatre"
+      ],
+      "content": "<p>An interview is a short window to show that you are safe, reliable and easy to work with. Preparation turns nerves into confidence.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/how-to-prepare-for-a-theatre-job-interview-figure.jpg\" alt=\"Interview prep: Research, Documents, Practise, Show up, Follow up\" loading=\"lazy\"><figcaption>Five stages of interview preparation.</figcaption></figure>\n<h2>Research the employer</h2>\n<p>Learn what kind of facility it is, what surgeries it does and who it serves. Read the advert again and match your skills to each requirement.</p>\n<h2>Prepare your documents</h2>\n<p>Bring originals and clear copies of your certificates, transcripts, ID, attachment records and any certifications. Put them in a folder in the order the advert lists them.</p>\n<h2>Practise likely questions aloud</h2>\n<ul>\n<li>\"Tell us about yourself\": a 60-second answer with your training, your attachment and what you want to do.</li>\n<li>\"What are the phases of the WHO Surgical Safety Checklist?\" (sign in, time out, sign out.)</li>\n<li>\"How do you maintain a sterile field?\" and \"What do you do if you break sterility?\"</li>\n<li>\"Why do we count instruments, swabs and sharps?\"</li>\n<li>\"Tell us about a mistake and what you learned.\" Be honest and show what you changed.</li>\n</ul>\n<h2>Be ready for a practical task</h2>\n<p>Some interviews include identifying instruments or demonstrating gowning and gloving. Refresh the basics the week before.</p>\n<h2>Show up well</h2>\n<p>Arrive early, dress neatly, switch off your phone and greet everyone politely. Listen to the whole question before answering, and keep answers clear and short.</p>\n<h2>Ask one or two questions</h2>\n<p>Ask about orientation, supervision or the usual team structure. It shows you want to learn and work safely.</p>\n<h2>Be honest</h2>\n<p>Do not claim experience you do not have. Say what you have done, what you have observed and what you are keen to learn.</p>\n<h2>Follow up</h2>\n<p>A short thank-you message the same day or the next shows good manners. Then wait patiently, and keep applying elsewhere.</p>\n<h2>Quick revision points</h2>\n<ul><li>Research the employer and the advert.</li><li>Organise originals and copies.</li><li>Practise safety questions aloud.</li><li>Be honest about gaps and mistakes.</li><li>Arrive early and follow up politely.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "A checklist for preparing for a health-sector interview: research, documents, likely questions, practical tasks and follow-up.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    },
+    "free-tools-for-making-medical-graphics-and-videos-on-a-phone": {
+      "slug": "free-tools-for-making-medical-graphics-and-videos-on-a-phone",
+      "title": "Free tools for making medical graphics and short videos on a phone",
+      "date": "2026-10-16",
+      "excerpt": "Free or low-cost apps for making clear study graphics and short videos on a phone, plus design rules that make medical content easier to read.",
+      "thumbnail": "/assets/blog/free-tools-for-making-medical-graphics-and-videos-on-a-phone.jpg",
+      "tags": [
+        "tools",
+        "content-creation",
+        "design"
+      ],
+      "content": "<p>You do not need a laptop or paid software to make good health education content. Many creators work entirely on a phone. Free plans and features change, so check the current terms before you rely on a tool.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/free-tools-for-making-medical-graphics-and-videos-on-a-phone-figure.jpg\" alt=\"Phone toolkit: Design, Edit video, Photos, Flashcards, Store\" loading=\"lazy\"><figcaption>A free phone toolkit for creators.</figcaption></figure>\n<h2>Graphics</h2>\n<p>Canva has a free tier with templates for posts and carousels. Google Slides also works well: set a custom square or vertical page size, build your graphic and export it as an image.</p>\n<h2>Video</h2>\n<p>CapCut offers a free tier for trimming clips, adding captions and music, and exporting vertical videos for TikTok, Reels and Shorts. Always check the licence of any music you use.</p>\n<h2>Photo editing</h2>\n<p>Snapseed is a free editor for cropping, straightening and brightening photos you took yourself.</p>\n<h2>Flashcards</h2>\n<p>Anki and its Android version AnkiDroid are free to use for spaced repetition. They are handy for turning your own content into study decks.</p>\n<h2>Storage and sharing</h2>\n<p>Google Drive gives you free storage and share links. Keep one folder per topic with the source notes, the graphic and the final file.</p>\n<h2>Design rules that matter more than the tool</h2>\n<ul>\n<li>One idea per image, with a clear title.</li>\n<li>Large, high-contrast text that is readable on a small screen.</li>\n<li>No more than two fonts and a consistent colour set.</li>\n<li>Do not rely on colour alone; add labels so colour-blind viewers can follow.</li>\n<li>Put a short source line on anything factual.</li>\n</ul>\n<h2>Accuracy comes first</h2>\n<p>A beautiful graphic with a wrong fact does harm. Check facts before you design, and add a note that the content is for education, not personal medical advice.</p>\n<h2>Quick revision points</h2>\n<ul><li>A phone and free apps are enough to start.</li><li>Check free-plan limits and music licences.</li><li>One idea per graphic, big readable text.</li><li>Keep files organised by topic.</li><li>Verify facts, then design.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "Free or low-cost apps for making clear study graphics and short videos on a phone, plus design rules that make medical content easier to read.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    },
+    "how-to-start-a-health-education-page-in-kenya": {
+      "slug": "how-to-start-a-health-education-page-in-kenya",
+      "title": "How to start a health education page in Kenya, responsibly",
+      "date": "2026-10-16",
+      "excerpt": "Starting a health education page is easy; doing it responsibly takes thought. Covers niche, accuracy, patient privacy, consistency and how to earn without losing trust.",
+      "thumbnail": "/assets/blog/how-to-start-a-health-education-page-in-kenya.jpg",
+      "tags": [
+        "content-creation",
+        "kenya",
+        "ethics"
+      ],
+      "content": "<p>Social media has made it possible for any student or graduate to teach thousands of people. With that reach comes responsibility. These are the principles I would follow before starting.</p>\n<figure class=\"post-figure\"><img src=\"/assets/blog/how-to-start-a-health-education-page-in-kenya-figure.jpg\" alt=\"Start responsibly: Niche, Accuracy, Privacy, Rhythm, Trust\" loading=\"lazy\"><figcaption>Five principles for a responsible health page.</figcaption></figure>\n<h2>Pick a narrow niche</h2>\n<p>\"Health tips\" is crowded. \"Theatre technology for students\" or \"anatomy memory aids\" is specific, and people know why to follow you. Decide who the page is for and what problem it solves.</p>\n<h2>Put accuracy first</h2>\n<p>Use textbooks, official guidelines and reputable organisations such as the World Health Organization and Kenya's Ministry of Health. Keep notes of your sources, correct mistakes openly and avoid giving personal medical advice to individuals online.</p>\n<h2>Protect patients and colleagues</h2>\n<ul>\n<li>Never post anything that could identify a patient: faces, names, records or recognisable details.</li>\n<li>Do not film or photograph in a clinical area unless your institution's policy and the people involved allow it.</li>\n<li>Remember that health information is sensitive personal data under the Data Protection Act, 2019.</li>\n<li>Do not criticise a named hospital, employer or colleague online.</li>\n</ul>\n<h2>Post on a schedule you can keep</h2>\n<p>Three solid posts a week beat seven rushed ones for a month followed by silence. Batch your work: plan, design and schedule in one sitting.</p>\n<h2>Engage and listen</h2>\n<p>Reply to questions, save the common ones as future posts and thank people who point out errors.</p>\n<h2>Earn without losing trust</h2>\n<ul>\n<li>Sell your own study notes or run paid tutoring.</li>\n<li>Accept sponsored posts only from products or institutions you are comfortable with, and label them clearly as advertising.</li>\n<li>Keep your educational content separate from promotion so followers can tell them apart.</li>\n</ul>\n<h2>Know your limits</h2>\n<p>Say what you are and are not qualified to teach, and send people with real health problems to a health facility.</p>\n<h2>Quick revision points</h2>\n<ul><li>Choose a narrow niche and a clear audience.</li><li>Verify every fact and cite sources.</li><li>Protect patient and colleague privacy.</li><li>Post on a schedule you can sustain.</li><li>Label sponsored content honestly.</li></ul>",
+      "status": "published",
+      "author": "Ezra Ogombo",
+      "meta_description": "Starting a health education page is easy; doing it responsibly takes thought. Covers niche, accuracy, patient privacy, consistency and how to earn without losing trust.",
+      "read_minutes": 2,
+      "updated": "2026-10-16"
+    }
+  },
+  "content_highlights": {
+    "carpal-bones-wrist": {
+      "body": "<p>A drawing of the hand and wrist sits in the centre of this graphic, with coloured dots on each of the eight carpal bones and labelled leader lines: scaphoid, lunate, triquetrum, pisiform, trapezium, trapezoid, capitate and hamate, plus the radius and ulna at the forearm end. A colour key sits underneath. A note at the bottom explains that the eight bones are arranged in two rows, the proximal row (scaphoid, lunate, triquetrum, pisiform) and the distal row (trapezium, trapezoid, capitate, hamate). I am on the left, shrugging with open hands, because this topic is notorious.</p>\n<h2>The two rows</h2>\n<p>The proximal row sits next to the radius and ulna, and the distal row sits next to the metacarpals of the hand. Together they let the wrist bend, extend and rotate.</p>\n<h2>A classic mnemonic</h2>\n<p>Many students use \"Some Lovers Try Positions That They Can't Handle\", which follows the order scaphoid, lunate, triquetrum, pisiform, trapezium, trapezoid, capitate, hamate, going from the thumb side across the proximal row and then across the distal row, again from the thumb side. The scaphoid is the one worth special attention, because it is the most commonly fractured carpal bone, often after a fall on an outstretched hand. A fracture there can be missed on the first X-ray and heal poorly.</p>"
+    },
+    "layers-of-the-scalp-scalp-mnemonic": {
+      "slug": "layers-of-the-scalp-scalp-mnemonic",
+      "title": "Layers of the Scalp — SCALP Mnemonic",
+      "image": "/assets/content/layers-of-the-scalp-scalp-mnemonic.jpg",
+      "caption": "Five layers, one word: Skin, Connective tissue, Aponeurosis, Loose areolar tissue, Pericranium.",
+      "body": "<p>A purple card lists the five layers of the scalp under the heading \"Remember: SCALP\": skin, connective tissue (dense), aponeurosis (the galea), loose areolar tissue and pericranium. A short box explains why the layers matter.</p>\n<h2>Why the layers matter</h2>\n<p>The dense connective tissue layer holds the walls of scalp vessels open, so scalp wounds can bleed freely. The loose areolar layer allows the galea to move over the skull, and it is also the layer through which infection can spread. Learning the order gives you a map of what a scalp wound passes through.</p>\n<h2>Quick revision points</h2>\n<ul><li>SCALP: Skin, Connective tissue, Aponeurosis, Loose areolar tissue, Pericranium.</li><li>The dense layer holds vessels open, so bleeding can be heavy.</li><li>The loose layer lets infection spread.</li></ul>",
+      "status": "published",
+      "order": -7
+    },
+    "word-of-the-day-haemostasis": {
+      "slug": "word-of-the-day-haemostasis",
+      "title": "Word of the Day: Haemostasis",
+      "image": "/assets/content/word-of-the-day-haemostasis.jpg",
+      "caption": "Haemostasis means the stopping of bleeding, from haemo (blood) and stasis (standing still).",
+      "body": "<p>A word-of-the-day card gives the pronunciation, the meaning and two memory hooks: haemo means blood and stasis means standing still.</p>\n<h2>In theatre</h2>\n<p>Surgeons and the team achieve haemostasis with pressure, clamps, ties, diathermy or topical agents. A bleeding vessel that is not controlled can quickly change the course of an operation, which is why swabs, suction and good lighting matter.</p>\n<h2>Quick revision points</h2>\n<ul><li>Haemostasis: stopping bleeding.</li><li>Methods: pressure, clamps, ties, diathermy, topical agents.</li><li>Haemo = blood; stasis = standing still.</li></ul>",
+      "status": "published",
+      "order": -6
+    },
+    "word-of-the-day-asepsis": {
+      "slug": "word-of-the-day-asepsis",
+      "title": "Word of the Day: Asepsis",
+      "image": "/assets/content/word-of-the-day-asepsis.jpg",
+      "caption": "Asepsis means keeping a site free from microorganisms; antisepsis lowers germs on living tissue.",
+      "body": "<p>A green word-of-the-day card defines asepsis and notes how it differs from antisepsis. The memory hook reads: A means without, sepsis means infection.</p>\n<h2>Asepsis versus antisepsis</h2>\n<p>Asepsis is about preventing contamination in the first place, through hand scrub, sterile gowns and gloves and a protected sterile field. Antisepsis is the use of a chemical on living tissue, such as skin preparation, to reduce the number of germs. Both are needed in theatre.</p>\n<h2>Quick revision points</h2>\n<ul><li>Asepsis: prevent contamination.</li><li>Antisepsis: reduce germs on living tissue.</li><li>A = without; sepsis = infection.</li></ul>",
+      "status": "published",
+      "order": -5
+    },
+    "team-shout-out-cssd-and-cleaning-staff": {
+      "slug": "team-shout-out-cssd-and-cleaning-staff",
+      "title": "Team Shout-Out: CSSD and Cleaning Staff",
+      "image": "/assets/content/team-shout-out-cssd-and-cleaning-staff.jpg",
+      "caption": "Thank you to the people who clean, pack and sterilise every tray and turn the room over between cases.",
+      "body": "<p>A blue shout-out card thanks the CSSD and cleaning teams, with three short reasons they deserve it: clean trays, fast turnover and quiet hard work.</p>\n<h2>Why it matters</h2>\n<p>Safe surgery starts long before the first incision. Instruments that were properly cleaned, packed and sterilised, and a room that was properly cleaned between cases, protect every patient. The people who do this work are rarely seen, so a thank-you is well deserved.</p>",
+      "status": "published",
+      "order": -4
+    },
+    "new-on-the-site-join-the-list": {
+      "slug": "new-on-the-site-join-the-list",
+      "title": "New on the Site: Join the Email List",
+      "image": "/assets/content/new-on-the-site-join-the-list.jpg",
+      "caption": "Get new posts and study materials by email. Scan the QR code or visit the subscribe page.",
+      "body": "<p>A gold announcement card invites people to join the email list for new posts and study materials. It explains that free notes download straight from Drive and paid materials are ordered with M-Pesa, and a QR code opens the subscribe page.</p>\n<h2>How to join</h2>\n<p>Scan the QR code or visit the <a href=\"/subscribe\">subscribe page</a>, enter your email and choose what you want to hear about. You can unsubscribe any time.</p>",
+      "status": "published",
+      "order": -3
+    },
+    "basic-general-surgery-set-example": {
+      "slug": "basic-general-surgery-set-example",
+      "title": "Basic General Surgery Set (Example)",
+      "image": "/assets/content/basic-general-surgery-set-example.jpg",
+      "caption": "An example tray for a basic general set. Sets differ between hospitals, so always follow your own tray list.",
+      "body": "<p>A teal card lists an example tray for a basic general set: scalpel handle and blade, dissecting forceps, Mayo and Metzenbaum scissors, artery forceps, Allis tissue forceps, a needle holder, towel clips and sponge-holding forceps. A tip box reminds you that sets differ between hospitals.</p>\n<h2>Learn it by function</h2>\n<p>Group the items by what they do: cutting (scalpel, scissors), grasping (forceps), clamping (artery forceps), holding drapes (towel clips), holding swabs (sponge-holding forceps) and suturing (needle holder). It is easier to remember a tray as six jobs than as nine names. See the full article on <a href=\"/blog/how-to-learn-surgical-instrument-names-fast\">how to learn instrument names fast</a>.</p>",
+      "status": "published",
+      "order": -2
+    },
+    "theatre-abbreviations-quick-list": {
+      "slug": "theatre-abbreviations-quick-list",
+      "title": "Theatre Abbreviations — Quick List",
+      "image": "/assets/content/theatre-abbreviations-quick-list.jpg",
+      "caption": "OT, CSSD, PACU, GA, LA, SSI and PPE: seven abbreviations every theatre student should know.",
+      "body": "<p>A cream card lists seven common abbreviations: OT for operating theatre, CSSD for sterile services, PACU for the recovery unit, GA for general anaesthesia, LA for local anaesthesia, SSI for surgical site infection and PPE for personal protective equipment.</p>\n<h2>Learn more</h2>\n<p>There are many more, and some differ between hospitals. Read the longer list in <a href=\"/blog/common-theatre-abbreviations-explained\">common theatre and hospital abbreviations explained</a>, and ask when you are not sure.</p>",
+      "status": "published",
+      "order": -1
+    }
+  },
+  "chatbot_faq": {
+    "faq002": {
+      "answer": "Diploma in Perioperative Theatre Technology (graduated December 2025). Did my field attachment at Likuyani Sub-County Hospital in 2024. The institution is listed on my CV."
+    },
+    "faq003": {
+      "answer": "Right now I work at JULO Enterprises' cyber café — printing, typing, online government services, basic computer training. It's alongside content creation while I look for theatre practice roles."
+    }
+  },
+  "milestones": {
+    "mile002": {
+      "event": "Started the Diploma in Perioperative Theatre Technology in Kitale."
+    },
+    "mile005": {
+      "event": "Working at JULO Enterprises' cyber café while looking for theatre practice roles; posting medical education content on Instagram, TikTok, and Facebook."
+    }
+  },
+  "site_settings": {
+    "tagline": "Content creator and Perioperative Theatre Technology graduate making medical education content for Instagram, TikTok, and Facebook.",
+    "default_description": "Ezra Ogombo (@ezraogombo) — Kenyan content creator and Perioperative Theatre Technology graduate sharing medical education content, blog posts and study materials (notes, past papers, study units).",
+    "seo": {
+      "handle": "ezraogombo",
+      "alternate_names": [
+        "ezraogombo",
+        "Ogombo",
+        "@ezraogombo",
+        "Ezra Ogombo Kenya"
+      ],
+      "keywords": [
+        "ezraogombo",
+        "Ezra Ogombo",
+        "Ogombo",
+        "@ezraogombo",
+        "Ezra Ogombo content creator",
+        "Kenyan content creator",
+        "medical education content",
+        "perioperative theatre technology",
+        "theatre technologist Kenya",
+        "anatomy mnemonics"
+      ],
+      "job_title": "Content Creator & Perioperative Theatre Technologist",
+      "identity": {
+        "brand": "Ezra Ogombo",
+        "handle": "ezraogombo",
+        "logo": "ezraogombo",
+        "rule": "Brand name 'Ezra Ogombo'; handle '@ezraogombo'; logo text 'ezraogombo'."
+      }
+    },
+    "proof": []
+  },
+  "pages": {
+    "home": {
+      "title": "Ezra Ogombo (@ezraogombo) | Content Creator & Theatre Technologist",
+      "description": "Ezra Ogombo (@ezraogombo) is a Kenyan content creator and Perioperative Theatre Technology graduate sharing medical education: anatomy mnemonics, blog posts and study materials on Instagram, TikTok and Facebook.",
+      "intro": "I'm Ezra — a content creator and Diploma graduate in Perioperative Theatre Technology. I make medical education content on Instagram, TikTok, and Facebook as @ezraogombo: anatomy mnemonics, OT quizzes, safety checklists. Quiet by default. Ask me about anaesthesia machines and watch that change."
+    },
+    "about": {
+      "title": "About Ezra Ogombo (@ezraogombo) — Content Creator & Theatre Technologist",
+      "description": "About Ezra Ogombo, content creator and Perioperative Theatre Technology diploma graduate from Matunda, Kenya, making medical education content for Instagram, TikTok and Facebook as @ezraogombo.",
+      "body": "<div class=\"crt-window\">\n      <div class=\"titlebar\"><span class=\"dot r\"></span><span class=\"dot y\"></span><span class=\"dot g\"></span><span class=\"label\">education.log</span></div>\n      <div class=\"body\">\n        <img src=\"/assets/theatre-portrait.jpg\" alt=\"Ezra Ogombo in theatre cap and mask\" style=\"width:140px; height:140px; object-fit:cover; border:2px solid var(--panel-border); border-radius:4px; float:right; margin:0 0 0.8rem 1rem; filter: sepia(0.15) hue-rotate(60deg) saturate(1.2);\">\n        <p><strong>Diploma in Perioperative Theatre Technology</strong> (2023–2025, graduated December 2025; institution listed on my <a href=\"/cv\">CV</a>). Practical score 78%.</p>\n        <p><strong>Field attachment</strong> — Likuyani Sub-County Hospital, Feb–Apr 2024. Scrubbed for caesarean section cases, ran sterilisation (CSSD), theatre setup and turnover, WHO Surgical Safety Checklist adherence.</p>\n        <p><strong>Certifications</strong> — Quality Improvement (Leeds Teaching Hospitals NHS Trust), Basic Life Support, Infection Prevention & Control.</p>\n      </div>\n    </div>\n\n    <div class=\"crt-window\">\n      <div class=\"titlebar\"><span class=\"dot r\"></span><span class=\"dot y\"></span><span class=\"dot g\"></span><span class=\"label\">day-job.log</span></div>\n      <div class=\"body\">\n        <p>Alongside creating content and looking for theatre practice, I work the front desk at a cyber café — JULO Enterprises. Printing, typing, eCitizen and KRA services, and teaching basic computer skills to walk-in clients. Temporary, but it's kept my tech instincts sharp.</p>\n      </div>\n    </div>\n\n    <section class=\"block\">\n      <h2>The content side</h2>\n      <p>I turn what I'm learning into short, memorable posts — anatomy mnemonics, OT quizzes, positioning and safety checklists — for Instagram, TikTok, and Facebook. If a concept took me three readings to actually get, there's a good chance it'll take you thirty seconds once I've turned it into a graphic. See the <a href=\"/content\">content page</a>.</p>\n    </section>\n\n    <section class=\"block\">\n      <h2>The theatre side</h2>\n      <p>Perioperative work is precise and mostly invisible — nobody notices the person who made sure the theatre ran smoothly, and that's exactly the appeal. No room for guessing. Every step has a reason.</p>\n    </section>\n\n    <section class=\"block\">\n      <h2>Also true about me</h2>\n      <p>Introvert. Talks more once you land on the right topic — usually anatomy, sometimes Kenyan history and culture (I'm slowly writing books on both — see the <a href=\"/writing\">writing page</a>). Coding is a hobby on the side, mostly playing with AI tools for fun — <a data-whatsapp data-msg=\"Hi Ezra, I read your About page and wanted to ask about your side projects.\" href=\"#\">ask me on WhatsApp</a> if you're curious, but it's not the main thing I do.</p>\n    </section>"
+    },
+    "cv": {
+      "title": "Ezra Ogombo CV — Perioperative Theatre Technologist & Content Creator",
+      "description": "Ezra Ogombo's CV: Perioperative Theatre Technologist and medical education content creator in Kenya. View online or download the PDF."
+    },
+    "contact": {
+      "title": "Contact Ezra Ogombo (@ezraogombo) — Message, WhatsApp & Socials",
+      "description": "Get in touch with Ezra Ogombo (@ezraogombo): send a message, WhatsApp, email, or find him on Facebook, Instagram, TikTok and LinkedIn."
+    },
+    "writing": {
+      "title": "Writing & Books by Ezra Ogombo (@ezraogombo)",
+      "description": "Books in progress by Ezra Ogombo: a memoir, a theatre-training account, a study companion, and more. All unfinished, all real."
+    },
+    "materials": {
+      "title": "Study Materials — Notes, Past Papers & Study Units | Ezra Ogombo",
+      "description": "Study notes, past papers, study units and templates for Perioperative Theatre Technology and more by Ezra Ogombo (@ezraogombo) — many free, premium ones ordered via M-Pesa."
+    },
+    "content": {
+      "title": "Medical Education Content by Ezra Ogombo (@ezraogombo)",
+      "description": "Medical education content by Ezra Ogombo (@ezraogombo): anatomy mnemonics, OT quizzes and safety checklists made for Instagram, TikTok and Facebook."
+    },
+    "blog": {
+      "title": "Blog — Ezra Ogombo (@ezraogombo): Theatre Technology, Study Tips & Content Creation",
+      "description": "Articles by Ezra Ogombo on perioperative theatre technology, study skills for health students, content creation and life in Kenya — updated as he writes."
+    },
+    "subscribe": {
+      "title": "Subscribe to Ezra Ogombo (@ezraogombo) — New Posts, Study Materials & Updates",
+      "description": "Join the Ezra Ogombo (@ezraogombo) email list: new blog posts, medical education content, free study materials and subscriber perks, a few emails a month, unsubscribe any time.",
+      "kicker": "SUBSCRIBE.EXE",
+      "heading": "Join the list. Get the good stuff first.",
+      "intro": "One short email when something worth reading, studying or downloading goes live. No spam, no selling your address, leave any time."
+    }
+  }
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opening link…</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<style>
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0d0f0d;color:#cfd8cf;font:16px/1.5 system-ui,sans-serif;text-align:center;padding:1rem}
+  a{color:#7CFFB2}
+  .box{max-width:420px}
+</style>
+</head>
+<body>
+<div class="box" id="box"><p id="msg">Opening link…</p><noscript><p>This short link needs JavaScript to open.</p></noscript></div>
+<script src="/js/firebase-config.js"></script>
+<script>
+// Short links: ezra-ogombo.web.app/<code>  ->  looks up short_links/<code> in the database and sends you there.
+(async () => {
+  const code = decodeURIComponent(location.pathname.replace(/^\/+|\/+$/g, "")).toLowerCase();
+  const miss = () => { document.title = "Link not found"; document.getElementById("box").innerHTML = '<p style="font-size:1.2rem;margin-top:0">That link doesn\'t exist or has expired.</p><p><a href="/">Go to the home page</a></p>'; };
+  if (!/^[a-z0-9]{3,20}$/.test(code)) return miss();
+  const base = window.EO_FIREBASE_CONFIG.databaseURL;
+  try {
+    const r = await fetch(`${base}/short_links/${code}.json`);
+    const d = r.ok ? await r.json() : null;
+    const u = d && typeof d.url === "string" ? d.url : "";
+    if (!(u.startsWith("/") && !u.startsWith("//")) && !/^https?:\/\//i.test(u)) return miss();
+    try { fetch(`${base}/short_links/${code}/clicks.json`, { method: "PUT", keepalive: true, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ".sv": { increment: 1 } }) }); } catch {}
+    location.replace(u);
+  } catch { document.getElementById("msg").textContent = "Couldn't reach the server. Check your connection and try again."; }
+})();
+</script>
+</body>
+</html>

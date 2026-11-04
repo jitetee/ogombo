@@ -1,0 +1,138 @@
+GREETING CALENDAR FOR 2026 (what visitors see each day; the first line of a day is the main popup, the rest appear as Also today)
+Lunar and religious dates (Ramadan, Eid, Islamic New Year, Lunar New Year) come from the browser calendar and may differ by a day from the local moon sighting; Diwali comes from a small table in greetings.js.
+
+Jan  1: 🎆 Happy New Year 2026!
+Feb  1: 🌅 Happy New Month! Welcome to February.
+Feb  4: 🎗️ World Cancer Day
+Feb  6: ✋ International Day of Zero Tolerance for FGM
+Feb 14: 💝 Happy Valentine's Day!
+Feb 17: 🧧 Happy Lunar New Year!
+Feb 18: 🌙 Ramadan Kareem!  |  🧧 Happy Lunar New Year!
+Feb 19: 🌙 Ramadan Kareem!
+Mar  1: 🌅 Happy New Month! Welcome to March.
+Mar  3: 👂 World Hearing Day
+Mar  4: ⚖️ World Obesity Day
+Mar  6: 🇬🇭 Happy Independence Day, Ghana!
+Mar  8: 👩🏾 Happy International Women's Day!
+Mar 12: 🫘 World Kidney Day
+Mar 20: 🌙 Eid Mubarak! (Eid al-Fitr)  |  🦷 World Oral Health Day
+Mar 21: 🌙 Eid Mubarak! (Eid al-Fitr)  |  💛 World Down Syndrome Day
+Mar 22: 💧 World Water Day
+Mar 24: 🫁 World TB Day
+Mar 30: 🩺 Happy Doctors' Day!
+Apr  1: 🃏 Happy April Fools' Day!  |  🌅 Happy New Month! Welcome to April.
+Apr  2: 🧩 World Autism Awareness Day
+Apr  3: ✝️ Blessed Good Friday
+Apr  5: 🐣 Happy Easter!
+Apr  6: 🌿 Happy Easter Monday!
+Apr  7: 🌍 World Health Day
+Apr 18: 🇿🇼 Happy Independence Day, Zimbabwe!
+Apr 22: 🌍 Happy Earth Day!
+Apr 24: 💉 World Immunization Week
+Apr 25: 🦟 World Malaria Day  |  💉 World Immunization Week
+Apr 26: 💉 World Immunization Week
+Apr 27: 🇿🇦 Happy Freedom Day, South Africa!  |  💉 World Immunization Week
+Apr 28: 💉 World Immunization Week
+Apr 29: 💉 World Immunization Week
+Apr 30: 💉 World Immunization Week
+May  1: 🛠️ Happy Labour Day!  |  🌅 Happy New Month! Welcome to May.
+May  5: 🧼 World Hand Hygiene Day  |  🤱 Happy International Day of the Midwife!
+May  6: 👩🏾‍⚕️ Happy Nurses Week!
+May  7: 👩🏾‍⚕️ Happy Nurses Week!
+May  8: 👩🏾‍⚕️ Happy Nurses Week!
+May  9: 👩🏾‍⚕️ Happy Nurses Week!
+May 10: 👩🏾‍⚕️ Happy Nurses Week!  |  🌸 Happy Mother's Day!
+May 11: 👩🏾‍⚕️ Happy Nurses Week!
+May 12: 🕯️ Happy International Nurses Day!
+May 17: ❤️ World Hypertension Day
+May 27: 🐑 Eid al-Adha Mubarak!
+May 28: 🐑 Eid al-Adha Mubarak!  |  🩸 Menstrual Hygiene Day
+May 31: 🚭 World No Tobacco Day
+Jun  1: 🇰🇪 Happy Madaraka Day!  |  🌅 Happy New Month! Welcome to June.
+Jun 14: 🩸 World Blood Donor Day
+Jun 16: 🕌 Happy Islamic New Year!
+Jun 17: 🕌 Happy Islamic New Year!
+Jun 19: 🔴 World Sickle Cell Day
+Jun 21: 👔 Happy Father's Day!
+Jul  1: 🇨🇦 Happy Canada Day! Happy Rwanda and Burundi Independence Day!  |  🌅 Happy New Month! Welcome to July.
+Jul  4: 🇺🇸 Happy Independence Day, USA! Happy Liberation Day, Rwanda!
+Jul  6: 🇲🇼 Happy Independence Day, Malawi!
+Jul  7: 🗣️ Happy World Kiswahili Language Day!
+Jul 25: 🌊 World Drowning Prevention Day
+Jul 28: 🧬 World Hepatitis Day
+Jul 30: 🤝 Happy Friendship Day!
+Aug  1: 🍼 World Breastfeeding Week  |  🌅 Happy New Month! Welcome to August.
+Aug  2: 🍼 World Breastfeeding Week
+Aug  3: 🍼 World Breastfeeding Week
+Aug  4: 🍼 World Breastfeeding Week
+Aug  5: 🍼 World Breastfeeding Week
+Aug  6: 🍼 World Breastfeeding Week
+Aug  7: 🍼 World Breastfeeding Week
+Aug 12: 🌱 Happy International Youth Day!
+Aug 15: 🇮🇳 Happy Independence Day, India!
+Sep  1: 🌅 Happy New Month! Welcome to September.
+Sep  8: 📚 Happy International Literacy Day!  |  🦵 World Physiotherapy Day
+Sep 10: 💚 World Suicide Prevention Day
+Sep 13: 🌡️ World Sepsis Day
+Sep 17: 🛡️ World Patient Safety Day
+Sep 21: 🕊️ International Day of Peace  |  🧠 World Alzheimer's Day
+Sep 25: 💊 Happy World Pharmacists Day!
+Sep 29: ❤️ World Heart Day
+Oct  1: 🇳🇬 Happy Independence Day, Nigeria!  |  🌅 Happy New Month! Welcome to October.  |  🎀 Breast Cancer Awareness Month
+Oct  2: 🎀 Breast Cancer Awareness Month
+Oct  3: 🎀 Breast Cancer Awareness Month
+Oct  4: 🎀 Breast Cancer Awareness Month
+Oct  5: 🍎 Happy World Teachers' Day!  |  🎀 Breast Cancer Awareness Month
+Oct  6: 🎀 Breast Cancer Awareness Month
+Oct  7: 🎀 Breast Cancer Awareness Month
+Oct  8: 👁️ World Sight Day  |  🎀 Breast Cancer Awareness Month
+Oct  9: 🇺🇬 Happy Independence Day, Uganda!  |  🎀 Breast Cancer Awareness Month
+Oct 10: 🧠 World Mental Health Day  |  🎀 Breast Cancer Awareness Month
+Oct 11: 🎀 Breast Cancer Awareness Month
+Oct 12: 🎀 Breast Cancer Awareness Month
+Oct 13: 🎀 Breast Cancer Awareness Month
+Oct 14: 🎀 Breast Cancer Awareness Month
+Oct 15: 🚰 Global Handwashing Day  |  🎀 Breast Cancer Awareness Month
+Oct 16: 😴 World Anaesthesia Day  |  🎀 Breast Cancer Awareness Month
+Oct 17: 🎀 Breast Cancer Awareness Month
+Oct 18: 🎀 Breast Cancer Awareness Month
+Oct 19: 🎀 Breast Cancer Awareness Month
+Oct 20: 🇰🇪 Happy Mashujaa Day!  |  🎀 Breast Cancer Awareness Month
+Oct 21: 🎀 Breast Cancer Awareness Month
+Oct 22: 🎀 Breast Cancer Awareness Month
+Oct 23: 🎀 Breast Cancer Awareness Month
+Oct 24: 🇿🇲 Happy Independence Day, Zambia!  |  🌐 Happy United Nations Day!  |  🎀 Breast Cancer Awareness Month
+Oct 25: 🎀 Breast Cancer Awareness Month
+Oct 26: 🎀 Breast Cancer Awareness Month
+Oct 27: 🎀 Breast Cancer Awareness Month
+Oct 28: 🎀 Breast Cancer Awareness Month
+Oct 29: 🧠 World Stroke Day  |  🎀 Breast Cancer Awareness Month
+Oct 30: 🎀 Breast Cancer Awareness Month
+Oct 31: 🎃 Happy Halloween!  |  🎀 Breast Cancer Awareness Month
+Nov  1: 🌅 Happy New Month! Welcome to November.
+Nov  8: 🪔 Happy Diwali!
+Nov 10: 🏥 Perioperative Nurses Week
+Nov 11: 🏥 Perioperative Nurses Week
+Nov 12: 🏥 Perioperative Nurses Week  |  🫁 World Pneumonia Day
+Nov 13: 🏥 Perioperative Nurses Week
+Nov 14: 🏥 Perioperative Nurses Week  |  🍬 World Diabetes Day
+Nov 15: 🏥 Perioperative Nurses Week
+Nov 16: 🏥 Perioperative Nurses Week
+Nov 17: 👶 World Prematurity Day
+Nov 18: 💊 World AMR Awareness Week
+Nov 19: 💊 World AMR Awareness Week
+Nov 20: 🧒 Happy World Children's Day!  |  💊 World AMR Awareness Week
+Nov 21: 💊 World AMR Awareness Week
+Nov 22: 💊 World AMR Awareness Week
+Nov 23: 💊 World AMR Awareness Week
+Nov 24: 💊 World AMR Awareness Week
+Nov 26: 🦃 Happy Thanksgiving!
+Dec  1: 🎗️ World AIDS Day  |  🌅 Happy New Month! Welcome to December.
+Dec  3: ♿ International Day of Persons with Disabilities
+Dec  9: 🇹🇿 Happy Independence Day, Tanzania!
+Dec 10: ⚖️ Human Rights Day
+Dec 12: 🇰🇪 Happy Jamhuri Day!
+Dec 24: 🎅 Merry Christmas Eve!
+Dec 25: 🎄 Merry Christmas!
+Dec 26: 🎁 Happy Boxing Day!
+Dec 31: 🥂 Happy New Year's Eve!

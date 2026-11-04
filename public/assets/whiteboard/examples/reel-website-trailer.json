@@ -1,0 +1,262 @@
+{
+ "name": "Website trailer PC mockup",
+ "format": "short",
+ "pace": 1,
+ "scenes": [
+  {
+   "say": "My website is your study corner for theatre practice. Open it any time, on your phone or computer.",
+   "hold": 0.9,
+   "items": [
+    {
+     "type": "text",
+     "x": 450,
+     "y": 40,
+     "text": "YOUR STUDY",
+     "size": 92,
+     "color": "#d7263d",
+     "align": "center",
+     "maxW": 860,
+     "cue": null
+    },
+    {
+     "type": "text",
+     "x": 450,
+     "y": 150,
+     "text": "CORNER",
+     "size": 92,
+     "color": "#d7263d",
+     "align": "center",
+     "maxW": 860,
+     "cue": null
+    },
+    {
+     "type": "narrator",
+     "pose": "hold-laptop",
+     "x": 0,
+     "y": 140,
+     "w": 900
+    },
+    {
+     "type": "shape",
+     "shape": "box",
+     "x": 235,
+     "y": 940,
+     "w": 455,
+     "h": 50,
+     "color": "#1b6ec2",
+     "lw": 5,
+     "cue": "my website"
+    },
+    {
+     "type": "text",
+     "x": 248,
+     "y": 946,
+     "text": "ezra-ogombo.web.app",
+     "size": 30,
+     "maxW": 430,
+     "cue": "my website"
+    },
+    {
+     "type": "icon",
+     "name": "book",
+     "x": 250,
+     "y": 1040,
+     "w": 90,
+     "color": "#1b6ec2",
+     "cue": "study corner"
+    },
+    {
+     "type": "icon",
+     "name": "download",
+     "x": 400,
+     "y": 1040,
+     "w": 90,
+     "color": "#1b6ec2",
+     "cue": "practice"
+    },
+    {
+     "type": "icon",
+     "name": "bulb",
+     "x": 550,
+     "y": 1040,
+     "w": 90,
+     "color": "#1b6ec2",
+     "cue": "phone"
+    }
+   ]
+  },
+  {
+   "say": "Read short articles, download study materials, and revise before your next list.",
+   "hold": 0.9,
+   "items": [
+    {
+     "type": "shape",
+     "shape": "box",
+     "x": 50,
+     "y": 230,
+     "w": 800,
+     "h": 600,
+     "color": "#222",
+     "lw": 10
+    },
+    {
+     "type": "shape",
+     "shape": "line",
+     "x": 50,
+     "y": 330,
+     "w": 800,
+     "h": 2,
+     "color": "#222",
+     "lw": 6
+    },
+    {
+     "type": "shape",
+     "shape": "line",
+     "x": 450,
+     "y": 830,
+     "w": 2,
+     "h": 110,
+     "color": "#222",
+     "lw": 10
+    },
+    {
+     "type": "shape",
+     "shape": "underline",
+     "x": 290,
+     "y": 935,
+     "w": 320,
+     "h": 30,
+     "color": "#222",
+     "lw": 10
+    },
+    {
+     "type": "text",
+     "x": 80,
+     "y": 262,
+     "text": "ezra-ogombo.web.app",
+     "size": 40,
+     "color": "#1b6ec2"
+    },
+    {
+     "type": "icon",
+     "name": "file-text",
+     "x": 100,
+     "y": 380,
+     "w": 120,
+     "color": "#1b6ec2",
+     "cue": "short articles"
+    },
+    {
+     "type": "text",
+     "x": 260,
+     "y": 402,
+     "text": "ARTICLES",
+     "size": 64,
+     "cue": "short articles",
+     "maxW": 540
+    },
+    {
+     "type": "icon",
+     "name": "download",
+     "x": 100,
+     "y": 540,
+     "w": 120,
+     "color": "#1b6ec2",
+     "cue": "study materials"
+    },
+    {
+     "type": "text",
+     "x": 260,
+     "y": 562,
+     "text": "MATERIALS",
+     "size": 64,
+     "cue": "study materials",
+     "maxW": 540
+    },
+    {
+     "type": "icon",
+     "name": "bulb",
+     "x": 100,
+     "y": 700,
+     "w": 120,
+     "color": "#1b6ec2",
+     "cue": "revise"
+    },
+    {
+     "type": "text",
+     "x": 260,
+     "y": 722,
+     "text": "REVISE",
+     "size": 64,
+     "cue": "revise",
+     "maxW": 540
+    },
+    {
+     "type": "narrator",
+     "pose": "point-right-grin",
+     "x": 150,
+     "y": 1000,
+     "w": 600
+    }
+   ]
+  },
+  {
+   "say": "Visit the website, and follow the channel for more.",
+   "hold": 1.0,
+   "items": [
+    {
+     "type": "text",
+     "x": 450,
+     "y": 50,
+     "text": "VISIT +",
+     "size": 100,
+     "color": "#d7263d",
+     "align": "center"
+    },
+    {
+     "type": "text",
+     "x": 450,
+     "y": 170,
+     "text": "FOLLOW",
+     "size": 100,
+     "color": "#d7263d",
+     "align": "center",
+     "cue": "follow"
+    },
+    {
+     "type": "narrator",
+     "pose": "hold-phone",
+     "x": 50,
+     "y": 480,
+     "w": 800
+    },
+    {
+     "type": "icon",
+     "name": "world",
+     "x": 690,
+     "y": 1080,
+     "w": 90,
+     "color": "#1b6ec2",
+     "cue": "website"
+    },
+    {
+     "type": "tag",
+     "x": 70,
+     "y": 1280,
+     "text": "EZRA-OGOMBO.WEB.APP",
+     "size": 52,
+     "cue": "website"
+    },
+    {
+     "type": "text",
+     "x": 80,
+     "y": 1400,
+     "text": "@ezraogombo",
+     "size": 56,
+     "color": "#1b6ec2",
+     "cue": "channel"
+    }
+   ]
+  }
+ ]
+}

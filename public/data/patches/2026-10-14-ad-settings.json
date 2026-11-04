@@ -1,0 +1,20 @@
+{
+  "_patch": {
+    "id": "2026-10-14-ad-settings",
+    "name": "Ad settings: look, renewals, pauses",
+    "date": "2026-10-14",
+    "notes": "Adds the new ad look (fade/roundness), renewal reminder days and sponsor pause limit. Your existing ad settings are not changed.",
+    "modes": {
+      "ad_settings": "add"
+    }
+  },
+  "ad_settings": {
+    "look": {
+      "fade": 50,
+      "radius": 4,
+      "label": ""
+    },
+    "renew_days": 3,
+    "max_pause_days": 7
+  }
+}

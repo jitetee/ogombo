@@ -1,0 +1,93 @@
+{
+  "_patch": {
+    "id": "2026-10-15-chatbot-and-wording",
+    "name": "Chatbot upgrade + graduate wording",
+    "notes": "Adds chatbot switches (greeting, sponsor, lead), new FAQ answers, and changes 'student' to 'graduate (December 2025)' wording. Review the Content changes before applying; your other data is untouched.",
+    "date": "2026-10-15",
+    "modes": {
+      "profile": "merge",
+      "status": "merge",
+      "chatbot_faq": "merge",
+      "site_settings": "merge",
+      "pages": "merge",
+      "chatbot_config": "add"
+    }
+  },
+  "profile": {
+    "tagline": "Perioperative Theatre Technology graduate making medical education content for Instagram, TikTok, and Facebook.",
+    "current_job": {
+      "note": "Day job while waiting to start theatre practice. Handles printing, typing, online government services (KRA/eCitizen), and basic computer training for walk-in clients."
+    }
+  },
+  "status": {
+    "note": "Currently: posting new anatomy content and waiting to start theatre practice."
+  },
+  "chatbot_faq": {
+    "faq001": {
+      "answer": "I'm Ezra Ogombo — a Diploma graduate in Perioperative Theatre Technology from Kenya, making medical education content for Instagram, TikTok, and Facebook while I wait to start theatre practice properly."
+    },
+    "faq009": {
+      "answer": "I'm Ezra Ogombo — a Diploma graduate in Perioperative Theatre Technology from Kenya, making medical education content for Instagram, TikTok, and Facebook while I wait to start theatre practice properly."
+    },
+    "faq_coupon": {
+      "keywords": [
+        "coupon",
+        "discount",
+        "code",
+        "promo",
+        "voucher",
+        "punguzo",
+        "kuponi"
+      ],
+      "answer": "Discount codes work on paid materials: open the item → Order, type the code and press Apply. Some codes are limited to a number of buyers, so use yours early."
+    },
+    "faq_services": {
+      "keywords": [
+        "services",
+        "cyber",
+        "printing",
+        "typing",
+        "huduma"
+      ],
+      "answer": "Ezra's cyber café and digital services are listed on the services page — ask for them here, or message on WhatsApp for prices."
+    },
+    "faq_voice": {
+      "keywords": [
+        "voice",
+        "speak",
+        "mic",
+        "microphone",
+        "talk"
+      ],
+      "answer": "Tap the 🎤 button next to the message box and speak your question (works in Chrome on Android and desktop). You can also write in English or Kiswahili."
+    },
+    "faq_grad": {
+      "keywords": [
+        "student",
+        "graduate",
+        "graduated",
+        "diploma",
+        "qualification",
+        "school"
+      ],
+      "answer": "Ezra is a Diploma graduate (December 2025) in Perioperative Theatre Technology from Kenya."
+    }
+  },
+  "site_settings": {
+    "tagline": "Perioperative Theatre Technology graduate making medical education content for Instagram, TikTok, and Facebook."
+  },
+  "pages": {
+    "home": {
+      "description": "Ezra Ogombo — Perioperative Theatre Technology graduate making medical education content for Instagram, TikTok, and Facebook.",
+      "intro": "I'm Ezra — Diploma graduate in Perioperative Theatre Technology, and I make medical education content on Instagram, TikTok, and Facebook: anatomy mnemonics, OT quizzes, safety checklists. Quiet by default. Ask me about anaesthesia machines and watch that change."
+    },
+    "about": {
+      "description": "Diploma graduate in Perioperative Theatre Technology from Matunda, Kenya, making medical education content for Instagram, TikTok, and Facebook."
+    }
+  },
+  "chatbot_config": {
+    "greeting": true,
+    "sponsor": true,
+    "lead": true
+  }
+}

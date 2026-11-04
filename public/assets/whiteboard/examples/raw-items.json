@@ -1,0 +1,65 @@
+{
+  "name": "Raw items demo",
+  "format": "wide",
+  "pace": 1,
+  "scenes": [
+    {
+      "say": "Count the swabs, then count them again.",
+      "hold": 0.8,
+      "items": [
+        {
+          "type": "text",
+          "x": 110,
+          "y": 70,
+          "text": "COUNT TWICE",
+          "size": 120,
+          "color": "#d7263d",
+          "maxW": 1300
+        },
+        {
+          "type": "shape",
+          "shape": "underline",
+          "x": 110,
+          "y": 230,
+          "w": 720,
+          "h": 30,
+          "color": "#1b6ec2",
+          "lw": 9
+        },
+        {
+          "type": "icon",
+          "name": "checklist",
+          "x": 160,
+          "y": 380,
+          "w": 260,
+          "cue": "count the swabs"
+        },
+        {
+          "type": "arrow",
+          "x": 450,
+          "y": 500,
+          "x2": 760,
+          "y2": 500,
+          "bend": 0.15,
+          "head": 26,
+          "cue": "then"
+        },
+        {
+          "type": "icon",
+          "name": "checklist",
+          "x": 800,
+          "y": 380,
+          "w": 260,
+          "cue": "again"
+        },
+        {
+          "type": "narrator",
+          "pose": "point-right-grin",
+          "x": 1150,
+          "y": 300,
+          "w": 380
+        }
+      ]
+    }
+  ]
+}
