@@ -1,0 +1,239 @@
+{
+ "_patch": {
+  "id": "2026-11-05-clean-display-names",
+  "name": "Remove file extensions from visible wording",
+  "date": "2026-11-05",
+  "notes": "Page kickers, the chatbot title and material descriptions no longer show .exe, .txt, .pdf, .dir or (.docx). Only display text changes: material source_file, keys and download links are untouched.",
+  "modes": {
+   "materials": "merge",
+   "pages": "merge",
+   "chatbot_faq": "merge",
+   "chatbot_config": "merge"
+  },
+  "changelog": [
+   {
+    "path": "materials/digital-literacy",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/numeracy-skills",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/environmental-literacy",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/entrepreneurial-skills",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/communication-skills",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/employability-skills",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/anatomy-physiology-part-a",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/anatomy-physiology-part-b",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/basic-hospital-procedures",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/common-diseases",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/first-aid",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/medical-legal-ethics",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-06-health-education-promotion",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-07-psychosocial-health-support",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-08-theatre-safety-precautions",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-09-preventing-nosocomial-infections",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-10-instrument-apparatus-maintenance",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-11-theatre-technical-services",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-12-managing-theatre-resources",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-13-participating-in-clinical-services",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-14-theatre-administrative-duties",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "materials/unit-15-managing-clinical-services",
+    "text": "Description without the file extension"
+   },
+   {
+    "path": "pages/about",
+    "text": "Kicker without extension"
+   },
+   {
+    "path": "pages/cv",
+    "text": "Kicker without extension"
+   },
+   {
+    "path": "pages/writing",
+    "text": "Kicker without extension"
+   },
+   {
+    "path": "pages/materials",
+    "text": "Kicker without extension"
+   },
+   {
+    "path": "pages/content",
+    "text": "Kicker without extension"
+   },
+   {
+    "path": "pages/blog",
+    "text": "Kicker without extension"
+   },
+   {
+    "path": "pages/subscribe",
+    "text": "Kicker without extension"
+   },
+   {
+    "path": "chatbot_faq/faq037",
+    "text": "Answer without (.docx)"
+   },
+   {
+    "path": "chatbot_config",
+    "text": "Title ASK-EZRA"
+   }
+  ]
+ },
+ "materials": {
+  "digital-literacy": {
+   "description": "Study pack (basic units) on using computers, the internet and digital tools safely and effectively. Free Word document."
+  },
+  "numeracy-skills": {
+   "description": "Study pack (basic units) on everyday and workplace mathematics. Free Word document."
+  },
+  "environmental-literacy": {
+   "description": "Study pack (basic units) on environmental awareness and responsible practice. Free Word document."
+  },
+  "entrepreneurial-skills": {
+   "description": "Study pack (basic units) on starting and running a small enterprise. Free Word document."
+  },
+  "communication-skills": {
+   "description": "Study pack (basic units) on clear written, spoken and professional communication. Free Word document."
+  },
+  "employability-skills": {
+   "description": "Study pack (basic units) on skills for finding, getting and keeping work. Free Word document."
+  },
+  "anatomy-physiology-part-a": {
+   "description": "Study pack (common units) on the structure and function of the human body. Free Word document."
+  },
+  "anatomy-physiology-part-b": {
+   "description": "Study pack (common units) on the structure and function of the human body (continued). Free Word document."
+  },
+  "basic-hospital-procedures": {
+   "description": "Study pack (common units) on routine procedures carried out in a hospital setting. Free Word document."
+  },
+  "common-diseases": {
+   "description": "Study pack (common units) on common diseases and conditions encountered in health care. Free Word document."
+  },
+  "first-aid": {
+   "description": "Study pack (common units) on first-aid principles and emergency response. Free Word document."
+  },
+  "medical-legal-ethics": {
+   "description": "Study pack (common units) on ethical and legal responsibilities in health care. Free Word document."
+  },
+  "unit-06-health-education-promotion": {
+   "description": "Study pack (common units) on educating and promoting health in the community. Free Word document."
+  },
+  "unit-07-psychosocial-health-support": {
+   "description": "Study pack (common units) on psychosocial support for patients and families. Free Word document."
+  },
+  "unit-08-theatre-safety-precautions": {
+   "description": "Study pack (core units) on safety precautions in the operating theatre. Free Word document."
+  },
+  "unit-09-preventing-nosocomial-infections": {
+   "description": "Study pack (core units) on preventing hospital-acquired infections. Free Word document."
+  },
+  "unit-10-instrument-apparatus-maintenance": {
+   "description": "Study pack (core units) on care and maintenance of theatre instruments and apparatus. Free Word document."
+  },
+  "unit-11-theatre-technical-services": {
+   "description": "Study pack (core units) on technical services in the operating theatre. Free Word document."
+  },
+  "unit-12-managing-theatre-resources": {
+   "description": "Study pack (core units) on managing theatre supplies, equipment and resources. Free Word document."
+  },
+  "unit-13-participating-in-clinical-services": {
+   "description": "Study pack (core units) on taking part in clinical services. Free Word document."
+  },
+  "unit-14-theatre-administrative-duties": {
+   "description": "Study pack (core units) on administrative duties in the theatre. Free Word document."
+  },
+  "unit-15-managing-clinical-services": {
+   "description": "Study pack (core units) on managing clinical services. Free Word document."
+  }
+ },
+ "pages": {
+  "about": {
+   "kicker": "WHOAMI"
+  },
+  "cv": {
+   "kicker": "CV"
+  },
+  "writing": {
+   "kicker": "DRAFTS"
+  },
+  "materials": {
+   "kicker": "DOWNLOADS"
+  },
+  "content": {
+   "kicker": "CONTENT"
+  },
+  "blog": {
+   "kicker": "LOG"
+  },
+  "subscribe": {
+   "kicker": "SUBSCRIBE"
+  }
+ },
+ "chatbot_faq": {
+  "faq037": {
+   "answer": "Yes — a blank, editable CV template is on the Materials page under Templates."
+  }
+ },
+ "chatbot_config": {
+  "name": "ASK-EZRA"
+ }
+}

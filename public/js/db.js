@@ -242,7 +242,12 @@
   window.EO_DB = { getContentIndex, getBlogIndex, getItem, getNode, getNodes, getPath, push, set, patch, increment, serverTime: { ".sv": "timestamp" } };
 
   // ---------- small shared helpers ----------
+  // One place that turns a stored name into what people see: strips a trailing file extension ("My Notes.txt" -> "My Notes").
+  // Stored names, keys and paths are never changed; only call this when rendering.
+  const EXT = /\.(ezr|txt|pdf|docx?|xlsx?|pptx?|csv|md|rtf|exe|bat|sh|log|cv|svg|xml|json|zip|png|jpe?g|webp|gif|mp3|mp4|wav|html?)$/i;
+  function displayName(name) { const s = String(name == null ? "" : name).trim(); const out = s.replace(EXT, "").trim(); return out || s; }
   window.EO_UTIL = {
+    displayName,
     esc(s) {
       return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     },

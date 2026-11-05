@@ -13,7 +13,7 @@
 </head>
 <body>
 <main><div class="wrap">
-<section class="hero" style="padding-top:1.2rem"><span class="kicker">INBOX.EXE</span><h1>Messages, comments &amp; engagement</h1></section>
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">INBOX</span><h1>Messages, comments &amp; engagement</h1></section>
 <div id="tabs"></div><div id="pane"></div>
 
 </div></main>
@@ -111,7 +111,7 @@
         <div class="field"><label><input type="checkbox" id="cb_gr" style="width:auto" ${cfg.greeting === false ? "" : "checked"}> Greeting bubble (shows once per visit)</label></div>
         <div class="field"><label><input type="checkbox" id="cb_sp" style="width:auto" ${cfg.sponsor === false ? "" : "checked"}> Occasional labelled sponsored suggestion</label></div>
         <div class="field"><label><input type="checkbox" id="cb_ld" style="width:auto" ${cfg.lead === false ? "" : "checked"}> Offer to pass unanswered questions to Messages</label></div>
-        <div class="field"><label>Name in title bar</label><input id="cb_name" value="${A.esc(cfg.name || "ASK-EZRA.EXE")}"></div>
+        <div class="field"><label>Name in title bar</label><input id="cb_name" value="${A.esc(cfg.name || "ASK-EZRA")}"></div>
         <div class="field"><label>Welcome message</label><textarea id="cb_wel" rows="3">${A.esc(cfg.welcome || "")}</textarea></div>
         <div class="field"><label>Reply when nothing is found</label><textarea id="cb_fb" rows="2">${A.esc(cfg.fallback || "")}</textarea></div>
         <div class="field"><label>Quick-reply chips (one per line)</label><textarea id="cb_chips" rows="5">${A.esc(chips.join("\n"))}</textarea></div>

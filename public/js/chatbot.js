@@ -9,7 +9,7 @@
 (function () {
   const U = window.EO_UTIL, E = U.esc;
   const HKEY = "eo_chat_hist", RATE = "eo_chat_rate";
-  const DEFAULT_CFG = { enabled: true, greeting: true, sponsor: true, lead: true, name: "ASK-EZRA.EXE", welcome: "Hey! I'm a helper bot (not a real person, not AI) that can find Ezra's posts, notes, past papers and downloads. What are you looking for?",
+  const DEFAULT_CFG = { enabled: true, greeting: true, sponsor: true, lead: true, name: "ASK-EZRA", welcome: "Hey! I'm a helper bot (not a real person, not AI) that can find Ezra's posts, notes, past papers and downloads. What are you looking for?",
     chips: ["Free materials", "Past papers", "Study notes", "Latest posts", "How do I order?", "Contact"], fallback: "I couldn't find that. Try different words, browse below, or send Ezra a message and he'll reply." };
   const STOP = new Set("a an the is are was were be to of in on for and or me my i you your do does did can could would please want need find show give get any some there this that it with about from at as by us we tell what whats where how which who when".split(" "));
   const SYN = { exam: "paper", exams: "paper", papers: "paper", paper: "paper", kcse: "paper", test: "paper", tests: "paper", revision: "notes", note: "notes", notes: "notes", handout: "notes", handouts: "notes",
@@ -112,7 +112,7 @@
   const SW_STRONG = new Set("habari hujambo mambo vipi naomba nataka ninataka nahitaji jinsi nitapata nawezaje tafadhali asante shukrani karibu kwaheri msaada wasiliana huduma tangazo matangazo punguzo vitabu mitihani mtihani maelezo bure malipo nunua kununua nipe nionyeshe ninaweza naweza unaweza kuhusu wapi nini gani".split(" "));
   const L = {
     en: {
-      greet: "Hi 👋 What are you looking for?", thanks: "You're welcome! Anything else I can find?", bye: "Bye! Come back anytime 👋",
+      greet: "Hi What are you looking for?", thanks: "You're welcome! Anything else I can find?", bye: "Bye! Come back anytime",
       bot: "I'm a helper bot that searches this site live — not a person and not an AI model. For anything personal, use the <a href=\"/contact\">contact form</a>.",
       help: "Try: <b>free notes</b>, <b>past papers</b>, <b>study units</b>, <b>latest posts</b>, <b>how do I order</b>, <b>summarise this post</b>, <b>my CV</b>, or just type a topic like <b>anatomy</b> or <b>sterile technique</b>.",
       contact: "The quickest way is WhatsApp, or the <a href=\"/contact\">contact page</a>.", order: "Free materials download directly. For paid ones: open the item → <b>Order</b>, pay by M-Pesa, paste the confirmation message and tell us where to send the link. Got a discount code? Type it on the order page. The link is sent after payment is verified.",
@@ -124,10 +124,10 @@
       sponsored: "Sponsored", summaryOf: "Quick summary", related: "Related", noPost: "Open a post or a material page first, then ask me to summarise it.", read: "Read more", open: "Open", download: "Download",
       services: "Here are the services available:", cvText: "Here's Ezra's CV — you can view it online and save it as a PDF.", adText: "Want your business, college or brand in front of our readers? See the advertising options (banners, in-article ads and social posts):",
       waText: "Chat with Ezra on WhatsApp:", rate: "You're sending a lot of messages — give it a few minutes, or use the contact page.", error: "Something went wrong. Please try again.",
-      placeholder: "Ask for notes, past papers, posts…", hello: "Need notes or past papers? Ask me 👋", helloPost: "Want a quick summary of this post? 👋", helloMat: "Looking for a specific past paper? Ask me 👋",
+      placeholder: "Ask for notes, past papers, posts…", hello: "Need notes or past papers? Ask me", helloPost: "Want a quick summary of this post?", helloMat: "Looking for a specific past paper? Ask me",
     },
     sw: {
-      greet: "Habari 👋 Unatafuta nini?", thanks: "Karibu! Kuna kingine ninaweza kukusaidia kutafuta?", bye: "Kwaheri! Karibu tena 👋",
+      greet: "Habari Unatafuta nini?", thanks: "Karibu! Kuna kingine ninaweza kukusaidia kutafuta?", bye: "Kwaheri! Karibu tena",
       bot: "Mimi ni roboti msaidizi inayotafuta kwenye tovuti hii moja kwa moja — si mtu wala si AI. Kwa mambo binafsi tumia <a href=\"/contact\">ukurasa wa mawasiliano</a>.",
       help: "Jaribu: <b>maelezo ya bure</b>, <b>mitihani ya zamani</b>, <b>makala mpya</b>, <b>jinsi ya kuagiza</b>, <b>fupisha makala hii</b>, <b>CV yako</b>, au andika mada kama <b>anatomia</b>.",
       contact: "Njia ya haraka ni WhatsApp, au <a href=\"/contact\">ukurasa wa mawasiliano</a>.", order: "Vitabu vya bure vinapakuliwa moja kwa moja. Vya kulipia: fungua kitabu → <b>Order</b>, lipa kwa M-Pesa, bandika ujumbe wa uthibitisho na utuambie tutume wapi kiungo. Una nambari ya punguzo? Iandike kwenye ukurasa wa kuagiza. Kiungo hutumwa baada ya malipo kuthibitishwa.",
@@ -139,7 +139,7 @@
       sponsored: "Tangazo", summaryOf: "Muhtasari mfupi", related: "Zinazohusiana", noPost: "Fungua makala au kitabu kwanza, kisha niombe nikufupishie.", read: "Soma zaidi", open: "Fungua", download: "Pakua",
       services: "Huduma zinazopatikana:", cvText: "Hii ni CV ya Ezra — unaweza kuiona mtandaoni na kuihifadhi kama PDF.", adText: "Unataka biashara, chuo au chapa yako ionekane na wasomaji wetu? Tazama chaguo za matangazo:",
       waText: "Ongea na Ezra kwenye WhatsApp:", rate: "Unatuma ujumbe mwingi — subiri dakika chache, au tumia ukurasa wa mawasiliano.", error: "Kuna hitilafu. Tafadhali jaribu tena.",
-      placeholder: "Uliza maelezo, mitihani, makala…", hello: "Unahitaji maelezo au mitihani? Niulize 👋", helloPost: "Unataka muhtasari wa makala hii? 👋", helloMat: "Unatafuta mtihani maalum? Niulize 👋",
+      placeholder: "Uliza maelezo, mitihani, makala…", hello: "Unahitaji maelezo au mitihani? Niulize", helloPost: "Unataka muhtasari wa makala hii?", helloMat: "Unatafuta mtihani maalum? Niulize",
     },
   };
 
@@ -151,9 +151,9 @@
     const win = document.createElement("div");
     win.id = "eo-chat-window"; win.setAttribute("role", "dialog"); win.setAttribute("aria-label", "Helper chat");
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    win.innerHTML = `<div class="titlebar"><span id="eo-chat-title">ASK-EZRA.EXE</span><span><button type="button" id="eo-chat-clear" aria-label="Clear chat" title="Clear chat">↺</button><button type="button" id="eo-chat-close" aria-label="Close">✕</button></span></div>
+    win.innerHTML = `<div class="titlebar"><span id="eo-chat-title">ASK-EZRA</span><span><button type="button" id="eo-chat-clear" aria-label="Clear chat" title="Clear chat">↺</button><button type="button" id="eo-chat-close" aria-label="Close">✕</button></span></div>
       <div id="eo-chat-log" aria-live="polite"></div><div id="eo-chat-chips"></div>
-      <form id="eo-chat-form"><input id="eo-chat-input" type="text" placeholder="Ask for notes, past papers, posts…" autocomplete="off" maxlength="200" />${SR ? `<button type="button" id="eo-chat-mic" aria-label="Speak" title="Speak your question">🎤</button>` : ""}<button type="submit">Send</button></form>`;
+      <form id="eo-chat-form"><input id="eo-chat-input" type="text" placeholder="Ask for notes, past papers, posts…" autocomplete="off" maxlength="200" />${SR ? `<button type="button" id="eo-chat-mic" aria-label="Speak" title="Speak your question">${window.EO_ICON ? window.EO_ICON("mic", 16) : "Speak"}</button>` : ""}<button type="submit">Send</button></form>`;
     document.body.append(toggle, win);
     const log = win.querySelector("#eo-chat-log"), input = win.querySelector("#eo-chat-input"), chips = win.querySelector("#eo-chat-chips");
     const badge = toggle.querySelector(".eo-badge");
@@ -179,7 +179,7 @@
       const d = document.createElement("div"); d.className = "msg " + who; d.innerHTML = html; log.appendChild(d);
       if (!opts.raw) decorate(d, who, opts);
       if (who === "bot" && opts.fb) {
-        const f = document.createElement("div"); f.className = "eo-fb"; f.innerHTML = `<button type="button" data-v="1" aria-label="Helpful">👍</button><button type="button" data-v="-1" aria-label="Not helpful">👎</button>`;
+        const f = document.createElement("div"); f.className = "eo-fb"; f.innerHTML = `<button type="button" data-v="1" aria-label="Helpful">${window.EO_ICON ? window.EO_ICON("thumbs-up", 16) : "Yes"}</button><button type="button" data-v="-1" aria-label="Not helpful">${window.EO_ICON ? window.EO_ICON("thumbs-down", 16) : "No"}</button>`;
         f.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; window.EO_DB.push("chat_feedback", { q: String(opts.q || "").slice(0, 200), a: opts.kind || "", v: +b.dataset.v, ts: Date.now() }).catch(() => {}); window.EO_DB.increment("chat_stats/" + (b.dataset.v === "1" ? "up" : "down")).catch(() => {}); f.textContent = ctx.lang === "sw" ? "Asante kwa maoni" : "Thanks for the feedback"; });
         d.appendChild(f);
       }
@@ -397,7 +397,7 @@
     async function open() {
       closeHello(); win.classList.add("open"); badge.hidden = true; sessionStorage.setItem("eo_chat_seen", "1"); fit();
       const D = await data();
-      document.getElementById("eo-chat-title").textContent = D.config.name;
+      document.getElementById("eo-chat-title").textContent = U.displayName(D.config.name);
       if (!log.children.length) {
         if (hist.length) hist.forEach((m) => { const d = document.createElement("div"); d.className = "msg " + m.w; d.innerHTML = m.h; log.appendChild(d); }); else bot(`<p>${text(ctx.lang === "sw" ? "Habari! Mimi ni roboti msaidizi (si mtu, si AI). Naweza kutafuta makala, maelezo, mitihani ya zamani na vitabu vya Ezra. Unatafuta nini?" : D.config.welcome)}</p>`);
         scroll();

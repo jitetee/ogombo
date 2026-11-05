@@ -13,10 +13,10 @@
 </head>
 <body>
 <main><div class="wrap">
-<section class="hero" style="padding-top:1.2rem"><span class="kicker">DASHBOARD.EXE</span><h1>Dashboard &amp; analytics</h1></section>
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">DASHBOARD</span><h1>Dashboard &amp; analytics</h1></section>
 <div class="range-bar" id="range"></div>
 <div class="cards" id="cards"></div>
-<div class="crt-window"><div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label" id="chart-label">views.svg</span></div><div class="body"><div id="chart"></div><p class="hint">Bars = page views · line = unique visitors per day. Hover a bar for the numbers.</p></div></div>
+<div class="crt-window"><div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label" id="chart-label">views</span></div><div class="body"><div id="chart"></div><p class="hint">Bars = page views · line = unique visitors per day. Hover a bar for the numbers.</p></div></div>
 <div class="grid2">
   <div class="crt-window"><div class="titlebar"><span class="label">top-pages</span></div><div class="body"><div class="range-bar" id="sec-tabs"></div><div id="top"></div></div></div>
   <div>
@@ -91,7 +91,7 @@
     const pts = days.map((d) => ({ d, v: gv(d, "views"), u: gv(d, "visitors") }));
     const W = 760, H = 180, bw = W / pts.length, max = Math.max(1, ...pts.map((x) => x.v), ...pts.map((x) => x.u));
     const y = (v) => H - 20 - (v / max) * (H - 40);
-    document.getElementById("chart-label").textContent = `last-${RANGE}-days.svg`;
+    document.getElementById("chart-label").textContent = `last-${RANGE}-days`;
     document.getElementById("chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="views per day">
       ${pts.map((x, i) => `<rect x="${i * bw + 1}" y="${y(x.v)}" width="${Math.max(1, bw - 2)}" height="${H - 20 - y(x.v)}" fill="var(--crt-green-dim)"><title>${x.d}: ${x.v} views, ${x.u} visitors</title></rect>`).join("")}
       <polyline fill="none" stroke="var(--amber)" stroke-width="2" points="${pts.map((x, i) => `${i * bw + bw / 2},${y(x.u)}`).join(" ")}"/>

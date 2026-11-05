@@ -177,7 +177,7 @@
         if (form.name && form.name.value.trim()) rec.name = form.name.value.trim().slice(0, 60);
         await window.EO_DB.push("newsletter", rec);
         try { localStorage.setItem("eo-subscribed", "1"); } catch {}
-        st.textContent = "Subscribed ✓ — thank you!"; form.email.value = "";
+        st.textContent = "Subscribed. Thank you!"; form.email.value = "";
       } catch { st.textContent = "Could not subscribe, try again."; }
     });
   }
@@ -195,7 +195,7 @@
       return d.innerHTML;
     };
     ["kicker", "heading", "intro", "body"].forEach((f) => {
-      if (rec[f] != null && rec[f] !== "") document.querySelectorAll(`[data-pg="${f}"]`).forEach((el) => { el.innerHTML = clean(rec[f]); });
+      if (rec[f] != null && rec[f] !== "") document.querySelectorAll(`[data-pg="${f}"]`).forEach((el) => { el.innerHTML = f === "kicker" ? clean(window.EO_UTIL.displayName(rec[f])) : clean(rec[f]); });
     });
     const paged = U.params().get("page") || U.params().get("tag");
     if (!paged && (rec.title || rec.description)) setMeta({ title: rec.title, description: rec.description });

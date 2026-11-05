@@ -7,9 +7,9 @@
   const U = window.EO_UTIL, E = U.esc;
   const kind = document.body.dataset.kind || (location.pathname.indexOf("/content/") === 0 ? "content" : location.pathname.indexOf("/writing/") === 0 ? "book" : "blog");
   const CONF = {
-    blog:    { node: "blog_posts", base: "/blog", label: "Blog", kicker: "LOG.TXT", ld: "BlogPosting" },
-    content: { node: "content_highlights", base: "/content", label: "Content", kicker: "CONTENT.DIR", ld: "Article" },
-    book:    { node: "writing_projects", base: "/writing/books", label: "Writing", kicker: "DRAFTS.DIR", ld: "Book", list: "/writing" },
+    blog:    { node: "blog_posts", base: "/blog", label: "Blog", kicker: "LOG", ld: "BlogPosting" },
+    content: { node: "content_highlights", base: "/content", label: "Content", kicker: "CONTENT", ld: "Article" },
+    book:    { node: "writing_projects", base: "/writing/books", label: "Writing", kicker: "DRAFTS", ld: "Book", list: "/writing" },
   }[kind];
   const slug = document.body.dataset.slug || decodeURIComponent(location.pathname.split("/").filter(Boolean).pop() || "").replace(/\.html$/, "");
   const $ = (id) => document.getElementById(id);
@@ -59,7 +59,7 @@
   const dateLabel = f.date ? new Date(f.date + "T00:00:00").toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "";
   const words = U.stripHtml(f.body).split(/\s+/).filter(Boolean).length;
   const mins = item.read_minutes || Math.max(1, Math.round(words / 200));
-  if ($("post-kicker")) $("post-kicker").textContent = kind === "blog" ? `LOG.TXT · ${dateLabel.toUpperCase()}` : kind === "book" ? String(item.status || "draft").toUpperCase() : CONF.kicker;
+  if ($("post-kicker")) $("post-kicker").textContent = kind === "blog" ? `LOG · ${dateLabel.toUpperCase()}` : kind === "book" ? String(item.status || "draft").toUpperCase() : CONF.kicker;
   const metaBits = [dateLabel, kind !== "book" ? `${mins} min read` : "", item.author].filter(Boolean);
   if ($("post-meta")) $("post-meta").textContent = metaBits.join(" · ");
   if ($("crumb-title")) $("crumb-title").textContent = f.title;

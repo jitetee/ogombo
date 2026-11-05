@@ -377,3 +377,4 @@ details.selftest p{margin:.3rem 0 0}
 .verdict.pass{border-color:#2e9e5b!important;background:rgba(46,158,91,.12)}
 .verdict.review{border-color:#d19a1e!important;background:rgba(209,154,30,.12)}
 .verdict.reject{border-color:#c0392b!important;background:rgba(192,57,43,.12)}
+i[data-i]{display:inline-flex;vertical-align:-0.2em;font-style:normal;margin-right:.35em} i[data-i]:only-child{margin-right:0} svg.eo-i{flex:none}

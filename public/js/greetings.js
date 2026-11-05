@@ -233,20 +233,16 @@
     if (open || !list.length) return; open = true; css();
     const g = list[0], p = PAL[g.pal] || PAL.teal, rest = list.slice(1, 4);
     const wrap = document.createElement("div"); wrap.id = "eo-greet"; wrap.setAttribute("role", "dialog"); wrap.setAttribute("aria-modal", "true"); wrap.setAttribute("aria-labelledby", "eo-greet-t");
-    const card = document.createElement("div"); card.className = "g"; card.style.background = `linear-gradient(150deg,${p[0]},${p[1]})`;
-    const cf = document.createElement("div"); cf.className = "cf";
-    const bits = [g.emoji, "✨", "⭐"]; for (let i = 0; i < 14; i++) { const e = document.createElement("i"); e.textContent = bits[i % 3]; e.style.left = Math.random() * 100 + "%"; e.style.animationDuration = 3 + Math.random() * 3 + "s"; e.style.animationDelay = Math.random() * 1.5 + "s"; cf.appendChild(e); }
-    card.appendChild(cf);
+    const card = document.createElement("div"); card.className = "g"; card.style.background = p[0];
     const x = document.createElement("button"); x.className = "x"; x.type = "button"; x.setAttribute("aria-label", "Close"); x.textContent = "×"; card.appendChild(x);
-    const em = document.createElement("div"); em.className = "e"; em.setAttribute("aria-hidden", "true"); em.textContent = g.emoji; card.appendChild(em);
     const h = document.createElement("h2"); h.id = "eo-greet-t"; h.textContent = g.title; card.appendChild(h);
     if (g.msg) { const pp = document.createElement("p"); pp.textContent = g.msg; card.appendChild(pp); }
-    if (rest.length) { const a = document.createElement("div"); a.className = "also"; a.textContent = "Also today: " + rest.map((r) => r.emoji + " " + r.title.replace(/[!.]+$/, "")).join("  ·  "); card.appendChild(a); }
+    if (rest.length) { const a = document.createElement("div"); a.className = "also"; a.textContent = "Also today: " + rest.map((r) => r.title.replace(/[!.]+$/, "")).join("  ·  "); card.appendChild(a); }
     const fr = document.createElement("div"); fr.className = "from"; fr.textContent = "With love from Ezra Ogombo"; card.appendChild(fr);
     const bar = document.createElement("div"); bar.className = "b";
     const ok = document.createElement("button"); ok.type = "button"; ok.className = "c"; ok.textContent = "Thank you!"; bar.appendChild(ok);
     const sh = document.createElement("a"); sh.className = "s"; sh.target = "_blank"; sh.rel = "noopener";
-    sh.href = "https://wa.me/?text=" + encodeURIComponent(g.emoji + " " + g.title + (g.msg ? "\n" + g.msg : "") + "\n" + location.origin); sh.textContent = "Share on WhatsApp"; bar.appendChild(sh);
+    sh.href = "https://wa.me/?text=" + encodeURIComponent(g.title + (g.msg ? "\n" + g.msg : "") + "\n" + location.origin); sh.textContent = "Share on WhatsApp"; bar.appendChild(sh);
     card.appendChild(bar); wrap.appendChild(card); document.body.appendChild(wrap);
     const prev = document.activeElement;
     const close = () => { wrap.classList.remove("on"); document.removeEventListener("keydown", kd); setTimeout(() => { wrap.remove(); open = false; if (prev && prev.focus) try { prev.focus(); } catch (e) {} }, 350); };

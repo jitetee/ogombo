@@ -37,7 +37,7 @@
 </head>
 <body>
 <main><div class="wrap">
-<section class="hero" style="padding-top:1rem"><span class="kicker">VIDEO.EXE</span><h1>Video studio</h1><p class="hint">Build a short video from scenes (title, bullets, big number, narrator, outro with QR), add a Kenyan voice, music and captions, then render an MP4 right here in your browser. Portrait, square or landscape.</p></section>
+<section class="hero" style="padding-top:1rem"><span class="kicker">VIDEO</span><h1>Video studio</h1><p class="hint">Build a short video from scenes (title, bullets, big number, narrator, outro with QR), add a Kenyan voice, music and captions, then render an MP4 right here in your browser. Portrait, square or landscape.</p></section>
 <div class="vs">
   <div class="vs-prev">
     <div class="vs-stage"><canvas id="cv"></canvas></div>
@@ -52,6 +52,7 @@
 <script src="/js/qr.js"></script>
 <script src="/js/vendor/mp4-muxer.js"></script>
 <script src="/js/video/engine.js"></script>
+<script src="/js/video/polish.js"></script>
 <script src="/js/video/tts.js"></script>
 <script src="/js/video/render.js"></script>
 <script src="/admin/admin.js"></script>
@@ -60,6 +61,7 @@
   await A.guard("video");
   const V = EO_VID, T = EO_TTS, E = A.esc, $ = (s, r) => (r || document).querySelector(s);
   const curAudF = () => ((P.audio === "music" || P.audio === "none") ? {} : aud);
+  const vkey = () => P.voice.name + P.voice.rate + P.voice.pitch + (P.voice.clean === false ? "r" : "c") + (P.voice.pron || "");
   let P = V.newProject(), cur = 0, aud = {}, music = null, musicName = "", imgs = {}, assets = null, mixBuf = null, mixSig = "", voices = [], poses = [], dirty = true;
   const cv = $("#cv"), ctx = cv.getContext("2d");
   const LS = "eo_video_draft";
@@ -146,7 +148,7 @@
     if (show(["outro"])) { h.append(field("Call to action", inp(s.cta, (v) => (s.cta = v)), "e.g. Follow for more")); h.append(field("QR code goes to", inp(s.qr, (v) => (s.qr = v)), "a short code like ghtyui, a /page or https:// link — empty = no QR")); }
     if (show(["narrator", "title", "bullets", "quote", "number", "image", "outro", "whiteboard"])) {
       const pb = el(`<div class="field"><label>Narrator pose <span class="hint">(shown beside the text; none = no narrator)</span></label><div class="vs-poses"></div></div>`), box = $(".vs-poses", pb);
-      const mk = (n, label) => { const b = document.createElement("button"); b.type = "button"; b.textContent = label; if ((s.pose || "") === n) b.className = "on"; b.onclick = () => { s.pose = n; save(); refresh().then(pane); }; box.append(b); };
+      const mk = (n, label) => { const b = document.createElement("button"); b.type = "button"; b.textContent = label; if ((s.pose || "") === n) b.className = "on"; b.onclick = () => { s.pose = n; s.poseAuto = false; save(); refresh().then(pane); }; box.append(b); };
       mk("", "none"); poses.forEach((p) => mk(p.n, (p.s || "") + " " + p.n.replace(/-/g, " ")));
       h.append(pb);
       h.append(field("Narrator sits on", sel({ "": "Project default", none: "Just the narrator", soap: "Soap bubble", blob: "Blob", circle: "Circle", card: "Contact card (channel ribbon)" }, s.plate || "", (v) => (s.plate = v))));
@@ -157,6 +159,7 @@
     h.append(field("What the narrator says", area(s.narration, (v) => (s.narration = v), { rows: 4 }), "this is spoken and shown as captions; leave empty for a silent scene"));
     const g = el(`<div class="vs-grid"></div>`);
     g.append(field("Seconds", inp(s.dur || "", (v) => (s.dur = Math.max(0, Math.min(60, Number(v) || 0))), { type: "number", min: 0, max: 60, placeholder: "auto" }), "empty = from the narration length"));
+    g.append(field("Mood (voice, light and pose)", sel(Object.assign({ "": "None (default)" }, Object.fromEntries(Object.entries(V.MOODS).map(([k, m]) => [k, m.label]))), s.mood || "", (v) => { s.mood = v; if (s.poseAuto) { s.pose = ""; } }), "changes how the voice sounds, the stage light colour and which narrator poses are used. Re-voice after changing it."));
     g.append(field("Text animation", sel(Object.assign({ "": "Use project default" }, V.ANIMS), s.anim || "", (v) => (s.anim = v))));
     g.append(field("Background", sel(Object.assign({ "": "Use project default" }, V.BGS), s.bg || "", (v) => (s.bg = v))));
     g.append(field("Transition in", sel({ up: "Float up (smooth)", fade: "Fade", slide: "Slide", zoom: "Zoom", zoomthru: "Zoom through", wipe: "Wipe", circle: "Circle reveal", doors: "Split doors" }, s.trans || "up", (v) => (s.trans = v))));
@@ -186,12 +189,12 @@
     const short = card.title.replace(/\s[—–-]\s.*$/, ""), out = [], poseFor = (t) => pickPose(t), PS = ["left", "right"], TR = ["up", "slide", "zoom", "wipe", "circle", "doors"], NUM = ["One", "Two", "Three", "Four", "Five"];
     const add = (o) => { const sc2 = Object.assign(V.newScene(o.layout), o); sc2.posePos = o.posePos || PS[out.length % 2 ? 0 : 1]; sc2.trans = o.trans || TR[out.length % TR.length]; if (!sc2.pose && sc2.layout !== "checklist") sc2.pose = poseFor(sc2.narration); if (!sc2.pose) sc2.pose = "clipboard-side"; out.push(sc2); };
     add({ layout: "title", title: short, sub: shortLine(card.caption || "", 90), narration: clipWords(summary, 36), pose: "wave-hello", anim: "stamp", trans: "up" });
-    let k = 0; secs.slice(1).filter((x) => (x.paras.length || x.items.length) && !/what the card shows|^sources?|^references?|disclaimer/i.test(x.h)).slice(0, 4).forEach((x) => {
+    let k = 0; secs.slice(1).filter((x) => (x.paras.length || x.items.length) && !/what the card shows|^sources?|^references?|disclaimer|check yourself|study aid/i.test(x.h)).slice(0, 4).forEach((x) => {
       const lett = x.paras.map((q) => q.split(/\s(?=[A-Z]\s[-–]\s)/)).find((arr) => arr.length >= 3 && arr.every((q) => /^[A-Z]\s[-–]\s/.test(q)));
       if (lett) { const it = lett.slice(0, 6); add({ layout: "checklist", title: shortLine(x.h, 40), lines: it.map((q) => shortLine(q.split(/:/)[0].replace(/\s[-–]\s/, " – "), 52)), narration: it.map((q) => { const [a1, ...r] = q.split(/:\s*/); return a1.replace(/^[A-Z]\s[-–]\s/, (z) => z[0] + ", ") + (r.length ? ": " + r.join(": ").split(/[;.]/)[0].trim() : ""); }).join(". ") + "." }); k++; return; }
-      const text = x.paras.join(" "), narr = clipWords(text, 40), sents = narr.split(/(?<=[.!?])\s+/).filter(Boolean);
+      const text = x.paras.join(" "), narr = clipWords(text, 40); let sents = narr.split(/(?<=[.!?])\s+/).filter(Boolean); const nm = sents.filter((q) => !/\b(this|the) card\b|study aid/i.test(q)); if (nm.length) sents = nm;
       if (x.items.length >= 2) { const it = x.items.slice(0, 5); add({ layout: "checklist", title: shortLine(x.h || "Key points", 40), lines: it.map((q) => shortLine(q, 58)), narration: it.map((q, i) => NUM[i] + ", " + shortLine(q, 60)).join(". ") + "." }); }
-      else if (k % 3 === 0 && sents.length >= 2) add({ layout: "bullets", title: shortLine(x.h, 44), lines: sents.slice(0, 3).map((q) => shortLine(q, 56)), narration: narr });
+      else if (k % 3 === 0 && sents.length >= 2) add({ layout: "bullets", title: shortLine(x.h, 44), lines: sents.slice(0, 3).map((q) => shortLine(q, 72)), narration: narr });
       else if (k % 3 === 1) add({ layout: "quote", title: shortLine(sents[0] || narr, 110), sub: shortLine(x.h, 40), narration: narr });
       else add({ layout: "narrator", title: shortLine(x.h, 40), sub: shortLine(narr, 150), narration: narr });
       k++;
@@ -278,13 +281,15 @@
     const g = el(`<div class="vs-grid"></div>`);
     g.append(field("Speed", inp(P.voice.rate, (v) => (P.voice.rate = Math.max(0.5, Math.min(1.6, Number(v) || 1))), { type: "number", step: 0.05, min: 0.5, max: 1.6 })));
     g.append(field("Pitch", inp(P.voice.pitch, (v) => (P.voice.pitch = Math.max(-8, Math.min(8, Number(v) || 0))), { type: "number", step: 1, min: -8, max: 8 })));
+    g.append(field("Clean the voice", sel({ on: "On: remove hiss and rumble", off: "Off: raw voice" }, P.voice.clean === false ? "off" : "on", (v) => { P.voice.clean = v !== "off"; save(); }), "Quietly removes steady background hiss from the voice. Turn off if it ever sounds thin."));
     h.append(g);
+    h.append(field("Pronunciation fixes", (() => { const ta = el(`<textarea rows="4" placeholder="One per line, like:\ndiathermy = die-a-ther-me\nCSSD = C S S D" style="width:100%"></textarea>`); ta.value = P.voice.pron || ""; ta.onchange = () => { P.voice.pron = ta.value; save(); }; return ta; })(), "Write the word, an equals sign, then how it should be said (spell it the way it sounds). Common short forms like CSSD, PACU and ECG are already handled."));
     const st = el(`<p class="vs-note" id="vst"></p>`);
     const gen = A.btn("Generate voice for all scenes", "primary", async (e) => {
       if (!P.voice.name) return A.toast("Choose a voice first", true);
       e.target.disabled = true; let n = 0;
       try {
-        for (const s of P.scenes) { const txt = (s.narration || "").trim(); if (!txt || (aud[s.id] && aud[s.id].narr === txt && aud[s.id].voice === P.voice.name + P.voice.rate + P.voice.pitch)) continue; st.textContent = `Voicing scene ${P.scenes.indexOf(s) + 1}…`; const b = await T.synth(txt, P.voice); aud[s.id] = Object.assign(T.analyse(b, txt), { voice: P.voice.name + P.voice.rate + P.voice.pitch }); n++; }
+        for (const s of P.scenes) { const txt = (s.narration || "").trim(); if (!txt || (aud[s.id] && aud[s.id].narr === txt && aud[s.id].voice === vkey() + (s.mood || ""))) continue; st.textContent = `Voicing scene ${P.scenes.indexOf(s) + 1}…`; const b = await T.synth(txt, Object.assign({}, P.voice, { mood: s.mood || "" })); aud[s.id] = Object.assign(T.analyse(b, txt), { voice: vkey() + (s.mood || "") }); n++; }
         st.textContent = n ? `Done — ${n} scene(s) voiced. Scene lengths now follow the voice.` : "Everything is already voiced."; await refresh();
       } catch (x) { st.textContent = ""; A.toast(x.message, true); }
       e.target.disabled = false;
@@ -320,7 +325,7 @@
     let ctl = null;
     const renderMode = async (mode, suffix) => {
       P.audio = mode; mixSig = "";
-      if (mode === "full") { const key = P.voice.name + P.voice.rate + P.voice.pitch, todo = P.scenes.filter((s) => (s.narration || "").trim()); if (!P.voice.name && todo.length) throw new Error("Choose a voice first (Voice & music tab)"); for (let i = 0; i < todo.length; i++) { const s = todo[i], txt = s.narration.trim(); if (aud[s.id] && aud[s.id].narr === txt && aud[s.id].voice === key) continue; st.textContent = `Voicing scene ${i + 1} of ${todo.length}… (the first time loads the voice, a few minutes)`; aud[s.id] = Object.assign(T.analyse(await T.synth(txt, P.voice), txt), { voice: key }); } }
+      if (mode === "full") { const key = vkey(), todo = P.scenes.filter((s) => (s.narration || "").trim()); if (!P.voice.name && todo.length) throw new Error("Choose a voice first (Voice & music tab)"); for (let i = 0; i < todo.length; i++) { const s = todo[i], txt = s.narration.trim(); const k2 = key + (s.mood || ""); if (aud[s.id] && aud[s.id].narr === txt && aud[s.id].voice === k2) continue; st.textContent = `Voicing scene ${i + 1} of ${todo.length}… (the first time loads the voice, a few minutes)`; aud[s.id] = Object.assign(T.analyse(await T.synth(txt, Object.assign({}, P.voice, { mood: s.mood || "" })), txt), { voice: k2 }); } }
       await reload(); assets.aud = curAudF(); st.textContent = "Mixing audio…"; await ensureMix();
       const web = !EO_RENDER.supported(); st.textContent = web ? "This browser has no MP4 encoder — recording in real time (WebM)…" : "Rendering frames…";
       const blob = await (web ? EO_RENDER.renderWebM : EO_RENDER.renderMP4)(P, assets, mixBuf, { signal: ctl.signal, onProgress: (x) => { $("i", pr).style.width = Math.round(x * 100) + "%"; st.textContent = (suffix ? suffix.slice(1) + ": " : "") + (web ? "Recording " : "Rendering ") + Math.round(x * 100) + "%"; } });
@@ -369,8 +374,8 @@
     const st = el(`<p class="vs-note"></p>`), pr = el(`<div class="vs-prog"><i></i></div>`), out = el(`<div></div>`); h.append(el(`<h3>Rendering "${E(P.name)}"</h3>`), st, pr, out);
     try {
       stop(); if (P.music && P.music.src) { try { music = await T.musicFromUrl(P.music.src); musicName = P.music.src; } catch {} }
-      const key = P.voice.name + P.voice.rate + P.voice.pitch, todo = P.audio === "full" || !P.audio ? P.scenes.filter((s) => (s.narration || "").trim()) : [];
-      for (let i = 0; i < todo.length; i++) { const s = todo[i], txt = s.narration.trim(); if (aud[s.id] && aud[s.id].narr === txt && aud[s.id].voice === key) continue; st.textContent = `Voicing scene ${i + 1} of ${todo.length}… (the first time loads the voice, a few minutes)`; $("i", pr).style.width = Math.round((i / todo.length) * 30) + "%"; aud[s.id] = Object.assign(T.analyse(await T.synth(txt, P.voice), txt), { voice: key }); }
+      const key = vkey(), todo = P.audio === "full" || !P.audio ? P.scenes.filter((s) => (s.narration || "").trim()) : [];
+      for (let i = 0; i < todo.length; i++) { const s = todo[i], txt = s.narration.trim(); const k2 = key + (s.mood || ""); if (aud[s.id] && aud[s.id].narr === txt && aud[s.id].voice === k2) continue; st.textContent = `Voicing scene ${i + 1} of ${todo.length}… (the first time loads the voice, a few minutes)`; $("i", pr).style.width = Math.round((i / todo.length) * 30) + "%"; aud[s.id] = Object.assign(T.analyse(await T.synth(txt, Object.assign({}, P.voice, { mood: s.mood || "" })), txt), { voice: k2 }); }
       await reload(); assets.aud = curAudF(); st.textContent = "Mixing audio…"; mixSig = ""; await ensureMix(); strip();
       const web = !EO_RENDER.supported();
       const blob = await (web ? EO_RENDER.renderWebM : EO_RENDER.renderMP4)(P, assets, mixBuf, { onProgress: (x) => { $("i", pr).style.width = Math.round(30 + x * 70) + "%"; st.textContent = "Rendering " + Math.round(x * 100) + "%"; } });

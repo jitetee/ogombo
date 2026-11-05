@@ -22,14 +22,14 @@
     const toggle = document.createElement("button");
     toggle.id = "eo-support-toggle";
     toggle.type = "button";
-    toggle.innerHTML = "♥ support";
+    toggle.innerHTML = (window.EO_ICON ? window.EO_ICON("heart", 16) + " " : "") + "support";
 
     const overlay = document.createElement("div");
     overlay.id = "eo-support-overlay";
     overlay.innerHTML = `
       <div id="eo-support-modal">
         <div class="titlebar">
-          <span>SUPPORT.EXE</span>
+          <span>SUPPORT</span>
           <button type="button" id="eo-support-close" aria-label="Close">✕</button>
         </div>
         <div class="eo-support-ticker"><span id="eo-support-ticker-text">loading payment details…</span></div>

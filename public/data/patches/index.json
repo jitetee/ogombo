@@ -1,81 +1,88 @@
 {
-  "patches": [
-    {
-      "id": "2026-10-23-short-links-all",
-      "file": "2026-10-23-short-links-all.json",
-      "name": "Short links for every blog post, material and content card (1811)",
-      "date": "2026-10-23",
-      "notes": "A 6-letter short link (like /abcdef) for each published blog post, material and content card. The main pages keep the short codes from the first short-links patch. Add more in Admin -> Links."
-    },
-    {
-      "id": "2026-10-23-short-links",
-      "file": "2026-10-23-short-links.json",
-      "name": "Short links (12 site sections)",
-      "date": "2026-10-23",
-      "notes": "Starter short links like /abcdef for the main pages. Add more in Admin -> Links."
-    },
-    {
-      "id": "2026-10-20-combined-fixes",
-      "file": "2026-10-20-combined-fixes.json",
-      "name": "Combined fixes: ad settings, sponsorship kit prices and 108 content explanations",
-      "date": "2026-10-20",
-      "notes": "One file replaces the 3 pending updates. Ads: new look, renewal and pause settings (existing kept); Starter, Growth, Premium prices and add-ons plus the new Annual Partner package from the Sponsorship Kit; founding-partner (15%) and non-profit (20%) coupons. Content: full explanations for the 108 older content cards. Does not touch the 500 or 1000 new cards."
-    },
-    {
-      "id": "2026-10-20-1000-cards",
-      "file": "2026-10-20-1000-cards.json",
-      "name": "1000 more study cards (explained, no QR)",
-      "date": "2026-10-20",
-      "notes": "Adds 1000 educational cards to Content. Merge mode. Images ship with the zip deploy."
-    },
-    {
-      "id": "2026-10-18-500-theatre-cards",
-      "file": "2026-10-18-500-theatre-cards.json",
-      "name": "500 theatre technology study cards (explained)",
-      "date": "2026-10-18",
-      "notes": "Adds 500 educational cards to Content with explanations and self-check questions. Merge mode, nothing existing changes. Images ship with the zip deploy."
-    },
-    {
-      "id": "2026-10-17-study-units-materials",
-      "file": "2026-10-17-study-units-materials.json",
-      "name": "Study units: 23 free Drive materials (Basic, Common, Core + complete guide)",
-      "date": "2026-10-17",
-      "notes": "Adds 23 free study-unit materials with Google Drive links. Merge mode, nothing existing is changed."
-    },
-    {
-      "id": "2026-10-17-100-posts",
-      "file": "2026-10-17-100-posts.json",
-      "name": "100 new posts: books, colleges and KMTC, theatre technology, boards, community",
-      "date": "2026-10-16",
-      "notes": "Only new posts plus one thumbnail path fix. Images (all new thumbnails with narrator poses, and refreshed thumbnails for older posts) ship with the zip deploy, not this file."
-    },
-    {
-      "id": "2026-10-16-new-posts",
-      "file": "2026-10-16-new-posts.json",
-      "name": "10 new blog posts and 7 content cards",
-      "date": "2026-10-16",
-      "notes": "Only new items; nothing existing is changed. Images ship with the site deploy (zip), not this file."
-    },
-    {
-      "id": "2026-10-16-seo-and-wording",
-      "file": "2026-10-16-seo-and-wording.json",
-      "name": "SEO, identity, subscribe page, 10 new posts & 7 content cards",
-      "date": "2026-10-16",
-      "notes": "New search titles, one identity (Ezra Ogombo / @ezraogombo), graduate wording, 10 new blog posts, 7 new content cards, carpal-bone wording fix. Import so the live database matches the new HTML."
-    },
-    {
-      "id": "2026-10-15-cv-redesign",
-      "file": "2026-10-15-cv-redesign.json",
-      "name": "CV page redesign",
-      "date": "2026-10-15",
-      "notes": "Replaces the CV page body with the new layout (profile card, key facts, timelines, clickable references)."
-    },
-    {
-      "id": "2026-10-15-chatbot-and-wording",
-      "file": "2026-10-15-chatbot-and-wording.json",
-      "name": "Chatbot upgrade + graduate wording",
-      "date": "2026-10-15",
-      "notes": "Adds chatbot switches (greeting, sponsor, lead), new FAQ answers, and changes 'student' to 'graduate (December 2025)' wording. Review the Content changes before applying; your other data is untouched."
-    }
-  ]
+ "patches": [
+  {
+   "id": "2026-11-05-clean-display-names",
+   "file": "2026-11-05-clean-display-names.json",
+   "name": "Remove file extensions from visible wording",
+   "date": "2026-11-05",
+   "notes": "Page kickers, the chatbot title and material descriptions no longer show .exe, .txt, .pdf, .dir or (.docx). Only display text changes: material source_file, keys and download links are untouched."
+  },
+  {
+   "id": "2026-10-23-short-links-all",
+   "file": "2026-10-23-short-links-all.json",
+   "name": "Short links for every blog post, material and content card (1811)",
+   "date": "2026-10-23",
+   "notes": "A 6-letter short link (like /abcdef) for each published blog post, material and content card. The main pages keep the short codes from the first short-links patch. Add more in Admin -> Links."
+  },
+  {
+   "id": "2026-10-23-short-links",
+   "file": "2026-10-23-short-links.json",
+   "name": "Short links (12 site sections)",
+   "date": "2026-10-23",
+   "notes": "Starter short links like /abcdef for the main pages. Add more in Admin -> Links."
+  },
+  {
+   "id": "2026-10-20-combined-fixes",
+   "file": "2026-10-20-combined-fixes.json",
+   "name": "Combined fixes: ad settings, sponsorship kit prices and 108 content explanations",
+   "date": "2026-10-20",
+   "notes": "One file replaces the 3 pending updates. Ads: new look, renewal and pause settings (existing kept); Starter, Growth, Premium prices and add-ons plus the new Annual Partner package from the Sponsorship Kit; founding-partner (15%) and non-profit (20%) coupons. Content: full explanations for the 108 older content cards. Does not touch the 500 or 1000 new cards."
+  },
+  {
+   "id": "2026-10-20-1000-cards",
+   "file": "2026-10-20-1000-cards.json",
+   "name": "1000 more study cards (explained, no QR)",
+   "date": "2026-10-20",
+   "notes": "Adds 1000 educational cards to Content. Merge mode. Images ship with the zip deploy."
+  },
+  {
+   "id": "2026-10-18-500-theatre-cards",
+   "file": "2026-10-18-500-theatre-cards.json",
+   "name": "500 theatre technology study cards (explained)",
+   "date": "2026-10-18",
+   "notes": "Adds 500 educational cards to Content with explanations and self-check questions. Merge mode, nothing existing changes. Images ship with the zip deploy."
+  },
+  {
+   "id": "2026-10-17-study-units-materials",
+   "file": "2026-10-17-study-units-materials.json",
+   "name": "Study units: 23 free Drive materials (Basic, Common, Core + complete guide)",
+   "date": "2026-10-17",
+   "notes": "Adds 23 free study-unit materials with Google Drive links. Merge mode, nothing existing is changed."
+  },
+  {
+   "id": "2026-10-17-100-posts",
+   "file": "2026-10-17-100-posts.json",
+   "name": "100 new posts: books, colleges and KMTC, theatre technology, boards, community",
+   "date": "2026-10-16",
+   "notes": "Only new posts plus one thumbnail path fix. Images (all new thumbnails with narrator poses, and refreshed thumbnails for older posts) ship with the zip deploy, not this file."
+  },
+  {
+   "id": "2026-10-16-new-posts",
+   "file": "2026-10-16-new-posts.json",
+   "name": "10 new blog posts and 7 content cards",
+   "date": "2026-10-16",
+   "notes": "Only new items; nothing existing is changed. Images ship with the site deploy (zip), not this file."
+  },
+  {
+   "id": "2026-10-16-seo-and-wording",
+   "file": "2026-10-16-seo-and-wording.json",
+   "name": "SEO, identity, subscribe page, 10 new posts & 7 content cards",
+   "date": "2026-10-16",
+   "notes": "New search titles, one identity (Ezra Ogombo / @ezraogombo), graduate wording, 10 new blog posts, 7 new content cards, carpal-bone wording fix. Import so the live database matches the new HTML."
+  },
+  {
+   "id": "2026-10-15-cv-redesign",
+   "file": "2026-10-15-cv-redesign.json",
+   "name": "CV page redesign",
+   "date": "2026-10-15",
+   "notes": "Replaces the CV page body with the new layout (profile card, key facts, timelines, clickable references)."
+  },
+  {
+   "id": "2026-10-15-chatbot-and-wording",
+   "file": "2026-10-15-chatbot-and-wording.json",
+   "name": "Chatbot upgrade + graduate wording",
+   "date": "2026-10-15",
+   "notes": "Adds chatbot switches (greeting, sponsor, lead), new FAQ answers, and changes 'student' to 'graduate (December 2025)' wording. Review the Content changes before applying; your other data is untouched."
+  }
+ ]
 }

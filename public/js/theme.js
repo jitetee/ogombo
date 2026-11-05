@@ -17,7 +17,7 @@
       /* localStorage unavailable — theme just won't persist across visits */
     }
     document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
-      btn.textContent = theme === "dark" ? "☀ light" : "☾ dark";
+      btn.innerHTML = (window.EO_ICON ? window.EO_ICON(theme === "dark" ? "sun" : "moon", 16) + " " : "") + (theme === "dark" ? "Light" : "Dark");
       btn.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
     });
   }

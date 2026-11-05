@@ -40,7 +40,7 @@
       document.getElementById("bundles").innerHTML = bl.map((b) => {
         const list = (Array.isArray(b.slugs) ? b.slugs : String(b.slugs || "").split(",")).map((x) => x.trim()).map((x) => items.find((m) => m.slug === x)).filter(Boolean);
         const sum = list.reduce((t, m) => t + (m.access === "paid" ? Number(m.price) || 0 : 0), 0);
-        return `<div class="bundle-card"><h3>🎁 ${E(b.title)}</h3><p>${E(b.description || "")}</p>
+        return `<div class="bundle-card"><h3>${E(b.title)}</h3><p>${E(b.description || "")}</p>
           <ul>${list.map((m) => `<li><a href="/materials/item/${E(m.slug)}">${E(m.title)}</a> <span class="mono">${m.access === "paid" ? "KES " + E(m.price) : "Free"}</span></li>`).join("")}</ul>
           ${sum ? `<p class="mono">Separate price: KES ${sum}</p>` : ""}${b.code ? `<p>Use code <b class="bundle-code" data-code="${E(b.code)}" title="Click to copy">${E(b.code)}</b> on the order page.</p>` : ""}</div>`;
       }).join("");

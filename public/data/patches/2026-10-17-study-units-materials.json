@@ -1,0 +1,555 @@
+{
+  "_patch": {
+    "id": "2026-10-17-study-units-materials",
+    "name": "Study units: 23 free Drive materials (Basic, Common, Core + complete guide)",
+    "notes": "Adds 23 free study-unit materials with Google Drive links. Merge mode, nothing existing is changed.",
+    "date": "2026-10-17",
+    "modes": {
+      "materials": "merge"
+    },
+    "changelog": [
+      {
+        "path": "materials/ptt-level-6-complete-study-guide",
+        "text": "New: Perioperative Theatre Technology (Level 6) — Complete Study Guide"
+      },
+      {
+        "path": "materials/digital-literacy",
+        "text": "New: Digital Literacy — Study Pack"
+      },
+      {
+        "path": "materials/numeracy-skills",
+        "text": "New: Numeracy Skills — Study Pack"
+      },
+      {
+        "path": "materials/environmental-literacy",
+        "text": "New: Environmental Literacy — Study Pack"
+      },
+      {
+        "path": "materials/entrepreneurial-skills",
+        "text": "New: Entrepreneurial Skills — Study Pack"
+      },
+      {
+        "path": "materials/communication-skills",
+        "text": "New: Communication Skills — Study Pack"
+      },
+      {
+        "path": "materials/employability-skills",
+        "text": "New: Employability Skills — Study Pack"
+      },
+      {
+        "path": "materials/anatomy-physiology-part-a",
+        "text": "New: Anatomy & Physiology — Part A — Study Pack"
+      },
+      {
+        "path": "materials/anatomy-physiology-part-b",
+        "text": "New: Anatomy & Physiology — Part B — Study Pack"
+      },
+      {
+        "path": "materials/basic-hospital-procedures",
+        "text": "New: Basic Hospital Procedures — Study Pack"
+      },
+      {
+        "path": "materials/common-diseases",
+        "text": "New: Common Diseases — Study Pack"
+      },
+      {
+        "path": "materials/first-aid",
+        "text": "New: First Aid — Study Pack"
+      },
+      {
+        "path": "materials/medical-legal-ethics",
+        "text": "New: Medical Legal Ethics — Study Pack"
+      },
+      {
+        "path": "materials/unit-06-health-education-promotion",
+        "text": "New: Unit 06 — Health Education & Promotion — Study Pack"
+      },
+      {
+        "path": "materials/unit-07-psychosocial-health-support",
+        "text": "New: Unit 07 — Psychosocial Health Support — Study Pack"
+      },
+      {
+        "path": "materials/unit-08-theatre-safety-precautions",
+        "text": "New: Unit 08 — Theatre Safety Precautions — Study Pack"
+      },
+      {
+        "path": "materials/unit-09-preventing-nosocomial-infections",
+        "text": "New: Unit 09 — Preventing Nosocomial Infections — Study Pack"
+      },
+      {
+        "path": "materials/unit-10-instrument-apparatus-maintenance",
+        "text": "New: Unit 10 — Instrument & Apparatus Maintenance — Study Pack"
+      },
+      {
+        "path": "materials/unit-11-theatre-technical-services",
+        "text": "New: Unit 11 — Theatre Technical Services — Study Pack"
+      },
+      {
+        "path": "materials/unit-12-managing-theatre-resources",
+        "text": "New: Unit 12 — Managing Theatre Resources — Study Pack"
+      },
+      {
+        "path": "materials/unit-13-participating-in-clinical-services",
+        "text": "New: Unit 13 — Participating in Clinical Services — Study Pack"
+      },
+      {
+        "path": "materials/unit-14-theatre-administrative-duties",
+        "text": "New: Unit 14 — Theatre Administrative Duties — Study Pack"
+      },
+      {
+        "path": "materials/unit-15-managing-clinical-services",
+        "text": "New: Unit 15 — Managing Clinical Services — Study Pack"
+      }
+    ],
+    "sha256": "e7490ab85883a80252b90ee84f4983efe769d27c96cd5c6736d8fde94473b7ac"
+  },
+  "materials": {
+    "ptt-level-6-complete-study-guide": {
+      "slug": "ptt-level-6-complete-study-guide",
+      "title": "Perioperative Theatre Technology (Level 6) — Complete Study Guide",
+      "description": "One consolidated study guide covering the Level 6 Perioperative Theatre Technology course.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1i2y33BjOa3AdU-jpyYsDpCMBbeoj9Slp/view?usp=sharing",
+      "source_file": "PTT_Level6_Complete_Study_Guide.docx",
+      "tags": [
+        "Perioperative Theatre Technology",
+        "Level 6",
+        "complete guide"
+      ],
+      "status": "published",
+      "order": 21,
+      "created": "2026-10-17"
+    },
+    "digital-literacy": {
+      "slug": "digital-literacy",
+      "title": "Digital Literacy — Study Pack",
+      "description": "Study pack (basic units) on using computers, the internet and digital tools safely and effectively. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1z-7Gp9uuQCEmACq-U6yZD8AjSeoZ2ctx/view?usp=sharing",
+      "source_file": "Digital_Literacy_Study_Pack.docx",
+      "tags": [
+        "Basic units",
+        "Perioperative Theatre Technology",
+        "Digital Literacy"
+      ],
+      "status": "published",
+      "order": 22,
+      "created": "2026-10-17"
+    },
+    "numeracy-skills": {
+      "slug": "numeracy-skills",
+      "title": "Numeracy Skills — Study Pack",
+      "description": "Study pack (basic units) on everyday and workplace mathematics. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1eCDwBw4fCev_PA-A_1zbkvGsnxNVcFdX/view?usp=sharing",
+      "source_file": "Numeracy_Skills_Study_Pack.docx",
+      "tags": [
+        "Basic units",
+        "Perioperative Theatre Technology",
+        "Numeracy Skills"
+      ],
+      "status": "published",
+      "order": 23,
+      "created": "2026-10-17"
+    },
+    "environmental-literacy": {
+      "slug": "environmental-literacy",
+      "title": "Environmental Literacy — Study Pack",
+      "description": "Study pack (basic units) on environmental awareness and responsible practice. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1-jVSRphD2pn6h6wu8ifUyt3CMQi0FuJt/view?usp=sharing",
+      "source_file": "Environmental_Literacy_Study_Pack.docx",
+      "tags": [
+        "Basic units",
+        "Perioperative Theatre Technology",
+        "Environmental Literacy"
+      ],
+      "status": "published",
+      "order": 24,
+      "created": "2026-10-17"
+    },
+    "entrepreneurial-skills": {
+      "slug": "entrepreneurial-skills",
+      "title": "Entrepreneurial Skills — Study Pack",
+      "description": "Study pack (basic units) on starting and running a small enterprise. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1bZjndNEMkdFhcYiKo6anK6c5wal05Jhq/view?usp=sharing",
+      "source_file": "Entrepreneurial_Skills_Study_Pack.docx",
+      "tags": [
+        "Basic units",
+        "Perioperative Theatre Technology",
+        "Entrepreneurial Skills"
+      ],
+      "status": "published",
+      "order": 25,
+      "created": "2026-10-17"
+    },
+    "communication-skills": {
+      "slug": "communication-skills",
+      "title": "Communication Skills — Study Pack",
+      "description": "Study pack (basic units) on clear written, spoken and professional communication. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/10as25tOlZTuwDXA6PZ2L4Mr4k9qPyrFG/view?usp=sharing",
+      "source_file": "Communication_Skills_Study_Pack.docx",
+      "tags": [
+        "Basic units",
+        "Perioperative Theatre Technology",
+        "Communication Skills"
+      ],
+      "status": "published",
+      "order": 26,
+      "created": "2026-10-17"
+    },
+    "employability-skills": {
+      "slug": "employability-skills",
+      "title": "Employability Skills — Study Pack",
+      "description": "Study pack (basic units) on skills for finding, getting and keeping work. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1LJ9bQfkntNpH2jp7uTSwCreeNMJA4v-2/view?usp=sharing",
+      "source_file": "Employability_Skills_Study_Pack.docx",
+      "tags": [
+        "Basic units",
+        "Perioperative Theatre Technology",
+        "Employability Skills"
+      ],
+      "status": "published",
+      "order": 27,
+      "created": "2026-10-17"
+    },
+    "anatomy-physiology-part-a": {
+      "slug": "anatomy-physiology-part-a",
+      "title": "Anatomy & Physiology — Part A — Study Pack",
+      "description": "Study pack (common units) on the structure and function of the human body. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1DcTkoScMPbStsh3yery2AOZBr6gGaO5y/view?usp=sharing",
+      "source_file": "Anatomy_Physiology_Part_A_Study_Pack.docx",
+      "tags": [
+        "Common units",
+        "Perioperative Theatre Technology",
+        "Anatomy & Physiology — Part A"
+      ],
+      "status": "published",
+      "order": 28,
+      "created": "2026-10-17"
+    },
+    "anatomy-physiology-part-b": {
+      "slug": "anatomy-physiology-part-b",
+      "title": "Anatomy & Physiology — Part B — Study Pack",
+      "description": "Study pack (common units) on the structure and function of the human body (continued). Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1I-5HPCiWUcwvISLntbQ_okTucViPZRcQ/view?usp=sharing",
+      "source_file": "Anatomy_Physiology_Part_B_Study_Pack.docx",
+      "tags": [
+        "Common units",
+        "Perioperative Theatre Technology",
+        "Anatomy & Physiology — Part B"
+      ],
+      "status": "published",
+      "order": 29,
+      "created": "2026-10-17"
+    },
+    "basic-hospital-procedures": {
+      "slug": "basic-hospital-procedures",
+      "title": "Basic Hospital Procedures — Study Pack",
+      "description": "Study pack (common units) on routine procedures carried out in a hospital setting. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1m0bySIfT4smef0F9wpXt94sGnQmxg73c/view?usp=sharing",
+      "source_file": "Basic_Hospital_Procedures_Study_Pack.docx",
+      "tags": [
+        "Common units",
+        "Perioperative Theatre Technology",
+        "Basic Hospital Procedures"
+      ],
+      "status": "published",
+      "order": 30,
+      "created": "2026-10-17"
+    },
+    "common-diseases": {
+      "slug": "common-diseases",
+      "title": "Common Diseases — Study Pack",
+      "description": "Study pack (common units) on common diseases and conditions encountered in health care. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1CcQ2w3OySUBekjLzBDs5zfLXIF17zBaU/view?usp=sharing",
+      "source_file": "Common_Diseases_Study_Pack.docx",
+      "tags": [
+        "Common units",
+        "Perioperative Theatre Technology",
+        "Common Diseases"
+      ],
+      "status": "published",
+      "order": 31,
+      "created": "2026-10-17"
+    },
+    "first-aid": {
+      "slug": "first-aid",
+      "title": "First Aid — Study Pack",
+      "description": "Study pack (common units) on first-aid principles and emergency response. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1Z9iH3xJj68Kj1B5W97Z6P40QgdZakxYu/view?usp=sharing",
+      "source_file": "First_Aid_Study_Pack.docx",
+      "tags": [
+        "Common units",
+        "Perioperative Theatre Technology",
+        "First Aid"
+      ],
+      "status": "published",
+      "order": 32,
+      "created": "2026-10-17"
+    },
+    "medical-legal-ethics": {
+      "slug": "medical-legal-ethics",
+      "title": "Medical Legal Ethics — Study Pack",
+      "description": "Study pack (common units) on ethical and legal responsibilities in health care. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1MkUNoKuaR-UMo12JUSU_WFLEoxqvlzjh/view?usp=sharing",
+      "source_file": "Medical_Legal_Ethics_Study_Pack.docx",
+      "tags": [
+        "Common units",
+        "Perioperative Theatre Technology",
+        "Medical Legal Ethics"
+      ],
+      "status": "published",
+      "order": 33,
+      "created": "2026-10-17"
+    },
+    "unit-06-health-education-promotion": {
+      "slug": "unit-06-health-education-promotion",
+      "title": "Unit 06 — Health Education & Promotion — Study Pack",
+      "description": "Study pack (common units) on educating and promoting health in the community. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1HP1slsmFCwQGrzvpcV3HtLVTbNJbZyzN/view?usp=sharing",
+      "source_file": "Unit06_Health_Education_Promotion_Study_Pack.docx",
+      "tags": [
+        "Common units",
+        "Perioperative Theatre Technology",
+        "Health Education & Promotion"
+      ],
+      "status": "published",
+      "order": 34,
+      "created": "2026-10-17",
+      "unit": "Unit 06"
+    },
+    "unit-07-psychosocial-health-support": {
+      "slug": "unit-07-psychosocial-health-support",
+      "title": "Unit 07 — Psychosocial Health Support — Study Pack",
+      "description": "Study pack (common units) on psychosocial support for patients and families. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1J1nbvVM3_RJi9n5UgpsJhvCvkx3I1b2G/view?usp=sharing",
+      "source_file": "Unit07_Psychosocial_Health_Support_Study_Pack.docx",
+      "tags": [
+        "Common units",
+        "Perioperative Theatre Technology",
+        "Psychosocial Health Support"
+      ],
+      "status": "published",
+      "order": 35,
+      "created": "2026-10-17",
+      "unit": "Unit 07"
+    },
+    "unit-08-theatre-safety-precautions": {
+      "slug": "unit-08-theatre-safety-precautions",
+      "title": "Unit 08 — Theatre Safety Precautions — Study Pack",
+      "description": "Study pack (core units) on safety precautions in the operating theatre. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1JSLLfabRH_w8rf307FQsQOFkGcQS5hNE/view?usp=sharing",
+      "source_file": "Unit08_Theatre_Safety_Precautions_Study_Pack.docx",
+      "tags": [
+        "Core units",
+        "Perioperative Theatre Technology",
+        "Theatre Safety Precautions"
+      ],
+      "status": "published",
+      "order": 36,
+      "created": "2026-10-17",
+      "unit": "Unit 08"
+    },
+    "unit-09-preventing-nosocomial-infections": {
+      "slug": "unit-09-preventing-nosocomial-infections",
+      "title": "Unit 09 — Preventing Nosocomial Infections — Study Pack",
+      "description": "Study pack (core units) on preventing hospital-acquired infections. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1PanYSXY157JTkqWEz3mNKbHS6-wrHeu-/view?usp=sharing",
+      "source_file": "Unit09_Preventing_Nosocomial_Infections_Study_Pack.docx",
+      "tags": [
+        "Core units",
+        "Perioperative Theatre Technology",
+        "Preventing Nosocomial Infections"
+      ],
+      "status": "published",
+      "order": 37,
+      "created": "2026-10-17",
+      "unit": "Unit 09"
+    },
+    "unit-10-instrument-apparatus-maintenance": {
+      "slug": "unit-10-instrument-apparatus-maintenance",
+      "title": "Unit 10 — Instrument & Apparatus Maintenance — Study Pack",
+      "description": "Study pack (core units) on care and maintenance of theatre instruments and apparatus. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1hUPgwZq-UAUXXSEc-8EXRh_LlUIiz5GA/view?usp=sharing",
+      "source_file": "Unit10_Instrument_Apparatus_Maintenance_Study_Pack.docx",
+      "tags": [
+        "Core units",
+        "Perioperative Theatre Technology",
+        "Instrument & Apparatus Maintenance"
+      ],
+      "status": "published",
+      "order": 38,
+      "created": "2026-10-17",
+      "unit": "Unit 10"
+    },
+    "unit-11-theatre-technical-services": {
+      "slug": "unit-11-theatre-technical-services",
+      "title": "Unit 11 — Theatre Technical Services — Study Pack",
+      "description": "Study pack (core units) on technical services in the operating theatre. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1qw7dd_VNABr8Z_rYnxlsLBiEDaQMAnFw/view?usp=sharing",
+      "source_file": "Unit11_Theatre_Technical_Services_Study_Pack.docx",
+      "tags": [
+        "Core units",
+        "Perioperative Theatre Technology",
+        "Theatre Technical Services"
+      ],
+      "status": "published",
+      "order": 39,
+      "created": "2026-10-17",
+      "unit": "Unit 11"
+    },
+    "unit-12-managing-theatre-resources": {
+      "slug": "unit-12-managing-theatre-resources",
+      "title": "Unit 12 — Managing Theatre Resources — Study Pack",
+      "description": "Study pack (core units) on managing theatre supplies, equipment and resources. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1U2Mbcnfz8a3A3ML4BsQMmyQ_Kd5MW6JI/view?usp=sharing",
+      "source_file": "Unit12_Managing_Theatre_Resources_Study_Pack.docx",
+      "tags": [
+        "Core units",
+        "Perioperative Theatre Technology",
+        "Managing Theatre Resources"
+      ],
+      "status": "published",
+      "order": 40,
+      "created": "2026-10-17",
+      "unit": "Unit 12"
+    },
+    "unit-13-participating-in-clinical-services": {
+      "slug": "unit-13-participating-in-clinical-services",
+      "title": "Unit 13 — Participating in Clinical Services — Study Pack",
+      "description": "Study pack (core units) on taking part in clinical services. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1K4GLfBaMzfEwg5nDyYB1Q33V9qoxqmDv/view?usp=sharing",
+      "source_file": "Unit13_Participating_in_Clinical_Services_Study_Pack.docx",
+      "tags": [
+        "Core units",
+        "Perioperative Theatre Technology",
+        "Participating in Clinical Services"
+      ],
+      "status": "published",
+      "order": 41,
+      "created": "2026-10-17",
+      "unit": "Unit 13"
+    },
+    "unit-14-theatre-administrative-duties": {
+      "slug": "unit-14-theatre-administrative-duties",
+      "title": "Unit 14 — Theatre Administrative Duties — Study Pack",
+      "description": "Study pack (core units) on administrative duties in the theatre. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/102cpJL37JDAdKlcHa9fSqulJ83GPqhuZ/view?usp=sharing",
+      "source_file": "Unit14_Theatre_Administrative_Duties_Study_Pack.docx",
+      "tags": [
+        "Core units",
+        "Perioperative Theatre Technology",
+        "Theatre Administrative Duties"
+      ],
+      "status": "published",
+      "order": 42,
+      "created": "2026-10-17",
+      "unit": "Unit 14"
+    },
+    "unit-15-managing-clinical-services": {
+      "slug": "unit-15-managing-clinical-services",
+      "title": "Unit 15 — Managing Clinical Services — Study Pack",
+      "description": "Study pack (core units) on managing clinical services. Free Word document.",
+      "category": "study-units",
+      "file_type": "docx",
+      "access": "free",
+      "price": 0,
+      "drive_url": "https://drive.google.com/file/d/1xEXfFiG7dMr3TbShCVgWKoBBT53mp6zr/view?usp=sharing",
+      "source_file": "Unit15_Managing_Clinical_Services_Study_Pack.docx",
+      "tags": [
+        "Core units",
+        "Perioperative Theatre Technology",
+        "Managing Clinical Services"
+      ],
+      "status": "published",
+      "order": 43,
+      "created": "2026-10-17",
+      "unit": "Unit 15"
+    }
+  }
+}

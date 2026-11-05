@@ -36,7 +36,7 @@
   if (!paid) {
     if (m.drive_url) {
       act.innerHTML = `<a class="btn primary" id="dl-btn" href="${E(window.EO_DRIVE.download(m.drive_url))}" target="_blank" rel="noopener">${window.EO_DRIVE.isPdfExport(m.drive_url) ? "⬇ Download PDF" : "⬇ Download (Google Drive)"}</a>
-        ${window.EO_DRIVE.preview(m.drive_url) ? `<button class="btn" id="pv-btn" type="button">👁 Preview</button>` : ""}
+        ${window.EO_DRIVE.preview(m.drive_url) ? `<button class="btn" id="pv-btn" type="button">${window.EO_ICON ? window.EO_ICON("eye", 16) + " " : ""}Preview</button>` : ""}
         ${window.EO_DRIVE.isPdfExport(m.drive_url) ? "" : `<a class="btn" href="${E(window.EO_DRIVE.view(m.drive_url))}" target="_blank" rel="noopener">Open in Drive</a>`}`;
       $("dl-btn").addEventListener("click", () => {
         window.EO_DB.increment(`material_stats/${slug}/downloads`).catch(() => {});
@@ -51,10 +51,10 @@
   } else {
     let prior = null;
     try { prior = (JSON.parse(localStorage.getItem("eo_orders") || "[]")).find((o) => o.slug === slug); } catch {}
-    const pvu = m.preview_url ? (/^(\/|https?:\/\/[^ ]+\.(png|jpe?g|webp|gif)(\?|$))/i.test(m.preview_url) && !/drive\.google/.test(m.preview_url) ? `<button class="btn" id="pv-btn2" type="button" data-img="${E(m.preview_url)}">👁 Free preview</button>` : (window.EO_DRIVE.preview(m.preview_url) ? `<button class="btn" id="pv-btn2" type="button" data-frame="${E(window.EO_DRIVE.preview(m.preview_url))}">👁 Free preview</button>` : "")) : "";
-    act.innerHTML = `<a class="btn primary" href="/materials/order/${E(slug)}">🛒 Order — KES ${E(m.price)}</a>${pvu}
+    const pvu = m.preview_url ? (/^(\/|https?:\/\/[^ ]+\.(png|jpe?g|webp|gif)(\?|$))/i.test(m.preview_url) && !/drive\.google/.test(m.preview_url) ? `<button class="btn" id="pv-btn2" type="button" data-img="${E(m.preview_url)}">${window.EO_ICON ? window.EO_ICON("eye", 16) + " " : ""}Free preview</button>` : (window.EO_DRIVE.preview(m.preview_url) ? `<button class="btn" id="pv-btn2" type="button" data-frame="${E(window.EO_DRIVE.preview(m.preview_url))}">${window.EO_ICON ? window.EO_ICON("eye", 16) + " " : ""}Free preview</button>` : "")) : "";
+    act.innerHTML = `<a class="btn primary" href="/materials/order/${E(slug)}">${window.EO_ICON ? window.EO_ICON("shopping-cart", 16) + " " : ""}Order — KES ${E(m.price)}</a>${pvu}
       <a class="btn" data-whatsapp data-msg="Hi, I'm interested in '${E(m.title)}'">Ask on WhatsApp</a>`;
-    $("m-body").insertAdjacentHTML("beforeend", `<div class="crt-window"><div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label">how-it-works.txt</span></div><div class="body">
+    $("m-body").insertAdjacentHTML("beforeend", `<div class="crt-window"><div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label">how-it-works</span></div><div class="body">
       <ol style="margin:0;padding-left:1.2rem;color:var(--ink-dim)"><li>Pay KES ${E(m.price)} by M-Pesa (details on the order page).</li><li>Paste the M-Pesa confirmation message in the order form and tell us where to send the file (WhatsApp/SMS number or email).</li><li>After the payment is verified, the download link is sent to you.</li></ol>
       ${prior ? `<p class="mono" style="margin:.8rem 0 0;color:var(--amber)">You already ordered this (ref ${E(prior.ref)}).</p>` : ""}</div></div>`);
     window.EO_SITE.refresh();

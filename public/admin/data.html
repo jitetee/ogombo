@@ -13,7 +13,7 @@
 </head>
 <body>
 <main><div class="wrap">
-<section class="hero" style="padding-top:1.2rem"><span class="kicker">DATA.EXE</span><h1>Data &amp; settings</h1>
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">DATA</span><h1>Data &amp; settings</h1>
 <p class="hint">Site settings, every node of the database, backups, sitemap/SEO tools and admin accounts.</p></section>
 <div id="tabs"></div><div id="pane"></div>
 
@@ -107,7 +107,7 @@
 
   // ---------------- tools ----------------
   async function tools() {
-    pane.innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">sitemap.xml</span></div><div class="body"><p class="hint">Static hosting can't update the sitemap by itself. Generate it after publishing new posts/materials, replace <code>sitemap.xml</code> in the project and redeploy (<code>firebase deploy --only hosting</code>).</p><button class="btn primary" id="sm" type="button">Generate sitemap</button> <button class="btn" id="smd" type="button" hidden>Download sitemap.xml</button><textarea class="code" id="smt" style="min-height:160px;margin-top:.6rem" hidden></textarea></div></div>
+    pane.innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">sitemap</span></div><div class="body"><p class="hint">Static hosting can't update the sitemap by itself. Generate it after publishing new posts/materials, replace <code>sitemap.xml</code> in the project and redeploy (<code>firebase deploy --only hosting</code>).</p><button class="btn primary" id="sm" type="button">Generate sitemap</button> <button class="btn" id="smd" type="button" hidden>Download sitemap.xml</button><textarea class="code" id="smt" style="min-height:160px;margin-top:.6rem" hidden></textarea></div></div>
       <div class="crt-window"><div class="titlebar"><span class="label">seo-check</span></div><div class="body"><button class="btn primary" id="seo" type="button">Run SEO check</button><div id="seor"></div></div></div>
       <div class="crt-window"><div class="titlebar"><span class="label">seed-missing</span></div><div class="body"><p class="hint">Copies nodes from <code>/data/seed-db.json</code> into the database ONLY where the node is empty. Nothing existing is overwritten.</p><button class="btn" id="sd" type="button">Seed missing nodes</button> <span id="sdr" class="hint"></span></div></div>
       <div class="crt-window"><div class="titlebar"><span class="label">backup</span></div><div class="body"><p class="hint">Export every node to one JSON file, or restore from one (replaces the nodes contained in the file).</p><button class="btn primary" id="ex" type="button">Export backup</button> <input type="file" id="im" accept=".json" style="display:none"><button class="btn danger" id="imb" type="button">Restore from file…</button></div></div>`;

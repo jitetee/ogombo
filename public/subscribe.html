@@ -37,18 +37,18 @@
   <div class="wrap">
     <a class="logo" href="/">ezraogombo</a>
     <nav class="site-nav"><a href="/">home</a><a href="/about">about</a><a href="/content">content</a><a href="/blog">blog</a><a href="/writing">writing</a><a href="/materials">materials</a><a href="/contact">contact</a></nav>
-    <button id="theme-toggle" data-theme-toggle type="button">☀ light</button>
-    <a id="search-link" href="/search" title="Search" aria-label="Search" style="color:var(--ink-dim); text-decoration:none; font-size:1rem; margin-left:0.3rem;">🔍</a>
+    <button id="theme-toggle" data-theme-toggle type="button">Light</button>
+    <a id="search-link" href="/search" title="Search" aria-label="Search" style="color:var(--ink-dim); text-decoration:none; font-size:1rem; margin-left:0.3rem;"><i data-i="search" data-s="20"></i></a>
   </div>
 </header>
 
 <main>
   <div class="wrap">
-    <section class="hero"><span class="kicker" data-pg="kicker">SUBSCRIBE.EXE</span><h1 data-pg="heading">Join the list. Get the good stuff first.</h1><p data-pg="intro" class="lede">One short email when something worth reading, studying or downloading goes live. No spam, no selling your address, leave any time.</p></section>
+    <section class="hero"><span class="kicker" data-pg="kicker">SUBSCRIBE</span><h1 data-pg="heading">Join the list. Get the good stuff first.</h1><p data-pg="intro" class="lede">One short email when something worth reading, studying or downloading goes live. No spam, no selling your address, leave any time.</p></section>
 
     <div class="sub-grid">
       <section class="sub-card crt-window" id="sub-box">
-        <div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label">subscribe.sh</span></div>
+        <div class="titlebar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="label">subscribe</span></div>
         <div class="body">
           <form id="sub-form" novalidate>
             <label>Email address<input type="email" name="email" autocomplete="email" placeholder="you@example.com" required></label>
@@ -65,7 +65,7 @@
             <p class="mono" id="sub-status" role="status" aria-live="polite"></p>
           </form>
           <div id="sub-done" hidden>
-            <h2>You're on the list ✓</h2>
+            <h2>You're on the list</h2>
             <p>Thanks<span id="sub-name"></span>! Next emails will come to <b id="sub-mail"></b>. While you wait:</p>
             <div class="row-links"><a class="btn" href="/blog">Read the latest posts</a><a class="btn" href="/materials">Browse free materials</a><a class="btn" href="/content">See the content</a></div>
             <div class="socials" style="margin-top:1rem"></div>
@@ -76,12 +76,12 @@
       <section class="sub-perks" data-pg="body">
         <h2>What you get</h2>
         <ul class="perks">
-          <li><b>📝 New posts first</b><span>Every new article lands in your inbox the day it goes live.</span></li>
-          <li><b>📚 Study-material alerts</b><span>Be the first to know about new notes, past papers and study units, including free ones.</span></li>
-          <li><b>🎁 Subscriber perks</b><span>Occasional discounts and early access on paid materials when they are available.</span></li>
-          <li><b>🧠 Memory tricks</b><span>Anatomy mnemonics and quick revision points you can use the same day.</span></li>
-          <li><b>🎬 Behind the scenes</b><span>How the content gets made, and what I'm building next.</span></li>
-          <li><b>🔒 Respect</b><span>About 1–4 emails a month. Your address is never shared or sold. Reply “unsubscribe” and it's gone.</span></li>
+          <li><b><i data-i="file-text"></i>New posts first</b><span>Every new article lands in your inbox the day it goes live.</span></li>
+          <li><b><i data-i="book-open"></i>Study-material alerts</b><span>Be the first to know about new notes, past papers and study units, including free ones.</span></li>
+          <li><b><i data-i="gift"></i>Subscriber perks</b><span>Occasional discounts and early access on paid materials when they are available.</span></li>
+          <li><b><i data-i="brain"></i>Memory tricks</b><span>Anatomy mnemonics and quick revision points you can use the same day.</span></li>
+          <li><b><i data-i="video"></i>Behind the scenes</b><span>How the content gets made, and what I'm building next.</span></li>
+          <li><b><i data-i="lock"></i>Respect</b><span>About 1–4 emails a month. Your address is never shared or sold. Reply “unsubscribe” and it's gone.</span></li>
         </ul>
         <h2>Questions</h2>
         <details><summary>How often will you email?</summary><p>Usually 1–4 times a month, only when there is something new.</p></details>
@@ -130,6 +130,7 @@
 <script src="/js/qr.js"></script>
 <script src="/js/site.js"></script>
 <script src="/js/ads.js"></script>
+<script src="/js/icons.js"></script>
 <script src="/js/theme.js"></script>
 <script src="/js/search.js"></script>
 <script src="/js/chatbot.js"></script>

@@ -34,7 +34,7 @@
             <button type="button" class="eng-btn" data-act="like"></button>
             <div class="eng-picker" role="menu">${REACTS.map(([k, e, l]) => `<button type="button" data-react="${k}" title="${l}" aria-label="${l}">${e}</button>`).join("")}</div>
           </div>
-          <button type="button" class="eng-btn" data-act="comment">💬 Comment</button>
+          <button type="button" class="eng-btn" data-act="comment">${window.EO_ICON ? window.EO_ICON("message-circle", 16) + " " : ""}Comment</button>
           <button type="button" class="eng-btn" data-act="share">↗ Share</button>
           <button type="button" class="eng-btn" data-act="pdf">⬇ PDF</button>
         </div>
@@ -67,7 +67,7 @@
       $('[data-c="react"]').textContent = total() ? `${top} ${total()}` : "";
       const m = REACTS.find(([k]) => k === mine);
       const btn = $('[data-act="like"]');
-      btn.textContent = m ? `${m[1]} ${m[2]}` : "👍 Like";
+      btn.textContent = m ? `${m[1]} ${m[2]}` : "Like";
       btn.classList.toggle("on", !!m);
     }
     async function react(k) {
@@ -113,7 +113,7 @@
         shareBox.innerHTML = shareLinks().map(([n, h]) => `<a href="${E(h)}" target="_blank" rel="noopener" class="btn">${n}</a>`).join("") + `<button type="button" class="btn" data-copy>Copy link</button>`;
         shareBox.querySelectorAll("a").forEach((a) => a.addEventListener("click", countShare));
         shareBox.querySelector("[data-copy]").addEventListener("click", async (e) => {
-          try { await navigator.clipboard.writeText(url); e.target.textContent = "Copied ✓"; } catch { window.prompt("Copy this link:", url); }
+          try { await navigator.clipboard.writeText(url); e.target.textContent = "Copied"; } catch { window.prompt("Copy this link:", url); }
           countShare();
         });
       }

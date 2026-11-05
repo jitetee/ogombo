@@ -5,7 +5,7 @@
   const list = window.EO_RECEIPT.list();
   const host = document.getElementById("rc-list"), view = document.getElementById("rc-view");
   if (!list.length) {
-    host.innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">none.txt</span></div><div class="body"><p>No receipts on this device yet. Receipts appear here after you order a paid material. If you ordered on another phone or browser, WhatsApp us your M-Pesa message and we will help.</p><p><a class="btn" data-whatsapp href="#">Message us on WhatsApp</a> <a class="btn" href="/materials">Browse materials</a></p></div></div>`;
+    host.innerHTML = `<div class="crt-window"><div class="titlebar"><span class="label">none</span></div><div class="body"><p>No receipts on this device yet. Receipts appear here after you order a paid material. If you ordered on another phone or browser, WhatsApp us your M-Pesa message and we will help.</p><p><a class="btn" data-whatsapp href="#">Message us on WhatsApp</a> <a class="btn" href="/materials">Browse materials</a></p></div></div>`;
     window.EO_SITE.refresh(); return;
   }
   const want = U.params().get("ref");
