@@ -20,6 +20,17 @@
 #   - Every error is saved to  .git/push-logs/errors.log  (never committed).
 #   - Shows a progress bar.
 #
+# v2 changes
+#   - Only changed / new / deleted files are ever committed. Unchanged files are never re-uploaded.
+#   - VERSION is created at 1.0.0 on the first run, then every run with changes bumps it (1.0.1, 1.0.2 ...).
+#     BUMP=minor|major|none changes how. The version goes into the commit message, a git tag (v1.0.1),
+#     docs/CHANGELOG.md and public/version.json (when a public/ folder exists).
+#   - The commit message is written for you from what changed (no prompt). Give your own text as an
+#     argument, or run ASK=1 bash push.sh to be asked.
+#   - DRY=1 bash push.sh shows what would be pushed and exits.
+#   - Big files are split only when they changed (before: re-split on every run).
+#   - A leftover .gitignore is never overwritten any more.
+#
 # Login: GitHub needs a Personal Access Token (scope "repo") as the password.
 
 set -u
@@ -30,6 +41,8 @@ BIG_MB="${BIG_MB:-50}"
 PART_MB="${PART_MB:-15}"
 BUMP="${BUMP:-patch}"
 TOKEN="${GITHUB_TOKEN:-}"
+ASK="${ASK:-0}"
+DRY="${DRY:-0}"
 DEFAULT_URL="https://github.com/jitetee/ogombo.git"
 cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
 
@@ -83,8 +96,9 @@ git config http.version HTTP/1.1
 git config http.lowSpeedLimit 0
 git config http.lowSpeedTime 0
 
-# ---------- 2. basic .gitignore ----------
-if [[ ! -f .gitignore ]] || grep -qE '^(data/|\*\.zip|auth)$' .gitignore; then
+# ---------- 2. basic .gitignore (only if there is none) ----------
+if [[ ! -f .gitignore && -f _gitignore ]]; then cp _gitignore .gitignore; ok ".gitignore restored from _gitignore"; fi
+if [[ ! -f .gitignore ]]; then
   cat > .gitignore <<'G'
 # secrets
 .env
@@ -104,7 +118,7 @@ Thumbs.db
 .idea/
 .vscode/
 G
-  ok ".gitignore set to the basic template"
+  ok ".gitignore created"
 fi
 
 # ---------- helpers ----------
@@ -198,6 +212,10 @@ split_big() {
     case $f in *.part[0-9][0-9]) continue ;; esac
     git check-ignore -q -- "$f" && continue
     any=1
+    if [[ -f "$f.part00" && -f "$f.md5" && ! "$f" -nt "$f.part00" ]]; then
+      grep -qxF "/$f" "$exf" 2>/dev/null || printf '/%s\n' "$f" >> "$exf"
+      continue                                  # parts are already up to date
+    fi
     say "Splitting $f ($(du -h "$f" | cut -f1)) into ${PART_MB} MB parts"
     rm -f "$f".part[0-9][0-9]
     split -b "${PART_MB}M" -d -a 2 -- "$f" "$f.part" || die "Could not split $f"
@@ -219,17 +237,39 @@ J
   fi
 }
 
+auto_msg() {   # one line that says what changed
+  local st n_new n_mod n_del dirs
+  st=$(git status --porcelain -uall 2>/dev/null)
+  n_new=$(printf '%s\n' "$st" | grep -c '^??\|^A') ; n_mod=$(printf '%s\n' "$st" | grep -c '^ M\|^M\|^MM\|^R') ; n_del=$(printf '%s\n' "$st" | grep -c '^ D\|^D')
+  dirs=$(printf '%s\n' "$st" | sed 's/^...//; s/^"//; s/"$//' | awk -F/ '{ if (NF>2) print $1"/"$2; else if (NF==2) print $1; else print "(root)" }' | sort | uniq -c | sort -rn | head -3 | awk '{printf "%s%s (%s)", (NR>1?", ":""), $2, $1}')
+  echo "update: ${n_new} new, ${n_mod} changed, ${n_del} deleted in ${dirs:-project}"
+}
+
 bump_version() {
-  [[ -f VERSION && $BUMP != none && ! -f $ST/bumped ]] || return 0
+  [[ $BUMP != none && ! -f $ST/bumped ]] || return 0
   local cur a b c new
-  cur=$(tr -d '[:space:]' < VERSION); [[ $cur =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || return 0
-  IFS=. read -r a b c <<<"$cur"
-  case $BUMP in major) new="$((a + 1)).0.0" ;; minor) new="$a.$((b + 1)).0" ;; *) new="$a.$b.$((c + 1))" ;; esac
-  echo "$new" > VERSION; touch "$ST/bumped"; ok "Version $cur → $new"
-  [[ -f README.md ]] && sed -i "s/badge\/version-[0-9.]*-/badge\/version-$new-/" README.md
-  if [[ -f docs/CHANGELOG.md ]] && ! grep -q "^## $new\$" docs/CHANGELOG.md; then
-    awk -v v="$new" -v m="$MSG" 'NR==1{print; print ""; print "## " v; print "- " m; next} {print}' docs/CHANGELOG.md > docs/CHANGELOG.md.tmp && mv docs/CHANGELOG.md.tmp docs/CHANGELOG.md
+  if [[ ! -f VERSION ]]; then echo "1.0.0" > VERSION; touch "$ST/bumped"; NEWVER="1.0.0"; ok "VERSION created: 1.0.0"
+  else
+    cur=$(tr -d '[:space:]' < VERSION); [[ $cur =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { warn "VERSION is not x.y.z, not bumping"; NEWVER="$cur"; return 0; }
+    IFS=. read -r a b c <<<"$cur"
+    case $BUMP in major) new="$((a + 1)).0.0" ;; minor) new="$a.$((b + 1)).0" ;; *) new="$a.$b.$((c + 1))" ;; esac
+    echo "$new" > VERSION; touch "$ST/bumped"; NEWVER="$new"; ok "Version $cur → $new"
   fi
+  echo "$NEWVER" > "$ST/ver"
+  [[ -f README.md ]] && sed -i "s/badge\/version-[0-9.]*-/badge\/version-$NEWVER-/" README.md
+  [[ -d public ]] && printf '{"version":"%s","date":"%s","message":"%s"}\n' "$NEWVER" "$(date '+%F %T')" "$(printf '%s' "$MSG" | sed 's/"/\\"/g')" > public/version.json
+  mkdir -p docs; [[ -f docs/CHANGELOG.md ]] || printf '# Changelog\n' > docs/CHANGELOG.md
+  if ! grep -q "^## $NEWVER\$" docs/CHANGELOG.md; then
+    { printf '## %s (%s)\n- %s\n' "$NEWVER" "$(date '+%F')" "$MSG"; git status --porcelain -uall | grep -v 'CHANGELOG.md\|VERSION\|version.json\|\.entry' | head -15 | sed 's/^...//; s/^/  - /'; printf '\n'; } > docs/.entry
+    awk 'NR==1{print; print ""; while ((getline l < "docs/.entry") > 0) print l; next} {print}' docs/CHANGELOG.md > docs/CHANGELOG.md.tmp && mv docs/CHANGELOG.md.tmp docs/CHANGELOG.md; rm -f docs/.entry
+  fi
+}
+
+push_tag() { # v1.2.3
+  local t=$1 n=0
+  git tag -f "$t" HEAD >/dev/null 2>&1 || return 0
+  until GIT_TERMINAL_PROMPT=0 git "${GA[@]}" push --force origin "refs/tags/$t" >/dev/null 2>&1; do n=$((n + 1)); ((n > 5)) && { warn "Could not push tag $t (the code is pushed)"; return 0; }; sleep 5; done
+  ok "Tag $t pushed"
 }
 
 # ---------- 4. start ----------
@@ -270,8 +310,11 @@ if [[ -z $(git status --porcelain) ]]; then
 fi
 
 MSG="${*:-}"
-if [[ -z $MSG ]]; then read -r -p "  Commit message [update $(date '+%Y-%m-%d %H:%M')]: " MSG; fi
-MSG="${MSG:-update $(date '+%Y-%m-%d %H:%M')}"
+AUTOM=$(auto_msg)
+if [[ -z $MSG && $ASK == 1 ]]; then read -r -p "  Commit message [$AUTOM]: " MSG; fi
+MSG="${MSG:-$AUTOM}"
+if [[ $DRY == 1 ]]; then say "DRY RUN. Would commit: $MSG"; git status --porcelain -uall | head -40; exit 0; fi
+NEWVER=""
 bump_version
 
 # ---------- 5. plan batches ----------
@@ -300,7 +343,8 @@ for ((k = 0; k < NB; k++)); do
   batch=("${FILES[@]:s:e-s}")
   if ! git add -A -- "${batch[@]}" 2> "$OUT"; then logerr "git add batch $((k + 1))" other; cat "$OUT" >&2; die "git add failed (details in $ERRLOG)"; fi
   git diff --cached --quiet && { bar "$e" "$TOTAL" "batch $((k + 1))/$NB (no changes)"; continue; }
-  label="$MSG"; ((NB > 1)) && label="$MSG (part $((k + 1))/$NB)"
+  label="${NEWVER:+v$NEWVER: }$MSG"; ((NB > 1)) && label="$label (part $((k + 1))/$NB)"
+  ((k < NB - 1)) && label="$label [skip ci]"      # only the LAST commit starts the Firebase deploy, so half-uploaded sites never go live
   git commit -q -m "$label" || die "Commit failed."
   push_pending
   bar "$e" "$TOTAL" "batch $((k + 1))/$NB · $e/$TOTAL files"
@@ -310,6 +354,7 @@ done
 git update-ref "refs/remotes/origin/$BRANCH" HEAD 2>/dev/null && git branch -q -u "origin/$BRANCH" 2>/dev/null
 rm -f "$ST/bumped"
 echo
-ok "All pushed to $REMOTE ($BRANCH)"
+[[ -n $NEWVER ]] && push_tag "v$NEWVER"
+ok "All pushed to $REMOTE ($BRANCH)${NEWVER:+  ·  version $NEWVER}"
 [[ -s $ERRLOG ]] && say "Errors seen along the way (all recovered) are in: $ERRLOG"
 exit 0

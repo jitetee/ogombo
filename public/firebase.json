@@ -8,7 +8,9 @@
       "FIREBASE.md",
       "SETUP.md",
       "database.rules.json",
-      "seed/**"
+      "seed/**",
+      "**/*.part[0-9][0-9]",
+      "**/*.md5"
     ],
     "cleanUrls": true,
     "trailingSlash": false,

@@ -255,7 +255,7 @@
     // mode "local" (default): /assets/content/t/<name>.webp made at build time.
     // mode "cdn": ONE original image; a free resizing proxy (wsrv.nl) fetches it from this site and returns just the size asked for,
     // so the browser downloads a few KB instead of the full picture. Switch with  window.EO_IMG_MODE = "cdn"  (before db.js) or localStorage eo-img-mode.
-    imgMode() { try { return window.EO_IMG_MODE || localStorage.getItem("eo-img-mode") || "local"; } catch (e) { return window.EO_IMG_MODE || "local"; } },
+    imgMode() { try { return window.EO_IMG_MODE || localStorage.getItem("eo-img-mode") || "cdn"; } catch (e) { return window.EO_IMG_MODE || "cdn"; } },
     sized(src, w) { return "https://wsrv.nl/?url=" + encodeURIComponent(location.host + src) + "&w=" + w + "&output=webp&q=76"; },
     thumb(src, w) {
       const m = /^\/assets\/content\/([^\/]+)\.jpg$/.exec(src || "");
