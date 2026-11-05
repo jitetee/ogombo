@@ -22,7 +22,7 @@
   $("m-title").textContent = m.title;
   if (cat) { $("crumb-cat").textContent = cat.label; $("crumb-cat").href = `/materials/${cat._key}`; }
   $("crumb-title").textContent = m.title;
-  const rows = [["Type", (m.file_type || "").toUpperCase()], ["Section", cat && cat.label], ["Unit / course", m.unit], ["Year", m.year], ["Level", m.level], ["Pages", m.pages], ["Size", m.size], ["Downloads", stats && stats.downloads]].filter(([, v]) => v);
+  const rows = [["Type", U.fileKind(m.file_type)], ["Section", cat && cat.label], ["Unit / course", m.unit], ["Year", m.year], ["Level", m.level], ["Pages", m.pages], ["Size", m.size], ["Downloads", stats && stats.downloads]].filter(([, v]) => v);
   $("m-body").innerHTML = `
     ${m.cover ? `<img class="post-hero" src="${E(m.cover)}" alt="${E(m.title)}">` : ""}
     <p><span class="badge ${paid ? "paid" : "free"}">${paid ? "Paid · KES " + E(m.price) : "Free"}</span>${Number((stats || {}).downloads) >= 5 ? `<span class="badge">⬇ ${E((stats || {}).downloads)} downloads</span>` : ""}${(m.tags || []).map((t) => `<span class="tag">${E(t)}</span>`).join("")}</p>

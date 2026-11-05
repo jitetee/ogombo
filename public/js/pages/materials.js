@@ -18,7 +18,7 @@
     const paid = m.access === "paid";
     const c = catOf(m.category), d = dlOf(m);
     const meta = [m.unit, m.year, m.level].filter(Boolean).join(" · ");
-    const thumb = m.cover ? `<img class="mat-cover" src="${E(m.cover)}" alt="" loading="lazy">` : `<div class="mat-ico">${E(m.file_type || "file")}</div>`;
+    const thumb = m.cover ? `<img class="mat-cover" src="${E(m.cover)}" alt="" loading="lazy">` : `<div class="mat-ico">${E(U.fileKind(m.file_type) || "File")}</div>`;
     return `<a class="mat-card" href="/materials/item/${E(m.slug)}">${thumb}
       <div><h3>${E(m.title)}</h3>
         <p><span class="badge ${paid ? "paid" : "free"}">${paid ? "KES " + E(m.price) : "Free"}</span>${isNew(m) ? `<span class="badge new">NEW</span>` : ""}${d > 0 && d >= topDl && d >= 5 ? `<span class="badge hot">★ POPULAR</span>` : ""}${m.featured === "yes" ? `<span class="badge hot">FEATURED</span>` : ""}${c ? `<span class="badge">${E(c.label)}</span>` : ""}${meta ? `<span class="mono" style="font-size:.8rem">${E(meta)}</span>` : ""}${d >= 5 ? `<span class="mono" style="font-size:.8rem">⬇ ${d}</span>` : ""}</p>

@@ -248,6 +248,8 @@
   function displayName(name) { const s = String(name == null ? "" : name).trim(); const out = s.replace(EXT, "").trim(); return out || s; }
   window.EO_UTIL = {
     displayName,
+    // what to show for a stored file_type ("docx", "pdf"...): a plain word, never the extension
+    fileKind(t) { const k = String(t || "").toLowerCase(); return /^docx?$|^gdoc|^rtf$|^txt$|^md$/.test(k) ? "Document" : /^pdf$/.test(k) ? "Document" : /^xlsx?$|^csv$/.test(k) ? "Spreadsheet" : /^pptx?$/.test(k) ? "Slides" : /^(zip|rar|7z)$/.test(k) ? "Bundle" : /^(png|jpe?g|webp|gif)$/.test(k) ? "Image" : /^(mp3|wav)$/.test(k) ? "Audio" : /^(mp4|mov)$/.test(k) ? "Video" : (k ? "File" : ""); },
     esc(s) {
       return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     },
@@ -257,7 +259,7 @@
       return d.textContent || "";
     },
     // Small copy of a content card image for lists.
-    // mode "local" (default): /assets/content/t/<name>.webp made at build time.
+    // mode "local": the original image is used as is (the old /assets/content/t/ webp copies were removed).
     // mode "cdn": ONE original image; a free resizing proxy (wsrv.nl) fetches it from this site and returns just the size asked for,
     // so the browser downloads a few KB instead of the full picture. Switch with  window.EO_IMG_MODE = "cdn"  (before db.js) or localStorage eo-img-mode.
     imgMode() { try { return window.EO_IMG_MODE || localStorage.getItem("eo-img-mode") || "cdn"; } catch (e) { return window.EO_IMG_MODE || "cdn"; } },
@@ -265,11 +267,11 @@
     thumb(src, w) {
       const m = /^\/assets\/content\/([^\/]+)\.jpg$/.exec(src || "");
       if (!m) return src;
-      return window.EO_UTIL.imgMode() === "cdn" && !/^(localhost|127\.)/.test(location.hostname) ? window.EO_UTIL.sized(src, w || 320) : `/assets/content/t/${m[1]}.webp`;
+      return window.EO_UTIL.imgMode() === "cdn" && !/^(localhost|127\.)/.test(location.hostname) ? window.EO_UTIL.sized(src, w || 320) : src;
     },
     // <img> markup for lists: thumbnail first, original if the thumbnail is missing
     timg(src, alt, extra) {
-      const t = window.EO_UTIL.thumb(src), cdn = t !== src && /^https:\/\/wsrv\.nl/.test(t), q = (x) => String(x == null ? "" : x).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      const t = window.EO_UTIL.thumb(src, 320), cdn = t !== src && /^https:\/\/wsrv\.nl/.test(t), q = (x) => String(x == null ? "" : x).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
       return `<img src="${q(t)}"${cdn ? ` srcset="${q(window.EO_UTIL.sized(src, 240))} 240w, ${q(window.EO_UTIL.sized(src, 480))} 480w, ${q(window.EO_UTIL.sized(src, 720))} 720w" sizes="(max-width:600px) 50vw, 240px"` : ""} alt="${q(alt)}" loading="lazy" decoding="async"${t !== src ? ` onerror="this.onerror=null;this.src='${q(src)}'"` : ""} ${extra || ""}>`;
     },
     slugify(s) {

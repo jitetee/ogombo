@@ -217,7 +217,7 @@ footer.site p{ margin:0; font-size:0.78rem; color: var(--ink-dim); }
   color: var(--crt-green); font-size:1.4rem;
   display:flex; align-items:center; justify-content:center;
   cursor:pointer; box-shadow: 0 0 16px rgba(61,220,132,0.35);
-  overflow:hidden; padding:0;
+  overflow:visible; padding:0;
 }
 #eo-chat-window{
   position:fixed; bottom:5.2rem; right:1.2rem; z-index:50;
@@ -349,3 +349,17 @@ html[data-theme="light"] .logo{ text-shadow:none; }
 html[data-theme="light"] .btn.primary{ color: #fff; }
 html[data-theme="light"] .post-card img{ filter: sepia(0.1) saturate(1.1) contrast(1.02); }
 html[data-theme="light"] .post-hero{ filter: sepia(0.08) saturate(1.1) contrast(1.02); }
+
+/* base style for every form field, so none is left as a browser-default box. Zero specificity: any specific rule above still wins. */
+:where(input:not([type=checkbox],[type=radio],[type=range],[type=color],[type=file],[type=hidden],[type=submit],[type=button],[type=reset],[type=image]),select,textarea){
+  font:inherit; font-size:1rem; line-height:1.4; color:var(--ink); background:var(--bg);
+  border:1px solid var(--panel-border); border-radius:3px; padding:.5rem .65rem; max-width:100%; box-sizing:border-box;
+}
+:where(textarea){ min-height:5rem; resize:vertical; }
+:where(select){ padding-right:.4rem; }
+:where(input,select,textarea):focus{ outline:2px solid var(--crt-green); outline-offset:1px; border-color:var(--crt-green); }
+:where(input,textarea)::placeholder{ color:var(--ink-dim); opacity:.8; }
+:where(input[type=checkbox],input[type=radio],input[type=range]){ accent-color:var(--crt-green); }
+:where(input[type=color]){ width:2.6rem; height:2.2rem; padding:.1rem; background:var(--bg); border:1px solid var(--panel-border); border-radius:3px; }
+:where(input[type=file]){ font:inherit; color:var(--ink-dim); max-width:100%; }
+:where(input:disabled,select:disabled,textarea:disabled){ opacity:.55; cursor:not-allowed; }

@@ -3,7 +3,7 @@
   "id": "2026-11-05-clean-display-names",
   "name": "Remove file extensions from visible wording",
   "date": "2026-11-05",
-  "notes": "Page kickers, the chatbot title and material descriptions no longer show .exe, .txt, .pdf, .dir or (.docx). Only display text changes: material source_file, keys and download links are untouched.",
+  "notes": "Page kickers, the chatbot title and material descriptions no longer show .exe, .txt, .pdf, .dir or (.docx). Only display text changes: material source_file, keys and download links are untouched. Material links point to the Google Docs you converted (the site already exports a Google Doc link as a PDF for downloads).",
   "modes": {
    "materials": "merge",
    "pages": "merge",
@@ -134,75 +134,199 @@
    {
     "path": "chatbot_config",
     "text": "Title ASK-EZRA"
+   },
+   {
+    "path": "materials/cv-template",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/ptt-level-6-complete-study-guide",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/digital-literacy",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/numeracy-skills",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/environmental-literacy",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/entrepreneurial-skills",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/communication-skills",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/employability-skills",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/anatomy-physiology-part-a",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/anatomy-physiology-part-b",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/basic-hospital-procedures",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/common-diseases",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/first-aid",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/medical-legal-ethics",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-06-health-education-promotion",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-07-psychosocial-health-support",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-08-theatre-safety-precautions",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-09-preventing-nosocomial-infections",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-10-instrument-apparatus-maintenance",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-11-theatre-technical-services",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-12-managing-theatre-resources",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-13-participating-in-clinical-services",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-14-theatre-administrative-duties",
+    "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "materials/unit-15-managing-clinical-services",
+    "text": "Link now points to the Google Doc"
    }
   ]
  },
  "materials": {
   "digital-literacy": {
-   "description": "Study pack (basic units) on using computers, the internet and digital tools safely and effectively. Free Word document."
+   "description": "Study pack (basic units) on using computers, the internet and digital tools safely and effectively. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1WEd8NeJRcikzKjbsEtS4_ZZfpURWeAMUUgIkN5dyRYQ/edit"
   },
   "numeracy-skills": {
-   "description": "Study pack (basic units) on everyday and workplace mathematics. Free Word document."
+   "description": "Study pack (basic units) on everyday and workplace mathematics. Free document.",
+   "drive_url": "https://docs.google.com/document/d/19QCwLH_Y4BMgQBPoLZXCiFA3vTCt1MyVO3T5IgVCgvk/edit"
   },
   "environmental-literacy": {
-   "description": "Study pack (basic units) on environmental awareness and responsible practice. Free Word document."
+   "description": "Study pack (basic units) on environmental awareness and responsible practice. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1WJyKx9meQOWHOpTe2VjzZ55YeLc3Mucb-zL9DyuRuyk/edit"
   },
   "entrepreneurial-skills": {
-   "description": "Study pack (basic units) on starting and running a small enterprise. Free Word document."
+   "description": "Study pack (basic units) on starting and running a small enterprise. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1Va2UJ_2xQNapQJ_JxIofAdlw4FPw4Hy0-TMiEfu4EHA/edit"
   },
   "communication-skills": {
-   "description": "Study pack (basic units) on clear written, spoken and professional communication. Free Word document."
+   "description": "Study pack (basic units) on clear written, spoken and professional communication. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1pbg7pKkOn5xM95wUNcEbj1894oa8YlFXSW8uD2W-cIw/edit"
   },
   "employability-skills": {
-   "description": "Study pack (basic units) on skills for finding, getting and keeping work. Free Word document."
+   "description": "Study pack (basic units) on skills for finding, getting and keeping work. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1KFbbfi7astlNYLAyWoo1QlioL687BRQJV9YnoU_QvU0/edit"
   },
   "anatomy-physiology-part-a": {
-   "description": "Study pack (common units) on the structure and function of the human body. Free Word document."
+   "description": "Study pack (common units) on the structure and function of the human body. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1-AjwnVxjBnQN5cYjCemsLFMpHTYtrz060JINfSnDDwY/edit"
   },
   "anatomy-physiology-part-b": {
-   "description": "Study pack (common units) on the structure and function of the human body (continued). Free Word document."
+   "description": "Study pack (common units) on the structure and function of the human body (continued). Free document.",
+   "drive_url": "https://docs.google.com/document/d/1bcV4lABOWRGMTJwXMnQ4TreSfY4MDfte_PiPzgKCY5k/edit"
   },
   "basic-hospital-procedures": {
-   "description": "Study pack (common units) on routine procedures carried out in a hospital setting. Free Word document."
+   "description": "Study pack (common units) on routine procedures carried out in a hospital setting. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1XYaUZ_3aD0Q_3jbb4P09HvFLMSxVp7uLfVhcocGaRfM/edit"
   },
   "common-diseases": {
-   "description": "Study pack (common units) on common diseases and conditions encountered in health care. Free Word document."
+   "description": "Study pack (common units) on common diseases and conditions encountered in health care. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1hu2Ng9IIizE5GY8UDImoDqYI7rt5eGoUzhSbhKMFvxQ/edit"
   },
   "first-aid": {
-   "description": "Study pack (common units) on first-aid principles and emergency response. Free Word document."
+   "description": "Study pack (common units) on first-aid principles and emergency response. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1_izKZWOmnh7-tmoClvyiA-OonrDCJaRb3DGxZtzAKoQ/edit"
   },
   "medical-legal-ethics": {
-   "description": "Study pack (common units) on ethical and legal responsibilities in health care. Free Word document."
+   "description": "Study pack (common units) on ethical and legal responsibilities in health care. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1RLCXEBVWDYu5u1hNCRKWOcQxt6T9DoeyGD6paF2QCY4/edit"
   },
   "unit-06-health-education-promotion": {
-   "description": "Study pack (common units) on educating and promoting health in the community. Free Word document."
+   "description": "Study pack (common units) on educating and promoting health in the community. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1215v_N23WCQt2b84PN0mH78__OkWyMg-YYeYsm5urXo/edit"
   },
   "unit-07-psychosocial-health-support": {
-   "description": "Study pack (common units) on psychosocial support for patients and families. Free Word document."
+   "description": "Study pack (common units) on psychosocial support for patients and families. Free document.",
+   "drive_url": "https://docs.google.com/document/d/12wWPbGxKPzPSYuYgV9EsX8VnOr0DwfPKa1CckECOM0Y/edit"
   },
   "unit-08-theatre-safety-precautions": {
-   "description": "Study pack (core units) on safety precautions in the operating theatre. Free Word document."
+   "description": "Study pack (core units) on safety precautions in the operating theatre. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1UhpRxPeWGZOrNBK-9elqUxTs1QFFl6HaIemr3fGMKIE/edit"
   },
   "unit-09-preventing-nosocomial-infections": {
-   "description": "Study pack (core units) on preventing hospital-acquired infections. Free Word document."
+   "description": "Study pack (core units) on preventing hospital-acquired infections. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1qdgbOd20kgU7FKY8T9GjAOe3Cb4RM2AGoWyIizfh16A/edit"
   },
   "unit-10-instrument-apparatus-maintenance": {
-   "description": "Study pack (core units) on care and maintenance of theatre instruments and apparatus. Free Word document."
+   "description": "Study pack (core units) on care and maintenance of theatre instruments and apparatus. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1ctd2OHbddSHI2PffNEow4nPAewjhEhcXEpfN3Tgnq4o/edit"
   },
   "unit-11-theatre-technical-services": {
-   "description": "Study pack (core units) on technical services in the operating theatre. Free Word document."
+   "description": "Study pack (core units) on technical services in the operating theatre. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1NLZcMVtIZLz723QGIfUaSfmUxA6pqCnUvF4tSGMPGcI/edit"
   },
   "unit-12-managing-theatre-resources": {
-   "description": "Study pack (core units) on managing theatre supplies, equipment and resources. Free Word document."
+   "description": "Study pack (core units) on managing theatre supplies, equipment and resources. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1mT7lssS8HxOc_hJHcY_0zsILtEADcgqvFyxfO5nery0/edit"
   },
   "unit-13-participating-in-clinical-services": {
-   "description": "Study pack (core units) on taking part in clinical services. Free Word document."
+   "description": "Study pack (core units) on taking part in clinical services. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1XKCixzYrPROv8J506_z2p1ymkKrBIWRKXh-Dz6b0Hho/edit"
   },
   "unit-14-theatre-administrative-duties": {
-   "description": "Study pack (core units) on administrative duties in the theatre. Free Word document."
+   "description": "Study pack (core units) on administrative duties in the theatre. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1MNcceFp2d9rlU101-eTZXlu_zZTeNXfLEvtC0p_UrTA/edit"
   },
   "unit-15-managing-clinical-services": {
-   "description": "Study pack (core units) on managing clinical services. Free Word document."
+   "description": "Study pack (core units) on managing clinical services. Free document.",
+   "drive_url": "https://docs.google.com/document/d/1T6pbEJ-BdzDhF7RX6q5hQlswutpHUhz3X81AwEjMaDk/edit"
+  },
+  "cv-template": {
+   "drive_url": "https://docs.google.com/document/d/1snWKKWn8bN2bfAJTqcQ4GCgr63ZMFT8YgUcSGvdzW-8/edit"
+  },
+  "ptt-level-6-complete-study-guide": {
+   "drive_url": "https://docs.google.com/document/d/17YmEG2EPrzrTUbO_vV6SEZpVh5BefDAKXu1HqASYReQ/edit"
   }
  },
  "pages": {

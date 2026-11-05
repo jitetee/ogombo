@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem("eo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Videos — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png">
+<link rel="stylesheet" href="/css/retro.css">
+<link rel="stylesheet" href="/css/extras.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main><div class="wrap">
+<section class="hero" style="padding-top:1.2rem"><span class="kicker">VIDEOS</span><h1>Videos page</h1><p class="hint">Paste YouTube links, one per line. Titles are fetched for you. Links with /shorts/ go under Shorts. Add your channel below to show all your uploads automatically.</p></section>
+<div class="crt-window"><div class="titlebar"><span class="label">channel</span></div><div class="body">
+<form id="cf" class="grid2">
+  <div class="field" style="grid-column:1/-1"><label>YouTube channel link or ID <span class="hint">(a link like youtube.com/channel/UC… works. For an @name link, get the ID in YouTube Studio: Settings, Channel, Advanced settings)</span></label><input name="ch" maxlength="200" placeholder="https://www.youtube.com/channel/UC…"></div>
+  <div class="field" style="grid-column:1/-1"><label>Channel page for the Subscribe button <span class="hint">(optional, e.g. https://www.youtube.com/@yourname)</span></label><input name="url" maxlength="200" placeholder="https://www.youtube.com/@…"></div>
+  <div style="grid-column:1/-1"><button class="btn primary" type="submit">Save channel</button> <span class="form-status mono" id="cs"></span></div>
+</form></div></div>
+<div class="crt-window" style="margin-top:1rem"><div class="titlebar"><span class="label">add videos</span></div><div class="body">
+<form id="nf">
+  <div class="field"><label>Video links <span class="hint">(one per line, optional "| your title" after a link)</span></label><textarea name="links" rows="6" placeholder="https://www.youtube.com/watch?v=…&#10;https://www.youtube.com/shorts/…"></textarea></div>
+  <button class="btn primary" type="submit">Add videos</button> <span class="form-status mono" id="ns"></span>
+</form></div></div>
+<div id="list" style="margin-top:1rem"></div>
+</div></main>
+<script src="/js/firebase-config.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(async () => {
+  await A.guard("videos");
+  const E = A.esc; let data = {};
+  const idOf = (u) => { const m = String(u).match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/); return m ? m[1] : (/^[\w-]{11}$/.test(u.trim()) ? u.trim() : ""); };
+  const title = async (id) => { try { const r = await fetch("https://noembed.com/embed?url=" + encodeURIComponent("https://www.youtube.com/watch?v=" + id)); const j = await r.json(); return j.title || ""; } catch { return ""; } };
+  async function load() { data = (await A.get("videos")) || {}; paint(); const s = (await A.get("site_settings/socials/youtube").catch(() => null)) || {}; const f = document.getElementById("cf"); f.ch.value = s.channel_id || ""; f.url.value = s.url || ""; }
+  function paint() {
+    const rows = Object.entries(data).sort((a, b) => (b[1].added || 0) - (a[1].added || 0)), box = document.getElementById("list");
+    if (!rows.length) { box.innerHTML = `<p class="hint">No videos yet.</p>`; return; }
+    box.innerHTML = `<table class="adm-table"><thead><tr><th>Video</th><th>Type</th><th></th></tr></thead><tbody>${rows.map(([id, v]) => `<tr><td>${E(v.title || id)}<br><span class="hint">youtube.com/watch?v=${E(id)}</span></td><td><select data-k="${E(id)}"><option value="long"${v.kind !== "short" ? " selected" : ""}>Long</option><option value="short"${v.kind === "short" ? " selected" : ""}>Short</option></select></td><td><button class="btn sm" data-del="${E(id)}" type="button">Remove</button></td></tr>`).join("")}</tbody></table>`;
+  }
+  document.getElementById("list").addEventListener("change", async (e) => { const k = e.target.dataset.k; if (!k) return; await A.update("videos/" + k, { kind: e.target.value }); data[k].kind = e.target.value; });
+  document.getElementById("list").addEventListener("click", async (e) => { const k = e.target.dataset.del; if (!k || !confirm("Remove this video from the page?")) return; await A.del("videos/" + k); delete data[k]; paint(); });
+  document.getElementById("nf").addEventListener("submit", async (e) => {
+    e.preventDefault(); const st = document.getElementById("ns"), lines = e.target.links.value.split("\n").map((x) => x.trim()).filter(Boolean); let n = 0; st.textContent = "Adding…";
+    for (const ln of lines) { const [u, t] = ln.split("|").map((x) => x.trim()), id = idOf(u); if (!id) continue; const ti = t || (await title(id)); await A.set("videos/" + id, { id, title: ti, kind: /\/shorts\//.test(u) ? "short" : "long", added: Date.now() }); n++; }
+    st.textContent = n ? `Added ${n} video(s).` : "No valid YouTube links found."; e.target.links.value = ""; load();
+  });
+  document.getElementById("cf").addEventListener("submit", async (e) => {
+    e.preventDefault(); const f = e.target, raw = f.ch.value.trim(), m = raw.match(/UC[\w-]{20,}/), url = f.url.value.trim();
+    if (raw && !m) { document.getElementById("cs").textContent = "I could not find a channel ID (starts with UC) in that."; return; }
+    await A.set("site_settings/socials/youtube", { label: "YouTube", url: url || (m ? "https://www.youtube.com/channel/" + m[0] : ""), channel_id: m ? m[0] : "", enabled: !!(url || m) });
+    document.getElementById("cs").textContent = "Saved.";
+  });
+  load();
+})();
+</script>
+</body></html>

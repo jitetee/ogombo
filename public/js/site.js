@@ -16,7 +16,7 @@
     per_page: { blog: 5, content: 5, materials: 6, comments: 5 },
     nav: [
       { label: "home", url: "/", order: 1 }, { label: "about", url: "/about", order: 2 },
-      { label: "content", url: "/content", order: 3 }, { label: "blog", url: "/blog", order: 4 },
+      { label: "content", url: "/content", order: 3 }, { label: "videos", url: "/videos", order: 3.5 }, { label: "blog", url: "/blog", order: 4 },
       { label: "writing", url: "/writing", order: 5 }, { label: "materials", url: "/materials", order: 6 },
       { label: "contact", url: "/contact", order: 7 },
     ],

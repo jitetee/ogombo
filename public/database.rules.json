@@ -1421,6 +1421,10 @@
       "message": {
         ".validate": "newData.isString() && newData.val().length <= 800"
       }
+    },
+    "videos": {
+      ".read": true,
+      ".write": "auth != null && (root.child('admins').child(auth.uid).exists() && root.child('admin_unlock').child(auth.uid).child('until').val() > now)"
     }
   }
 }

@@ -157,7 +157,6 @@
     document.body.append(toggle, win);
     const log = win.querySelector("#eo-chat-log"), input = win.querySelector("#eo-chat-input"), chips = win.querySelector("#eo-chat-chips");
     const badge = toggle.querySelector(".eo-badge");
-    if (!sessionStorage.getItem("eo_chat_seen")) badge.hidden = false;
     let hist = []; try { hist = JSON.parse(sessionStorage.getItem(HKEY) || "[]"); } catch {}
     const CK = "eo_chat_ctx";
     const ctx = Object.assign({ topic: [], item: null, lang: /^sw/i.test(navigator.language || "") ? "sw" : "en", n: 0, spAt: -9, items: [], shown: 0 }, (() => { try { return JSON.parse(sessionStorage.getItem(CK) || "{}"); } catch { return {}; } })());
@@ -392,16 +391,38 @@
     // ----- opening, greeting bubble, mobile keyboard -----
     const fit = () => { if (window.visualViewport && innerWidth <= 640 && win.classList.contains("open")) win.style.maxHeight = Math.max(260, visualViewport.height - 24) + "px"; else win.style.maxHeight = ""; };
     if (window.visualViewport) visualViewport.addEventListener("resize", fit);
+    // ---- what is new: shown as an unread count on the icon, delivered as messages when the chat is opened ----
+    let inbox = null;
+    async function buildInbox() {
+      if (inbox) return inbox;
+      let seen = {}; try { seen = JSON.parse(localStorage.getItem("eo_cta_seen") || "{}"); } catch {}
+      const out = [], mark = {}, add = (h) => out.push(h);
+      try { const bi = await window.EO_DB.getBlogIndex(); const p = bi && bi.items && bi.items.slice().sort((a, b) => (a.date < b.date ? 1 : -1))[0]; if (p) { mark.post = p.slug; if (seen.post !== p.slug) add(`<p><b>New post</b><br><a href="/blog/${E(p.slug)}">${E(p.title)}</a></p>`); } } catch {}
+      try { const ci = await window.EO_DB.getContentIndex(); const c = ci && ci.items && ci.items[0]; if (c) { mark.card = c.slug; if (seen.card !== c.slug) add(`<p><b>New content card</b><br><a href="/content/${E(c.slug)}">${E(c.title)}</a></p>`); } } catch {}
+      let yt = ""; try { const cfg = await window.EO_SITE.ready; const y = ((cfg && cfg.socials) || {}).youtube || {}; yt = y.channel_id ? "https://www.youtube.com/channel/" + y.channel_id : y.url || ""; } catch {}
+      try { const vs = await window.EO_DB.getNode("videos"); const v = (Array.isArray(vs) ? vs : Object.values(vs || {})).filter((x) => x && x.id).sort((a, b) => (b.added || 0) - (a.added || 0))[0]; if (v) { mark.video = v.id; if (seen.video !== v.id) add(`<p><b>New video</b><br><a href="/videos">${E(v.title || "Watch the latest video")}</a></p>`); } } catch {}
+      add(yt ? `<p>If this helps your revision, <a href="${E(yt + (yt.includes("?") ? "&" : "?") + "sub_confirmation=1")}" target="_blank" rel="noopener">subscribe on YouTube</a> and <a href="/subscribe">get new posts by email</a>.</p>` : `<p>If this helps your revision, <a href="/subscribe">get new posts by email</a> and follow Ezra on social media.</p>`);
+      inbox = { list: out, mark };
+      return inbox;
+    }
+    async function deliverInbox() {
+      if (sessionStorage.getItem("eo_cta_done")) return;
+      const b = await buildInbox().catch(() => null); if (!b) return;
+      sessionStorage.setItem("eo_cta_done", "1");
+      b.list.forEach((h) => bot(h)); scroll();
+      try { localStorage.setItem("eo_cta_seen", JSON.stringify(b.mark)); } catch {}
+    }
     let hello = null;
     const closeHello = () => { if (hello) { hello.remove(); hello = null; } };
     async function open() {
-      closeHello(); win.classList.add("open"); badge.hidden = true; sessionStorage.setItem("eo_chat_seen", "1"); fit();
+      closeHello(); win.classList.add("open"); badge.hidden = true; badge.textContent = ""; sessionStorage.setItem("eo_chat_seen", "1"); fit();
       const D = await data();
       document.getElementById("eo-chat-title").textContent = U.displayName(D.config.name);
       if (!log.children.length) {
         if (hist.length) hist.forEach((m) => { const d = document.createElement("div"); d.className = "msg " + m.w; d.innerHTML = m.h; log.appendChild(d); }); else bot(`<p>${text(ctx.lang === "sw" ? "Habari! Mimi ni roboti msaidizi (si mtu, si AI). Naweza kutafuta makala, maelezo, mitihani ya zamani na vitabu vya Ezra. Unatafuta nini?" : D.config.welcome)}</p>`);
         scroll();
       }
+      await deliverInbox();
       input.placeholder = tr().placeholder;
       if (!chips.children.length) setChips(pageChips(D));
       input.focus();
@@ -431,10 +452,12 @@
     // friendly nudge once per visit (never on admin / sponsor pages, never if already opened)
     data().then((D) => {
       if (D.config.greeting === false || sessionStorage.getItem("eo_chat_seen") || sessionStorage.getItem("eo_chat_hello") || /^\/(admin|sponsor)\b/.test(location.pathname)) return;
-      setTimeout(() => {
+      setTimeout(async () => {
         if (win.classList.contains("open") || sessionStorage.getItem("eo_chat_seen")) return;
         sessionStorage.setItem("eo_chat_hello", "1");
-        const it = pageItem(D), T = tr(), msg = D.config.hello_text || (it && it.kind !== "material" ? T.helloPost : /^\/materials/.test(location.pathname) ? T.helloMat : T.hello);
+        const ib = sessionStorage.getItem("eo_cta_done") ? null : await buildInbox().catch(() => null);
+        if (ib && ib.list.length) { badge.textContent = String(ib.list.length); badge.hidden = false; }
+        const it = pageItem(D), T = tr(), msg = D.config.hello_text || (ib && ib.list.length > 1 ? "You have " + ib.list.length + " new messages" : "") || (it && it.kind !== "material" ? T.helloPost : /^\/materials/.test(location.pathname) ? T.helloMat : T.hello);
         hello = document.createElement("div"); hello.id = "eo-chat-hello"; hello.innerHTML = `<button type="button" class="eo-hello-x" aria-label="Dismiss">×</button><span>${E(msg)}</span>`;
         hello.addEventListener("click", (e) => { if (e.target.closest(".eo-hello-x")) closeHello(); else open(); });
         document.body.appendChild(hello); setTimeout(closeHello, 14000);

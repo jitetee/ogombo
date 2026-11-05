@@ -88,7 +88,8 @@
 
 /* chatbot v2 */
 #eo-chat-toggle{ position:fixed; }
-#eo-chat-toggle .eo-badge{ position:absolute; top:-2px; right:-2px; width:14px; height:14px; background:#ff5f57; border:2px solid var(--bg); border-radius:50%; }
+#eo-chat-toggle .eo-badge{ position:absolute; top:-6px; right:-6px; min-width:22px; height:22px; padding:0 5px; display:flex; align-items:center; justify-content:center; background:#e5302f; color:#fff; font:700 .8rem/1 sans-serif; border:2px solid var(--bg); border-radius:11px; }
+#eo-chat-toggle .eo-badge[hidden]{ display:none; }
 #eo-chat-window .titlebar{ display:flex; justify-content:space-between; align-items:center; }
 #eo-chat-log .msg p{ margin:0 0 .4rem; max-width:none; }
 #eo-chat-log .msg a{ color:var(--crt-green); }
@@ -378,3 +379,20 @@ details.selftest p{margin:.3rem 0 0}
 .verdict.review{border-color:#d19a1e!important;background:rgba(209,154,30,.12)}
 .verdict.reject{border-color:#c0392b!important;background:rgba(192,57,43,.12)}
 i[data-i]{display:inline-flex;vertical-align:-0.2em;font-style:normal;margin-right:.35em} i[data-i]:only-child{margin-right:0} svg.eo-i{flex:none}
+
+/* videos page */
+.vid-tabs{ display:flex; gap:.5rem; flex-wrap:wrap; margin:1rem 0; }
+.vid-tabs button{ font:inherit; font-size:1rem; padding:.45rem .9rem; background:var(--panel); color:var(--ink); border:1px solid var(--panel-border); cursor:pointer; }
+.vid-tabs button.on{ border-color:var(--crt-green); color:var(--crt-green); }
+.vid-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:1.4rem 1.2rem; }
+.vid h3{ font-size:1.15rem; margin:.55rem 0 .1rem; color:var(--ink); }
+.vid-meta{ margin:0; font-size:1rem; }
+.vid-play{ position:relative; display:block; width:100%; padding:0; border:1px solid var(--panel-border); background:#000; cursor:pointer; aspect-ratio:16/9; overflow:hidden; }
+.vid.short .vid-play{ aspect-ratio:9/16; }
+.vid-play img{ width:100%; height:100%; object-fit:cover; display:block; }
+.vid-btn{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; }
+.vid-btn svg{ width:3.2rem; height:3.2rem; padding:.8rem; background:rgba(0,0,0,.65); border-radius:50%; }
+.vid iframe{ width:100%; aspect-ratio:16/9; border:1px solid var(--panel-border); display:block; }
+.vid.short iframe{ aspect-ratio:9/16; }
+.vid-chan iframe{ width:100%; aspect-ratio:16/9; border:1px solid var(--panel-border); margin-bottom:1rem; }
+.vid-chan.short iframe{ max-width:360px; aspect-ratio:9/16; }

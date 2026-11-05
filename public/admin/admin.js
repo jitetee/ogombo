@@ -5,7 +5,7 @@
 // ============================================================
 (function () {
   const CFG = window.EO_FIREBASE_CONFIG, DB = CFG.databaseURL;
-  const PAGES = [["index", "Dashboard"], ["content", "Content"], ["content-generator", "Studio"], ["materials", "Materials"], ["ads", "Ads"], ["inbox", "Inbox"], ["links", "Links"], ["support-wall", "Support wall"], ["video", "Video"], ["whiteboard", "Whiteboard"], ["marketing", "Email"], ["merge", "Import"], ["data", "Data & settings"]];
+  const PAGES = [["index", "Dashboard"], ["content", "Content"], ["content-generator", "Studio"], ["materials", "Materials"], ["ads", "Ads"], ["inbox", "Inbox"], ["links", "Links"], ["videos", "Videos"], ["support-wall", "Support wall"], ["video", "Video"], ["whiteboard", "Whiteboard"], ["marketing", "Email"], ["merge", "Import"], ["data", "Data & settings"]];
   const LS = "eo_admin_session";
   let idToken = null, idExp = 0, session = null;
 
@@ -47,7 +47,7 @@
   }
   function audit(op, path) { if (!/^audit_log/.test(path)) req("POST", "audit_log", { ts: Date.now(), uid: session.uid, email: session.email, op, path }).catch(() => {}); }
   // visitors keep a browser copy of rarely-changing nodes; any admin save to one of them moves this stamp so they refresh
-  const PUBLIC_NODES = /^\/?(site_settings|profile|status|chatbot_faq|chatbot_config|materials|material_categories|material_bundles|writing_projects|ads|ad_settings|ad_packages|cyber_cafe_services|payment|pages|milestones|interests|occasions|jokes|side_projects|gallery)(\/|$)/;
+  const PUBLIC_NODES = /^\/?(site_settings|profile|status|chatbot_faq|chatbot_config|materials|material_categories|material_bundles|writing_projects|ads|ad_settings|ad_packages|cyber_cafe_services|payment|pages|milestones|interests|occasions|jokes|side_projects|gallery|videos)(\/|$)/;
   let bumpT = null;
   function bump(path) { if (!PUBLIC_NODES.test(path)) return; clearTimeout(bumpT); bumpT = setTimeout(() => req("PUT", "site_changed", { ".sv": "timestamp" }).catch(() => {}), 400); }
   const A = {
