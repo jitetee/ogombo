@@ -115,3 +115,14 @@ More: `examples/who-checklist.json` (layouts) and `examples/raw-items.json` (man
 > Write a JSON script for my whiteboard video maker following the guide above. Topic: ___. 6 scenes, about 45 seconds, format wide. Use only layouts and fields in the guide, cue words copied exactly from each `say`, icon names from Tabler, no emoji, no invented statistics. Reply with the JSON only.
 
 The hub also has a **Copy AI prompt** button with a ready-made version.
+
+## New item options (editor and JSON)
+
+- `rot`: rotate any item in degrees, for example `"rot": -4`.
+- `crop`: for image items, fractions cut from each side, for example `"crop": {"l":0.1,"r":0.1,"t":0,"b":0.2}`. Also `flip`: true and `opacity`: 0 to 1.
+- `eraseAt` (seconds into the scene) or `eraseCue` (a phrase from `say`): the eraser wipes that one item away.
+- `{"type":"ink","pts":[[x,y],...],"color":"#e63946","lw":8}`: a freehand stroke drawn over earlier items. Add `"hl":true` for a yellow highlighter. In the editor use "Pen over items" or "Highlighter".
+
+## Audio mixer
+
+On the Voice, audio and export page: voice volume, music volume (default 6 percent), music ducking under the voice, fades, sound-effect volume (whoosh between scenes, pop and ding on items) and extra audio layers with start time, stop time, volume and loop.

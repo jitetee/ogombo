@@ -3,7 +3,7 @@
   const q = new URLSearchParams(location.search), id = q.get("id") || "";
   const dbn = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms || 500); }; };
   function subnav(active) {
-    const items = [["hub", "Projects", "/admin/whiteboard"], ["edit", "Editor", "/admin/whiteboard-edit?id=" + encodeURIComponent(id)], ["export", "Voice & export", "/admin/whiteboard-export?id=" + encodeURIComponent(id)], ["thumb", "Thumbnail maker", "/admin/whiteboard-thumb"], ["guide", "Import guide", "/assets/whiteboard/import-guide.md"]];
+    const items = [["hub", "Projects", "/admin/whiteboard"], ["edit", "Editor", "/admin/whiteboard-edit?id=" + encodeURIComponent(id)], ["export", "Voice, audio & export", "/admin/whiteboard-export?id=" + encodeURIComponent(id)], ["thumb", "Thumbnail maker", "/admin/whiteboard-thumb"], ["guide", "Import guide", "/assets/whiteboard/import-guide.md"]];
     const el = document.createElement("div"); el.className = "wb-subnav"; el.style.cssText = "display:flex;gap:.4rem;flex-wrap:wrap;margin:.3rem 0 .8rem";
     items.forEach(([k, l, href]) => { if ((k === "edit" || k === "export") && !id) return; const a = document.createElement("a"); a.className = "btn sm" + (k === active ? " primary" : ""); a.textContent = l; a.href = href; if (k === "guide") a.target = "_blank"; el.appendChild(a); });
     return el;

@@ -251,15 +251,21 @@
       d.innerHTML = html || "";
       return d.textContent || "";
     },
-    // small WebP copy of a content card image (assets/content/t/<name>.webp), for lists. Falls back to the original.
-    thumb(src) {
+    // Small copy of a content card image for lists.
+    // mode "local" (default): /assets/content/t/<name>.webp made at build time.
+    // mode "cdn": ONE original image; a free resizing proxy (wsrv.nl) fetches it from this site and returns just the size asked for,
+    // so the browser downloads a few KB instead of the full picture. Switch with  window.EO_IMG_MODE = "cdn"  (before db.js) or localStorage eo-img-mode.
+    imgMode() { try { return window.EO_IMG_MODE || localStorage.getItem("eo-img-mode") || "local"; } catch (e) { return window.EO_IMG_MODE || "local"; } },
+    sized(src, w) { return "https://wsrv.nl/?url=" + encodeURIComponent(location.host + src) + "&w=" + w + "&output=webp&q=76"; },
+    thumb(src, w) {
       const m = /^\/assets\/content\/([^\/]+)\.jpg$/.exec(src || "");
-      return m ? `/assets/content/t/${m[1]}.webp` : src;
+      if (!m) return src;
+      return window.EO_UTIL.imgMode() === "cdn" && !/^(localhost|127\.)/.test(location.hostname) ? window.EO_UTIL.sized(src, w || 320) : `/assets/content/t/${m[1]}.webp`;
     },
     // <img> markup for lists: thumbnail first, original if the thumbnail is missing
     timg(src, alt, extra) {
-      const t = window.EO_UTIL.thumb(src), q = (x) => String(x == null ? "" : x).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-      return `<img src="${q(t)}" alt="${q(alt)}" loading="lazy" decoding="async"${t !== src ? ` onerror="this.onerror=null;this.src='${q(src)}'"` : ""} ${extra || ""}>`;
+      const t = window.EO_UTIL.thumb(src), cdn = t !== src && /^https:\/\/wsrv\.nl/.test(t), q = (x) => String(x == null ? "" : x).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      return `<img src="${q(t)}"${cdn ? ` srcset="${q(window.EO_UTIL.sized(src, 240))} 240w, ${q(window.EO_UTIL.sized(src, 480))} 480w, ${q(window.EO_UTIL.sized(src, 720))} 720w" sizes="(max-width:600px) 50vw, 240px"` : ""} alt="${q(alt)}" loading="lazy" decoding="async"${t !== src ? ` onerror="this.onerror=null;this.src='${q(src)}'"` : ""} ${extra || ""}>`;
     },
     slugify(s) {
       return String(s || "").toLowerCase().normalize("NFKD").replace(/[^\w\s-]/g, "").trim().replace(/[\s_]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");

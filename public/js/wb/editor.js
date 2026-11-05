@@ -6,9 +6,9 @@
   $("main .wrap").insertBefore(C.subnav("edit"), $("#top"));
   if (!C.id) { location.href = "/admin/whiteboard"; return; }
   const rec = await S.get(C.id); if (!rec) { alert("That project was not found. Going back to the list."); location.href = "/admin/whiteboard"; return; }
-  let P = Object.assign(W.newProject(), rec.data), cur = 0, sel = null, aud = [], durs = [], playing = null, icons = {}, dragging = null, mixBuf = null, mixSig = "";
-  if (!P.scenes.length) P.scenes.push(W.newScene());
-  P.voice = P.voice || { name: "piper:mine", languageCode: "en-US", rate: 1, pitch: 0 }; P.music = P.music || { src: "/assets/music/calm-focus.mp3", vol: 0.12 };
+  let P = Object.assign(W.newProject(), rec.data), cur = 0, sel = null, aud = [], durs = [], playing = null, icons = {}, dragging = null, mixBuf = null, mixSig = "", drawMode = null, inkCol = "#e63946";
+  if (!P.scenes.length) P.scenes.push(W.newScene()); EO_WBA.settings(P);
+  P.voice = P.voice || { name: "piper:mine", languageCode: "en-US", rate: 1, pitch: 0 }; P.music = P.music || { src: "/assets/music/calm-focus.mp3", vol: 0.06 };
   const cv = $("#cv"), ov = $("#ov"), ctx = cv.getContext("2d"), octx = ov.getContext("2d");
   const persist = C.dbn(async () => { try { const r = await S.get(C.id) || { id: C.id }; r.data = P; r.thumb = C.thumb(cv, 320); await S.put(r); } catch (e) { console.warn("save failed", e); } }, 700);
   const save = () => { mixSig = ""; persist(); };
@@ -30,31 +30,42 @@
   // ---------- drawing ----------
   function editT(tl) { const s = tl.scenes[Math.min(cur, tl.scenes.length - 1)]; return s.t0 + s.lead + s.lay.end + 0.02; }
   function frame(t) {
-    sizeCanvas(); const tl = TL(); assets.tl = tl; assets.hand = playing ? true : false;
+    sizeCanvas(); const tl = TL(); assets.tl = tl; assets.hand = playing ? true : false; assets.edit = !playing;
     W.draw(ctx, P, playing ? t : editT(tl), assets);
     octx.clearRect(0, 0, ov.width, ov.height);
     if (!playing) overlay(tl);
     const tot = tl.total; $("#tm").textContent = (playing ? fmt(t) : "edit") + " / " + fmt(tot);
   }
+  const rotOK = (it) => it.type !== "icon" && it.type !== "figure" && it.type !== "arrow" && it.type !== "ink";
+  const centre = (b) => [b[0] + b[2] / 2, b[1] + b[3] / 2];
+  function unrot(it, b, x, y) { if (!it.rot || !rotOK(it)) return [x, y]; const [cx, cy] = centre(b), a = -it.rot * Math.PI / 180, dx = x - cx, dy = y - cy; return [cx + dx * Math.cos(a) - dy * Math.sin(a), cy + dx * Math.sin(a) + dy * Math.cos(a)]; }
   function overlay() {
     const z = W.size(P), k = ov.width / z.w; octx.save(); octx.scale(k, k); const it = item();
-    if (it) { const b = W.build(it, P, assets, ctx).bbox; octx.strokeStyle = "#28e8cd"; octx.lineWidth = 3 / k * 1.2; octx.setLineDash([8, 6]); octx.strokeRect(b[0] - 6, b[1] - 6, b[2] + 12, b[3] + 12); octx.setLineDash([]); octx.fillStyle = "#28e8cd"; octx.fillRect(b[0] + b[2] - 6, b[1] + b[3] - 6, 20, 20); }
+    if (it) { const b = W.build(it, P, assets, ctx).bbox, [cx, cy] = centre(b); octx.save(); if (it.rot && rotOK(it)) { octx.translate(cx, cy); octx.rotate(it.rot * Math.PI / 180); octx.translate(-cx, -cy); }
+      octx.strokeStyle = "#28e8cd"; octx.lineWidth = 3 / k * 1.2; octx.setLineDash([8, 6]); octx.strokeRect(b[0] - 6, b[1] - 6, b[2] + 12, b[3] + 12); octx.setLineDash([]); octx.fillStyle = "#28e8cd"; octx.fillRect(b[0] + b[2] - 6, b[1] + b[3] - 6, 20, 20);
+      if (rotOK(it)) { octx.beginPath(); octx.moveTo(cx, b[1] - 6); octx.lineTo(cx, b[1] - 44); octx.stroke(); octx.beginPath(); octx.arc(cx, b[1] - 52, 13, 0, 7); octx.fill(); octx.fillStyle = "#0b2a26"; octx.font = "bold 18px sans-serif"; octx.textAlign = "center"; octx.fillText("\u21bb", cx, b[1] - 46); }
+      octx.restore(); }
     octx.restore();
   }
   const redraw = () => frame(0);
 
   // ---------- pointer interaction ----------
   const toBoard = (e) => { const r = ov.getBoundingClientRect(), z = W.size(P); return [((e.clientX - r.left) / r.width) * z.w, ((e.clientY - r.top) / r.height) * z.h]; };
-  function hit(x, y) { const L = sc().items; for (let i = L.length - 1; i >= 0; i--) { const b = W.build(L[i], P, assets, ctx).bbox; if (x >= b[0] - 12 && x <= b[0] + b[2] + 12 && y >= b[1] - 12 && y <= b[1] + b[3] + 12) return L[i]; } return null; }
+  function hit(x, y) { const L = sc().items; for (let i = L.length - 1; i >= 0; i--) { const b = W.build(L[i], P, assets, ctx).bbox, [ux, uy] = unrot(L[i], b, x, y); if (ux >= b[0] - 12 && ux <= b[0] + b[2] + 12 && uy >= b[1] - 12 && uy <= b[1] + b[3] + 12) return L[i]; } return null; }
   ov.addEventListener("pointerdown", (e) => {
     if (playing) return; const [x, y] = toBoard(e), cur0 = item(); ov.setPointerCapture(e.pointerId);
-    if (cur0) { const b = W.build(cur0, P, assets, ctx).bbox; if (x >= b[0] + b[2] - 14 && x <= b[0] + b[2] + 26 && y >= b[1] + b[3] - 14 && y <= b[1] + b[3] + 26) { dragging = { mode: "size", it: cur0, x0: x, y0: y, b }; return; } }
+    if (drawMode) { const it = { id: W.newId(), type: "ink", pts: [[Math.round(x), Math.round(y)]], color: inkCol, hl: drawMode === "hl" }; sc().items.push(it); sel = it.id; dragging = { mode: "ink", it }; return; }
+    if (cur0) { const b = W.build(cur0, P, assets, ctx).bbox, [ux, uy] = unrot(cur0, b, x, y);
+      if (rotOK(cur0) && Math.hypot(ux - (b[0] + b[2] / 2), uy - (b[1] - 52)) < 30) { dragging = { mode: "rot", it: cur0, b }; return; }
+      if (cur0.type !== "ink" && ux >= b[0] + b[2] - 14 && ux <= b[0] + b[2] + 26 && uy >= b[1] + b[3] - 14 && uy <= b[1] + b[3] + 26) { dragging = { mode: "size", it: cur0, x0: x, y0: y, b }; return; } }
     const h = hit(x, y); sel = h ? h.id : null; if (h) dragging = { mode: "move", it: h, x0: x, y0: y }; inspector(); redraw(); strip();
   });
   ov.addEventListener("pointermove", (e) => {
     if (!dragging) return; const [x, y] = toBoard(e), it = dragging.it, dx = x - dragging.x0, dy = y - dragging.y0;
-    if (dragging.mode === "move") { it.x += dx; it.y += dy; if (it.type === "arrow") { it.x2 += dx; it.y2 += dy; } dragging.x0 = x; dragging.y0 = y; }
-    else { const b = dragging.b, nw = Math.max(30, x - b[0]), nh = Math.max(30, y - b[1]);
+    if (dragging.mode === "ink") { const l = it.pts[it.pts.length - 1]; if (Math.hypot(x - l[0], y - l[1]) > 5) it.pts.push([Math.round(x), Math.round(y)]); redrawInk(); return; }
+    if (dragging.mode === "rot") { const [cx, cy] = centre(dragging.b); let a = Math.atan2(y - cy, x - cx) * 180 / Math.PI + 90; if (!e.altKey) a = Math.abs(a % 90) < 4 || Math.abs(a % 90) > 86 ? Math.round(a / 90) * 90 : a; a = ((a + 540) % 360) - 180; it.rot = Math.round(a * 10) / 10; redraw(); return; }
+    if (dragging.mode === "move") { if (it.type === "ink") it.pts = it.pts.map((q) => [q[0] + dx, q[1] + dy]); else { it.x += dx; it.y += dy; } if (it.type === "arrow") { it.x2 += dx; it.y2 += dy; } dragging.x0 = x; dragging.y0 = y; }
+    else { const b = dragging.b, [ux, uy] = unrot(it, b, x, y), nw = Math.max(30, ux - b[0]), nh = Math.max(30, uy - b[1]);
       if (it.type === "text" || it.type === "tag" || it.type === "emoji") it.size = Math.max(20, Math.round((it.size || 64) * nh / b[3]));
       else if (it.type === "arrow") { it.x2 = x; it.y2 = y; }
       else if (it.type === "pie") it.r = Math.max(40, Math.round(Math.min(nw, nh) / 2));
@@ -62,7 +73,8 @@
       else { it.w = Math.round(nw); delete it.h; } }
     redraw();
   });
-  ov.addEventListener("pointerup", () => { if (dragging) { dragging = null; save(); inspector(); } });
+  const redrawInk = () => { frame(0); const it = item(); if (it && it.type === "ink") { const z = W.size(P), k = ov.width / z.w; octx.save(); octx.scale(k, k); octx.strokeStyle = it.color; octx.lineWidth = it.hl ? 34 : 7; octx.globalAlpha = it.hl ? 0.45 : 1; octx.lineCap = "round"; octx.lineJoin = "round"; octx.beginPath(); it.pts.forEach((q, i) => (i ? octx.lineTo(q[0], q[1]) : octx.moveTo(q[0], q[1]))); octx.stroke(); octx.restore(); } };
+  ov.addEventListener("pointerup", () => { if (dragging) { if (dragging.mode === "ink" && dragging.it.pts.length < 2) { sc().items = sc().items.filter((i) => i !== dragging.it); sel = null; } dragging = null; save(); inspector(); redraw(); timelineList(); } });
   ov.addEventListener("dblclick", (e) => { const it = item(); if (it && (it.type === "text" || it.type === "tag")) { const t = prompt("Text", it.text); if (t != null) { it.text = t; save(); redraw(); inspector(); } } });
   addEventListener("keydown", (e) => { if (/INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || "")) return; const it = item(); if (!it) return; if (e.key === "Delete" || e.key === "Backspace") { delItem(); e.preventDefault(); } const st = e.shiftKey ? 20 : 4; if (e.key.startsWith("Arrow")) { if (e.key === "ArrowLeft") it.x -= st; if (e.key === "ArrowRight") it.x += st; if (e.key === "ArrowUp") it.y -= st; if (e.key === "ArrowDown") it.y += st; save(); redraw(); e.preventDefault(); } });
   const stage = $("#stagebox");
@@ -147,6 +159,13 @@
     if (it.type === "image") { add(fld("Width", "w", "number")); add(fld("Reveal", "reveal", "select", ["wipe", "scan"])); }
     if (it.type === "narrator") { add(fld("Pose", "pose", "select", poseList || [it.pose])); add(fld("Width", "w", "number")); }
     if (it.type === "emoji") { add(fld("Emoji", "char", "text")); add(fld("Size", "size", "number")); }
+    if (it.type === "ink") { add(fld("Colour", "color", "color", "#e63946")); add(fld("Line thickness", "lw", "number")); h.insertAdjacentHTML("beforeend", `<p class="wb-note">Move it by dragging. To redo it, delete it and draw again.</p>`); }
+    if (it.type === "image" || it.type === "narrator") { h.insertAdjacentHTML("beforeend", `<h4 style="margin:.5rem 0 .2rem">Crop (percent cut from each side)</h4>`); const cr = (it.crop = it.crop || {}); const g = document.createElement("div"); g.className = "wb-two"; [["l", "Left"], ["t", "Top"], ["r", "Right"], ["b", "Bottom"]].forEach(([k2, l]) => { const d = document.createElement("div"); d.className = "field"; d.innerHTML = `<label>${l} <b>${Math.round((cr[k2] || 0) * 100)}%</b></label><input type="range" min="0" max="80" value="${Math.round((cr[k2] || 0) * 100)}">`; const r = $("input", d), lb = $("b", d); r.oninput = () => { cr[k2] = +r.value / 100; lb.textContent = r.value + "%"; delete it.h; redraw(); }; r.onchange = () => { save(); }; g.appendChild(d); }); add(g);
+      const q = document.createElement("div"); q.className = "wb-row"; q.append(A.btn("Flip", "sm", () => { it.flip = !it.flip; save(); redraw(); }), A.btn("Reset crop", "sm", () => { delete it.crop; delete it.h; save(); inspector(); redraw(); })); add(q); add(fld("Opacity (0-1)", "opacity", "number")); }
+    if (rotOK(it)) add(fld("Rotation (degrees)", "rot", "number"));
+    else if (it.type === "icon" || it.type === "figure") add(fld("Rotation (degrees)", "rot", "number"));
+    h.insertAdjacentHTML("beforeend", `<hr style="border-color:var(--panel-border)"><p class="wb-note">Erase: the item is wiped away by the eraser later in the scene (leave blank to keep it).</p>`);
+    add(fld("Erase at (seconds into the scene)", "eraseAt", "number")); add(fld("Or erase when this phrase is spoken", "eraseCue", "text"));
     h.insertAdjacentHTML("beforeend", `<hr style="border-color:var(--panel-border)"><p class="wb-note">Timing: leave all three blank and items are spread across the voice-over in order.</p>`);
     add(fld("When to draw (phrase from the voice-over)", "cue", "text")); const r2 = document.createElement("div"); r2.className = "wb-two"; r2.append(fld("Starts at (s)", "start", "number"), fld("Draw time (s)", "dur", "number")); add(r2);
     const r = document.createElement("div"); r.className = "wb-row";
@@ -170,7 +189,7 @@
 
   // ---------- voice (made on the Voice & export page, cached for this page) ----------
   async function refreshVoices() { aud = await EO_WBA.loadVoices(P); recomputeDurs(); }
-  async function getMix() { const tl = TL(), sig = JSON.stringify(P.scenes.map((s) => s.narration + (s.hold || "") + s.items.length)) + P.music.src + P.music.vol + durs.join(","); if (mixBuf && sig === mixSig) return mixBuf; mixBuf = await EO_WBA.mix(P, tl, aud); mixSig = sig; return mixBuf; }
+  async function getMix() { const tl = TL(), sig = JSON.stringify(P.scenes.map((s) => s.narration + (s.hold || "") + s.items.length)) + EO_WBA.sig(P) + durs.join(","); if (mixBuf && sig === mixSig) return mixBuf; mixBuf = await EO_WBA.mix(P, tl, aud); mixSig = sig; return mixBuf; }
 
   // ---------- playback ----------
   async function play() {
@@ -181,7 +200,7 @@
   }
   function stopPlay() { if (playing && playing.a) playing.a.stop(); playing = null; $("#play").textContent = "Play"; redraw(); }
   $("#play").onclick = play;
-  $("#seek").oninput = () => { if (playing) stopPlay(); const tl = TL(), t = (+$("#seek").value / 1000) * tl.total; assets.hand = true; sizeCanvas(); assets.tl = tl; W.draw(ctx, P, t, assets); octx.clearRect(0, 0, ov.width, ov.height); $("#tm").textContent = fmt(t) + " / " + fmt(tl.total); };
+  $("#seek").oninput = () => { if (playing) stopPlay(); const tl = TL(), t = (+$("#seek").value / 1000) * tl.total; assets.hand = true; assets.edit = false; sizeCanvas(); assets.tl = tl; W.draw(ctx, P, t, assets); octx.clearRect(0, 0, ov.width, ov.height); $("#tm").textContent = fmt(t) + " / " + fmt(tl.total); };
 
   // ---------- project bar ----------
   const top = $("#top");
@@ -228,6 +247,16 @@
       A.btn("Back to narrator hand", "", async () => { delete P.hand; save(); await reload(); redraw(); d.remove(); }), A.btn("Close", "", () => d.remove()));
   }
   function logoDialog() { const f = document.createElement("input"); f.type = "file"; f.accept = "image/*"; f.onchange = () => { const r = new FileReader(); r.onload = () => { const im = new Image(); im.onload = async () => { const c = document.createElement("canvas"); c.width = c.height = 256; const g = c.getContext("2d"), m = Math.min(im.width, im.height); g.drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, 256, 256); P.logo = c.toDataURL("image/png"); save(); await reload(); redraw(); }; im.src = r.result; }; r.readAsDataURL(f.files[0]); }; if (confirm("OK = upload a new logo. Cancel = go back to your site logo.")) f.click(); else { P.logo = "/assets/icons/icon-192.png"; save(); reload().then(redraw); } }
-  await reload(); await refreshVoices(); bar(); assetsPane(); strip(); inspector(); redraw(); timelineList(); addEventListener("resize", redraw);
+  // ---------- draw-over toolbar ----------
+  function drawTools() {
+    const row = document.createElement("div"); row.className = "wb-row"; row.id = "drawtools"; $("#stagebox").parentNode.insertBefore(row, $("#stagebox").nextSibling);
+    const paint = () => { row.innerHTML = ""; const b1 = A.btn("Pen over items", "sm" + (drawMode === "pen" ? " primary" : ""), () => { drawMode = drawMode === "pen" ? null : "pen"; sel = null; ov.style.touchAction = drawMode ? "none" : ""; ov.style.cursor = drawMode ? "crosshair" : ""; paint(); redraw(); }),
+        b2 = A.btn("Highlighter", "sm" + (drawMode === "hl" ? " primary" : ""), () => { drawMode = drawMode === "hl" ? null : "hl"; sel = null; ov.style.touchAction = drawMode ? "none" : ""; ov.style.cursor = drawMode ? "crosshair" : ""; if (drawMode === "hl" && inkCol === "#e63946") inkCol = "#ffe14d"; paint(); redraw(); });
+      const c = document.createElement("input"); c.type = "color"; c.value = inkCol; c.title = "Ink colour"; c.oninput = () => (inkCol = c.value);
+      const u = A.btn("Undo last stroke", "sm", () => { const L = sc().items; for (let i = L.length - 1; i >= 0; i--) if (L[i].type === "ink") { L.splice(i, 1); break; } sel = null; save(); inspector(); redraw(); timelineList(); });
+      const n = document.createElement("span"); n.className = "wb-note"; n.textContent = drawMode ? "Drawing is ON: drag on the board. Strokes are drawn by the hand during the video, after the items before them." : "Draw circles, arrows or highlights over images."; row.append(b1, b2, c, u, n); };
+    paint();
+  }
+  await reload(); await refreshVoices(); bar(); drawTools(); assetsPane(); strip(); inspector(); redraw(); timelineList(); addEventListener("resize", redraw);
 
 })();

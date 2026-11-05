@@ -158,11 +158,22 @@
       };
     }
     if (k === "image" || k === "narrator") {
-      const src = k === "narrator" ? "/assets/narrators/" + (it.pose || "neutral") + ".png" : it.src, im = A.imgs && A.imgs[src], w = it.w || (k === "narrator" ? 420 : 300), h = it.h || (im ? w * im.height / im.width : w);
+      const src = k === "narrator" ? "/assets/narrators/" + (it.pose || "neutral") + ".png" : it.src, im = A.imgs && A.imgs[src], cr = it.crop || {}, cl = cr.l || 0, ct = cr.t || 0, crr = cr.r || 0, cb = cr.b || 0;
+      const cw = im ? im.width * (1 - cl - crr) : 1, ch = im ? im.height * (1 - ct - cb) : 1, w = it.w || (k === "narrator" ? 420 : 300), h = it.h || (im ? w * ch / cw : w);
       const scan = k === "narrator" || it.reveal === "scan";
       return { bbox: [it.x, it.y, w, h], src, pen(p) { return scan ? [it.x + w * (0.5 + 0.35 * Math.sin(p * 18)), it.y + h * p] : [it.x + w * p, it.y + h * (0.5 + 0.45 * Math.sin(p * 40))]; },
         draw(ctx, p) { if (!im) { ctx.save(); ctx.strokeStyle = "#999"; ctx.setLineDash([10, 8]); ctx.lineWidth = 3; ctx.strokeRect(it.x, it.y, w, h); ctx.restore(); return; }
-          ctx.save(); ctx.beginPath(); if (scan) ctx.rect(it.x - 4, it.y - 4, w + 8, (h + 8) * p); else ctx.rect(it.x, it.y, w * p, h); ctx.clip(); ctx.drawImage(im, it.x, it.y, w, h); ctx.restore(); } };
+          ctx.save(); ctx.beginPath(); if (scan) ctx.rect(it.x - 4, it.y - 4, w + 8, (h + 8) * p); else ctx.rect(it.x, it.y, w * p, h); ctx.clip(); if (it.opacity != null) ctx.globalAlpha = it.opacity;
+          if (it.flip) { ctx.translate(it.x * 2 + w, 0); ctx.scale(-1, 1); }
+          ctx.drawImage(im, im.width * cl, im.height * ct, cw, ch, it.x, it.y, w, h); ctx.restore(); } };
+    }
+    if (k === "ink") {   // freehand drawing over other items: points in board coordinates
+      const pts = it.pts || [], xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]), x0 = Math.min(...xs, 0), y0 = Math.min(...ys, 0), bx = pts.length ? Math.min(...xs) : 0, by = pts.length ? Math.min(...ys) : 0;
+      const bw = pts.length ? Math.max(...xs) - bx : 10, bh = pts.length ? Math.max(...ys) - by : 10, lens = [0]; for (let i = 1; i < pts.length; i++) lens.push(lens[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); const L = lens[lens.length - 1] || 1;
+      const at = (p) => { const d = p * L; let i = 1; while (i < pts.length - 1 && lens[i] < d) i++; const a = pts[i - 1] || [0, 0], b = pts[i] || a, seg = (lens[i] - lens[i - 1]) || 1, f = clamp((d - lens[i - 1]) / seg, 0, 1); return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]; };
+      return { bbox: [bx, by, Math.max(10, bw), Math.max(10, bh)], len: L, pen(p) { return pts.length ? at(p) : [0, 0]; },
+        draw(ctx, p) { if (pts.length < 2) return; ctx.save(); const hl = !!it.hl; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = it.color || (hl ? "#ffe14d" : "#e63946"); ctx.lineWidth = it.lw || (hl ? 34 : 7); if (hl) { ctx.globalAlpha = 0.45; ctx.globalCompositeOperation = "multiply"; }
+          const d = p * L; ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) { if (lens[i] <= d) ctx.lineTo(pts[i][0], pts[i][1]); else { const f = (d - lens[i - 1]) / ((lens[i] - lens[i - 1]) || 1), a = pts[i - 1]; ctx.lineTo(a[0] + (pts[i][0] - a[0]) * f, a[1] + (pts[i][1] - a[1]) * f); break; } } ctx.stroke(); ctx.restore(); } };
     }
     if (k === "emoji") {
       const size = it.size || 160;
@@ -179,8 +190,8 @@
   }
 
   // ---------- timeline ----------
-  const COMPLEX = { icon: 0.9, figure: 1.7, shape: 0.8, arrow: 0.7, pie: 2.2, image: 1.2, narrator: 1.6, emoji: 0.6, tag: 0.9, text: 0 };
-  function itemDur(it) { if (it.dur) return it.dur; if (it.type === "text" || it.type === "tag") return clamp(String(it.text || "").length * 0.075, 0.6, 5); return COMPLEX[it.type] || 1; }
+  const COMPLEX = { icon: 0.9, figure: 1.7, shape: 0.8, arrow: 0.7, pie: 2.2, image: 1.2, narrator: 1.6, ink: 1.2, emoji: 0.6, tag: 0.9, text: 0 };
+  function itemDur(it) { if (it.dur) return it.dur; if (it.type === "text" || it.type === "tag") return clamp(String(it.text || "").length * 0.075, 0.6, 5); if (it.type === "ink") { const pts = it.pts || []; let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return clamp(L / 900, 0.5, 4); } return COMPLEX[it.type] || 1; }
   // gives every item {t0,t1} relative to the scene's body start (= when the voice starts).
   // Priority: explicit start > cue (a phrase from the narration: drawing begins just before it is spoken) > next in order.
   function cueTime(s, it, nd) {
@@ -253,9 +264,19 @@
     ctx.fillStyle = P.bg; ctx.fillRect(0, 0, W, H);
     const g = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(60,50,30,0.07)"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   }
-  function drawItems(ctx, P, A, sc, lt, upTo) {
-    for (const o of sc.lay.list) { const p = upTo ? 1 : c01((lt - o.t0) / Math.max(0.01, o.t1 - o.t0)); if (p <= 0) continue; built(o.it, P, A, ctx).draw(ctx, io(p) * 0.35 + p * 0.65); }
+  // an item can be wiped away by an eraser later in the scene: it.eraseAt (seconds) or it.eraseCue (phrase from the voice-over)
+  const ERASE = 0.7;
+  function eraseTime(sc, it) { if (it.eraseAt != null && it.eraseAt !== "") return +it.eraseAt; if (it.eraseCue) { const c = cueTime(sc.s, it.eraseCue ? { cue: it.eraseCue } : it, sc.nd); if (c != null) return c + 0.25; } return null; }
+  function drawOne(ctx, P, A, o, p, q) {
+    const it = o.it, g = built(it, P, A, ctx), b = g.bbox; ctx.save();
+    if (it.rot && it.type !== "icon" && it.type !== "figure") { const cx = b[0] + b[2] / 2, cy = b[1] + b[3] / 2; ctx.translate(cx, cy); ctx.rotate(it.rot * Math.PI / 180); ctx.translate(-cx, -cy); }
+    if (q > 0) { ctx.beginPath(); ctx.rect(b[0] + b[2] * q - 8, b[1] - 40, b[2] + 80, b[3] + 80); ctx.clip(); }
+    g.draw(ctx, p); ctx.restore();
   }
+  function drawItems(ctx, P, A, sc, lt, upTo) {
+    for (const o of sc.lay.list) { const te = A.edit ? null : eraseTime(sc, o.it); if (upTo && te != null) continue; let q = 0; if (te != null && lt >= te) { q = (lt - te) / ERASE; if (q >= 1) continue; } const p = upTo ? 1 : c01((lt - o.t0) / Math.max(0.01, o.t1 - o.t0)); if (p <= 0) continue; drawOne(ctx, P, A, o, io(p) * 0.35 + p * 0.65, q); }
+  }
+  function activeErase(sc, P, A, ctx, lt) { for (const o of sc.lay.list) { const te = eraseTime(sc, o.it); if (te != null && lt >= te && lt < te + ERASE) { const b = built(o.it, P, A, ctx).bbox, q = (lt - te) / ERASE; return [b[0] + b[2] * q, b[1] + b[3] * (0.5 + 0.4 * Math.sin(q * 16))]; } } return null; }
   function penAt(sc, P, A, ctx, lt) {
     const L = sc.lay.list; if (!L.length) return null;
     const pos = (o, p) => built(o.it, P, A, ctx).pen(io(p) * 0.35 + p * 0.65), OFF = [820, 620];
@@ -275,6 +296,27 @@
     const arc = Math.sin(f * Math.PI) * Math.min(70, dist * 0.12);                   // the pen lifts off the board while travelling
     return { xy: [lerp(e[0], s2[0], io(f)), lerp(e[1], s2[1], io(f)) - arc], lift: Math.sin(f * Math.PI) };
   }
+
+  // ---------- auto captions: the voice-over words, a few at a time, with the spoken word lit ----------
+  const CAPC = new WeakMap();
+  function capWords(sc) {
+    const txt = String(sc.s.narration || "").replace(/\s+/g, " ").trim(); if (!txt) return null; let c = CAPC.get(sc.s); if (c && c.txt === txt) return c;
+    const raw = txt.split(" "), ws = raw.map((w) => { const clean = w.replace(/[^\p{L}\p{N}'’%-]/g, "") || w; return { w, wt: clean.length + 1.5 + (/[.!?]$/.test(w) ? 6 : /[,;:]$/.test(w) ? 3 : 0) }; });
+    const tot = ws.reduce((a, b) => a + b.wt, 0); let acc = 0; ws.forEach((x) => { x.a = acc / tot; acc += x.wt; x.b = acc / tot; });
+    const pages = []; let cur = []; ws.forEach((x, i) => { cur.push(x); const end = /[.!?,;:]$/.test(x.w); if (cur.length >= 4 || (end && cur.length >= 2) || i === ws.length - 1) { pages.push(cur); cur = []; } });
+    c = { txt, pages }; CAPC.set(sc.s, c); return c;
+  }
+  function drawCaptions(ctx, P, sc, lt, sz) {
+    const cap = P.captions; if (!cap || !cap.on) return; const c = capWords(sc); if (!c || !(sc.nd > 0)) return; const f = (lt - sc.lead) / sc.nd; if (f < 0 || f > 1.02) return;
+    const page = c.pages.find((pg) => f >= pg[0].a - 0.002 && f <= pg[pg.length - 1].b) || c.pages.filter((pg) => pg[0].a <= f).pop(); if (!page) return;
+    const vert = sz.h > sz.w, size = Math.round((cap.size || 1) * (vert ? sz.w * 0.07 : sz.h * 0.062)), y = sz.h * (cap.pos === "mid" ? 0.5 : vert ? 0.875 : 0.9), maxW = sz.w * (vert ? 0.74 : 0.9), cxm = sz.w * (vert ? 0.45 : 0.5);
+    ctx.save(); ctx.font = fontStr(P, size); ctx.textBaseline = "alphabetic"; ctx.lineJoin = "round";
+    const lines = []; let line = [], lw = 0; const sp = Math.max(ctx.measureText(" ").width, size * 0.3); page.forEach((x) => { const w = ctx.measureText(x.w).width; if (line.length && lw + sp + w > maxW) { lines.push({ line, lw }); line = []; lw = 0; } lw += (line.length ? sp : 0) + w; line.push(x); }); lines.push({ line, lw });
+    const lh = size * 1.18, y0 = y - (lines.length - 1) * lh * 0.5; const pad = size * 0.28; const wmax = Math.max(...lines.map((l) => l.lw));
+    ctx.globalAlpha = 0.92; ctx.fillStyle = "#101418"; ctx.beginPath(); ctx.roundRect(cxm - wmax / 2 - pad * 1.4, y0 - size * 0.92, wmax + pad * 2.8, lines.length * lh + pad * 0.6, size * 0.3); ctx.fill(); ctx.globalAlpha = 1;
+    lines.forEach((L, i) => { let x = cxm - L.lw / 2; L.line.forEach((wd) => { const on = f >= wd.a - 0.002 && f < wd.b + 0.01, past = f >= wd.b; ctx.textAlign = "left"; ctx.fillStyle = on ? "#ffe14d" : past ? "#ffffff" : "#ffffffaa"; if (on) { ctx.save(); ctx.translate(x + ctx.measureText(wd.w).width / 2, y0 + i * lh); ctx.scale(1.03, 1.03); ctx.fillText(wd.w, -ctx.measureText(wd.w).width / 2, 0); ctx.restore(); } else ctx.fillText(wd.w, x, y0 + i * lh); x += ctx.measureText(wd.w).width + sp; }); });
+    ctx.restore();
+  }
   function draw(ctx, P, t, A) {
     A = A || {}; const sz = size(P), W = ctx.canvas.width, H = ctx.canvas.height, k = W / sz.w; ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); paper(ctx, P, W, H); ctx.scale(k, k);
     const tl = A.tl || timeline(P, A.aud); if (!tl.scenes.length) { ctx.font = fontStr(P, 60); ctx.fillStyle = "#999"; ctx.textAlign = "center"; ctx.fillText("Add a scene to start", sz.w / 2, sz.h / 2); ctx.restore(); return; }
@@ -286,10 +328,11 @@
       ctx.save(); ctx.fillStyle = P.bg; ctx.beginPath(); ctx.moveTo(-10, -10); ctx.lineTo(wx, -10); ctx.lineTo(wx - 140, sz.h + 10); ctx.lineTo(-10, sz.h + 10); ctx.closePath(); ctx.fill(); ctx.restore();
       eraser = [wx - 70 + Math.sin(f * 14) * 80, sz.h * 0.5 + Math.sin(f * 9) * sz.h * 0.35];
     } else {
-      const bt = lt - sc.lead; drawItems(ctx, P, A, sc, bt, false); if (hand) { const pa = penAt(sc, P, A, ctx, bt); if (pa) handPos = pa; }
+      const bt = lt - sc.lead; drawItems(ctx, P, A, sc, bt, false); if (hand) { const ea = activeErase(sc, P, A, ctx, bt); if (ea) eraser = ea; else { const pa = penAt(sc, P, A, ctx, bt); if (pa) handPos = pa; } }
     }
     if (eraser) drawHand(ctx, eraser[0], eraser[1], hs, "eraser", A, 0);
     else if (handPos) drawHand(ctx, handPos.xy[0], handPos.xy[1], hs, "pen", A, 0, handPos.lift);
+    if (!eraser) drawCaptions(ctx, P, sc, lt, sz);
     // logo badge: the project's real logo (round) or initials
     if (P.badge || P.logo) { const r = 38 * hs, bx = sz.w - 62 * hs, by = sz.h - 62 * hs; ctx.save(); ctx.beginPath(); ctx.arc(bx, by, r + 4 * hs, 0, Math.PI * 2); ctx.fillStyle = "#fff"; ctx.fill(); ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI * 2); ctx.clip();
       if (A.logoImg) ctx.drawImage(A.logoImg, bx - r, by - r, r * 2, r * 2); else { ctx.fillStyle = "#5b5b5b"; ctx.fillRect(bx - r, by - r, r * 2, r * 2); ctx.fillStyle = "#fff"; ctx.font = fontStr(P, 26 * hs); ctx.textAlign = "center"; ctx.fillText(P.badge, bx, by + 9 * hs); } ctx.restore(); }

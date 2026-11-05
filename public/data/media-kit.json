@@ -1,0 +1,36 @@
+{
+  "_help": "Fill in your real numbers from YouTube Studio, Instagram, TikTok and Facebook insights. Any stat with an empty value is hidden on the page. Do not round up: sponsors check.",
+  "updated": "",
+  "tagline": "Making theatre easier to understand.",
+  "stats": [
+    { "label": "YouTube subscribers", "value": "" },
+    { "label": "YouTube views, last 28 days", "value": "" },
+    { "label": "Average view duration", "value": "" },
+    { "label": "Instagram followers", "value": "" },
+    { "label": "TikTok followers", "value": "" },
+    { "label": "Facebook followers", "value": "" },
+    { "label": "Newsletter subscribers", "value": "" },
+    { "label": "Top country share (Kenya)", "value": "" }
+  ],
+  "audience": [
+    "Perioperative theatre, nursing and clinical students in Kenya and East Africa",
+    "Newly qualified theatre staff learning instruments, sets and sterility",
+    "Medical education learners who prefer short, visual, exam-focused explanations"
+  ],
+  "pillars": [
+    { "t": "Whiteboard explainers", "d": "12-minute animated lessons: instruments, sets, scopes, sterilisation, with viva questions." },
+    { "t": "Explainer cards", "d": "Over 1,600 free study cards on the website that students save, print and share." },
+    { "t": "Short videos", "d": "Anatomy mnemonics, OT quizzes and safety checklists for Instagram, TikTok and Facebook." },
+    { "t": "Study materials", "d": "Notes and resources on the Materials page, plus a newsletter." }
+  ],
+  "packages": [
+    { "t": "Sponsored mention", "d": "A 20 to 30 second mention inside a lesson, with your link in the description and pinned comment.", "price": "" },
+    { "t": "Dedicated lesson", "d": "A whiteboard video about your product or training topic, scripted with you and fact-checked.", "price": "" },
+    { "t": "Series sponsor", "d": "Your name and link on every video in a series, plus a mention in each intro.", "price": "" },
+    { "t": "Website placement", "d": "Banner or in-article placement on ezra-ogombo.web.app with a live sponsor dashboard.", "price": "", "link": "/advertise" },
+    { "t": "Affiliate partnership", "d": "Tools, books, scrubs and gear you sell, shared with an affiliate link and honest review.", "price": "Commission" }
+  ],
+  "testimonials": [],
+  "past": [],
+  "contactEmail": "ezraogombo@gmail.com"
+}

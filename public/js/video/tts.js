@@ -85,11 +85,16 @@
     if (mk === "custom") {
       const m0 = await import("/js/vendor/ort/ort.wasm.min.mjs"), ort0 = m0.default || m0; ort0.env.wasm.wasmPaths = "/js/vendor/ort/"; ort0.env.wasm.numThreads = 1;
       const buf0 = await cvGet("onnx"), cfg0 = await cvGet("json"); if (!buf0 || !cfg0) throw new Error("Upload your voice files first (Voice and export page, My voice).");
-      return (pips.custom = { ort: ort0, cfg: cfg0, sess: await ort0.InferenceSession.create(new Uint8Array(buf0), { executionProviders: ["wasm"] }) });
+      return (pips.custom = { ort: ort0, cfg: cfg0, sess: await ort0.InferenceSession.create(new Uint8Array(buf0), { executionProviders: ["wasm"], graphOptimizationLevel: "basic", enableCpuMemArena: false, enableMemPattern: false }) });
     }
     const m = await import("/js/vendor/ort/ort.wasm.min.mjs"), ort = m.default || m; ort.env.wasm.wasmPaths = "/js/vendor/ort/"; ort.env.wasm.numThreads = 1;
+    // phones run out of memory on the 63 MB model, so "my voice" uses the 19 MB int8 copy there (and as a fallback)
+    const small = /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent) || (navigator.deviceMemory && navigator.deviceMemory <= 4);
+    const SOPT = { executionProviders: ["wasm"], graphOptimizationLevel: "basic", enableCpuMemArena: false, enableMemPattern: false };
+    const load = async (name) => { const [cfg, buf] = await Promise.all([fetch("/assets/voices/" + name + ".onnx.json").then((r) => { if (!r.ok) throw new Error("Voice file missing: " + name + ".onnx.json"); return r.json(); }), fetch("/assets/voices/" + name + ".onnx").then((r) => { if (!r.ok) throw new Error("Voice file missing: " + name + ".onnx"); return r.arrayBuffer(); })]); return { cfg, sess: await ort.InferenceSession.create(new Uint8Array(buf), SOPT) }; };
+    if (mk === "mine") { let r; try { r = await load(small ? "myvoice-lite" : "myvoice"); } catch (e) { if (small) throw e; r = await load("myvoice-lite"); } return (pips[mk] = { ort, cfg: r.cfg, sess: r.sess }); }
     const [cfg, buf] = await Promise.all([fetch("/assets/voices/" + MODELS[mk] + ".onnx.json").then((r) => { if (!r.ok) throw new Error("Voice file missing: upload assets/voices/" + MODELS[mk] + ".onnx and .onnx.json"); return r.json(); }), fetch("/assets/voices/" + MODELS[mk] + ".onnx").then((r) => { if (!r.ok) throw new Error("Voice file missing: upload assets/voices/" + MODELS[mk] + ".onnx"); return r.arrayBuffer(); })]);
-    const sess = await ort.InferenceSession.create(new Uint8Array(buf), { executionProviders: ["wasm"] });
+    const sess = await ort.InferenceSession.create(new Uint8Array(buf), SOPT);
     return (pips[mk] = { ort, cfg, sess });
   }
   // voice settings per mood: [noise_scale (variation), noise_w (rhythm variation), length_scale (pace), pause after a sentence in seconds]

@@ -4,8 +4,8 @@
 // (b) raw "items" with x/y positions, or both (layout first, then extra items). See assets/whiteboard/import-guide.md.
 // ============================================================
 (function () {
-  const W = window.EO_WB, LAYOUTS = ["title", "bullets", "icons", "steps", "compare", "pie", "quote", "narrator"];
-  const ITEM_TYPES = ["text", "tag", "icon", "figure", "narrator", "shape", "arrow", "pie", "image", "emoji"];
+  const W = window.EO_WB, LAYOUTS = ["title", "bullets", "icons", "steps", "compare", "pie", "quote", "narrator", "cardnotes"];
+  const ITEM_TYPES = ["text", "tag", "icon", "figure", "narrator", "shape", "arrow", "pie", "image", "emoji", "ink"];
   const asObj = (x, key) => (typeof x === "string" || typeof x === "number" ? { [key]: String(x) } : x || {});
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 
@@ -59,6 +59,24 @@
       const pw = wide ? w * 0.34 : w * 0.7; add({ type: "narrator", pose: sc.narrator || "neutral", x: wide ? w * 0.04 : (w - pw) / 2, y: wide ? h * 0.1 : h * 0.5, w: pw }); const tx = wide ? w * 0.42 : w * 0.08, tw = wide ? w * 0.52 : w * 0.84;
       let y = h * (wide ? 0.14 : 0.06); if (sc.title) { add({ type: "text", x: tx, y, text: sc.title, size: Math.round(h * (wide ? 0.1 : 0.06)), color: P.accent, maxW: tw, cue: sc.titleCue }); y += lines(sc.title, h * (wide ? 0.1 : 0.06), tw) * h * (wide ? 0.12 : 0.07) + h * 0.04; }
       (sc.points || []).slice(0, 5).forEach((p0) => { const o = asObj(p0, "text"), ps = Math.round(h * (wide ? 0.058 : 0.04)); add({ type: "text", x: tx, y, text: o.text || "", size: ps, maxW: tw, cue: o.cue }); y += lines(o.text || "", ps, tw) * ps * 1.2 + ps * 0.55; });
+    } else if (L === "cardnotes") {
+      // revise a content card: the card is drawn, then highlights, circles and handwritten notes are added on top as it is spoken
+      const src = sc.src || "/assets/content/" + sc.card + ".jpg", cw = Math.min(w * 0.9, h * 0.5), cx = (w - cw) / 2, cy = h * (sc.top == null ? 0.19 : sc.top), k = cw / 600, n = clamp(+sc.rows || 4, 3, 5), pitch = 0.43 / n;
+      if (sc.title) add({ type: "text", x: w / 2, y: h * 0.045, text: sc.title, size: Math.round(h * 0.042), align: "center", maxW: w * 0.9, color: P.accent, cue: sc.titleCue });
+      add({ type: "image", src, x: cx, y: cy, w: cw, h: cw, reveal: "scan", cue: sc.cardCue });
+      const j = (a) => Math.round((Math.sin(a * 12.9898) * 43758.5453 % 1) * 6);   // small hand-drawn wobble
+      (sc.marks || []).forEach((m, mi) => {
+        const type = m.type || "highlight", col = m.color, rc = 0.16 + pitch * ((m.row || 1) - 0.5), yy = cy + rc * 600 * k, hh = pitch * 600 * k;
+        if (m.remember) { const x0 = cx + 150 * k, y0 = cy + 360 * k, ww = 310 * k, hq = 170 * k; add({ type: "ink", color: col || P.blue, lw: 9, cue: m.cue, pts: [[x0, y0 + j(1)], [x0 + ww * 0.5, y0 - 6], [x0 + ww + 8, y0 + j(2)], [x0 + ww + 6, y0 + hq * 0.5], [x0 + ww + 8, y0 + hq + 6], [x0 + ww * 0.5, y0 + hq + 10], [x0 - 6, y0 + hq + 4], [x0 - 8, y0 + hq * 0.5], [x0 - 2, y0 - 4]] }); return; }
+        const x0 = cx + (m.from != null ? m.from : 0.13) * 600 * k, x1 = cx + (m.to != null ? m.to : 0.93) * 600 * k;
+        if (type === "highlight") add({ type: "ink", hl: true, color: col || "#ffe14d", lw: Math.round(hh * 0.72), cue: m.cue, pts: [[x0, yy], [x1, yy + 3]] });
+        else if (type === "underline") add({ type: "ink", color: col || P.accent, lw: 8, cue: m.cue, pts: [[x0, yy + hh * 0.3], [x0 + (x1 - x0) * 0.3, yy + hh * 0.3 + 5], [x0 + (x1 - x0) * 0.6, yy + hh * 0.3 - 3], [x1, yy + hh * 0.3 + 4]] });
+        else if (type === "box") add({ type: "ink", color: col || P.accent, lw: 8, cue: m.cue, pts: [[x0 - 8, yy - hh * 0.4], [x1 + 8, yy - hh * 0.42 + j(mi)], [x1 + 10, yy + hh * 0.42], [x0 - 10, yy + hh * 0.4 + j(mi + 3)], [x0 - 8, yy - hh * 0.4]] });
+        else if (type === "circle") { const mx = (x0 + x1) / 2, rx = (x1 - x0) / 2 + 10, ry = hh * 0.55, pts = []; for (let a = 0; a <= 7.1; a += 0.35) pts.push([mx + Math.cos(a - 1.2) * rx * (1 + a * 0.004), yy + Math.sin(a - 1.2) * ry]); add({ type: "ink", color: col || P.accent, lw: 8, cue: m.cue, pts }); }
+        else if (type === "tick") add({ type: "ink", color: col || "#1f9d55", lw: 12, cue: m.cue, pts: [[x1 - 70, yy], [x1 - 45, yy + hh * 0.3], [x1 - 5, yy - hh * 0.35]] });
+      });
+      let ny = cy + cw + h * 0.035; const size = Math.round(h * 0.03);
+      (sc.notes || []).slice(0, 5).forEach((n0, i) => { const o = asObj(n0, "text"); add({ type: "icon", name: o.icon || "pencil", x: w * 0.06, y: ny - 4, w: size * 1.3, color: P.blue, cue: o.cue }); add({ type: "text", x: w * 0.06 + size * 1.7, y: ny, text: o.text || "", size, maxW: w * 0.86 - size * 1.7, color: o.color || P.ink, cue: o.cue }); ny += lines(o.text || "", size, w * 0.86 - size * 1.7) * size * 1.2 + size * 0.7; });
     }
     return out;
   }
@@ -74,7 +92,7 @@
   }
   // script -> project. Never throws on content problems: use validate() first to show messages.
   function fromScript(S) {
-    const P = W.newProject(); ["name", "format", "font", "handle", "fps", "bg", "ink", "accent", "blue", "pace", "logo", "badge", "flow"].forEach((k) => { if (S[k] != null) P[k] = S[k]; });
+    const P = W.newProject(); ["name", "format", "font", "handle", "fps", "bg", "ink", "accent", "blue", "pace", "logo", "badge", "flow", "captions"].forEach((k) => { if (S[k] != null) P[k] = S[k]; });
     if (S.voice) P.voice = S.voice; if (S.music) P.music = S.music; if (S.hand) P.hand = S.hand;
     const usedPoses = []; P.scenes = (S.scenes || []).map((sc) => { if (sc.narrator === "auto") sc = Object.assign({}, sc, { narrator: pickPose(String(sc.say != null ? sc.say : sc.narration || ""), usedPoses) }); const sn = W.newScene(); sn.narration = String(sc.say != null ? sc.say : sc.narration || ""); if (sc.hold != null) sn.hold = +sc.hold; if (sc.lead != null) sn.lead = +sc.lead;
       sn.items = (sc.layout ? place(sc, P) : []).concat((sc.items || []).map((it) => Object.assign({ id: W.newId() }, it, it.type === "narrator" && it.pose === "auto" ? { pose: pickPose(sn.narration, usedPoses) } : {}))); return sn; });
@@ -100,7 +118,7 @@
       if (sc.layout === "steps" && !(sc.steps || []).length) errors.push(at + "layout \"steps\" needs a \"steps\" list.");
       if (sc.layout === "compare" && !(sc.left && sc.right)) errors.push(at + "layout \"compare\" needs \"left\" and \"right\".");
       (sc.items || []).forEach((it, j) => { const a2 = at + "item " + (j + 1) + ": "; if (!it || !ITEM_TYPES.includes(it.type)) { errors.push(a2 + `"type" must be one of ${ITEM_TYPES.join(", ")}.`); return; }
-        if (it.type !== "arrow" && (typeof it.x !== "number" || typeof it.y !== "number")) errors.push(a2 + "needs numeric \"x\" and \"y\"."); if (it.type === "arrow" && ["x", "y", "x2", "y2"].some((k) => typeof it[k] !== "number")) errors.push(a2 + "arrow needs x, y, x2, y2.");
+        if (it.type === "ink") { if (!Array.isArray(it.pts) || it.pts.length < 2) errors.push(a2 + "ink needs a \"pts\" list of [x,y] points."); } else if (it.type !== "arrow" && (typeof it.x !== "number" || typeof it.y !== "number")) errors.push(a2 + "needs numeric \"x\" and \"y\"."); if (it.type === "arrow" && ["x", "y", "x2", "y2"].some((k) => typeof it[k] !== "number")) errors.push(a2 + "arrow needs x, y, x2, y2.");
         if ((it.type === "text" || it.type === "tag") && !it.text) errors.push(a2 + "needs \"text\"."); if (it.type === "icon" && !it.name) errors.push(a2 + "icon needs \"name\"."); if (it.type === "icon") checkIcon(it.name, it.pack); if (it.cue) checkCue(it.cue); });
     });
     return { errors, warnings };
