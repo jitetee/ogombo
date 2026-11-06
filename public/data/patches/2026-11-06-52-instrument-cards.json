@@ -1,0 +1,691 @@
+{
+ "_patch": {
+  "id": "2026-11-06-52-instrument-cards",
+  "name": "52 theatre instrument and equipment cards",
+  "date": "2026-11-06",
+  "notes": "52 new content cards (images are in assets/content). They are numbered to sit at the front of the recent group, so the shuffled Content page favours them. Existing cards are untouched (merge).",
+  "modes": {
+   "content_highlights": "merge"
+  },
+  "changelog": [
+   {
+    "path": "content_highlights/crile-kelly-kocher-and-allis-clamps",
+    "text": "New: Common clamps by name"
+   },
+   {
+    "path": "content_highlights/adson-bonney-debakey-and-russian-forceps",
+    "text": "New: Named tissue forceps"
+   },
+   {
+    "path": "content_highlights/mayo-metzenbaum-potts-and-iris-scissors",
+    "text": "New: Scissors by name"
+   },
+   {
+    "path": "content_highlights/deaver-army-navy-malleable-and-rake-retractors",
+    "text": "New: Hand-held retractors"
+   },
+   {
+    "path": "content_highlights/weitlaner-richardson-and-bookwalter-retractors",
+    "text": "New: Richardson, Weitlaner, Bookwalter"
+   },
+   {
+    "path": "content_highlights/yankauer-poole-and-frazier-suction-tips",
+    "text": "New: Suction tips by name"
+   },
+   {
+    "path": "content_highlights/linear-circular-staplers-and-clips",
+    "text": "New: Staplers and clips"
+   },
+   {
+    "path": "content_highlights/energy-systems-in-theatre",
+    "text": "New: Energy systems"
+   },
+   {
+    "path": "content_highlights/laparoscopy-camera-light-and-insufflator",
+    "text": "New: Laparoscopy: see and inflate"
+   },
+   {
+    "path": "content_highlights/veress-needle-trocars-and-laparoscopic-instruments",
+    "text": "New: Laparoscopy: access and tools"
+   },
+   {
+    "path": "content_highlights/orthopaedic-equipment-overview",
+    "text": "New: Orthopaedic equipment"
+   },
+   {
+    "path": "content_highlights/robot-assisted-surgery-equipment",
+    "text": "New: Robot-assisted surgery"
+   },
+   {
+    "path": "content_highlights/artery-forceps-halstead-cushing-adson-cairns",
+    "text": "New: Artery forceps: four patterns"
+   },
+   {
+    "path": "content_highlights/artery-forceps-crile-dunhill-lawson-tait-kocher",
+    "text": "New: Artery forceps: more names"
+   },
+   {
+    "path": "content_highlights/spencer-wells-and-rochester-pean-artery-forceps",
+    "text": "New: Spencer Wells, Rochester-Pean"
+   },
+   {
+    "path": "content_highlights/gillies-lanes-dunhill-and-coole-dissecting-forceps",
+    "text": "New: Dissecting forceps: the tips"
+   },
+   {
+    "path": "content_highlights/mcindoe-jean-and-charnley-dissecting-forceps",
+    "text": "New: More dissecting forceps"
+   },
+   {
+    "path": "content_highlights/michel-clip-instruments",
+    "text": "New: Michel clip instruments"
+   },
+   {
+    "path": "content_highlights/mayo-crile-wood-gillies-and-olsen-hegar-needle-holders",
+    "text": "New: Needle holders by name"
+   },
+   {
+    "path": "content_highlights/kilner-macphail-mathieu-and-naughton-morgan-needle-holders",
+    "text": "New: Needle holders: more patterns"
+   },
+   {
+    "path": "content_highlights/tungsten-carbide-needle-holders-gold-handles",
+    "text": "New: Gold handles: tungsten carbide"
+   },
+   {
+    "path": "content_highlights/supercut-scissors-black-handles",
+    "text": "New: Black handles: supercut scissors"
+   },
+   {
+    "path": "content_highlights/dressing-and-bandage-scissors",
+    "text": "New: Scissors for dressings"
+   },
+   {
+    "path": "content_highlights/fine-pattern-dissecting-scissors",
+    "text": "New: Fine-pattern scissors"
+   },
+   {
+    "path": "content_highlights/towel-clips-backhaus-moynihan-jones-shardles",
+    "text": "New: Towel clips"
+   },
+   {
+    "path": "content_highlights/czerny-lane-morris-and-langenbeck-retractors",
+    "text": "New: Czerny, Lane, Morris, Langenbeck"
+   },
+   {
+    "path": "content_highlights/deaver-type-abdominal-retractors",
+    "text": "New: Deaver-type retractors"
+   },
+   {
+    "path": "content_highlights/small-hand-retractors-senn-volkmann-kilner",
+    "text": "New: Small hand retractors"
+   },
+   {
+    "path": "content_highlights/self-retaining-retractors-with-teeth",
+    "text": "New: Self-retaining retractors"
+   },
+   {
+    "path": "content_highlights/abdominal-self-retaining-balfour-gelpi-collin",
+    "text": "New: Abdominal frame retractors"
+   },
+   {
+    "path": "content_highlights/theatre-hollowware-gallipot-jug-jar-tray",
+    "text": "New: Hollowware on the trolley"
+   },
+   {
+    "path": "content_highlights/instrument-baskets-and-containers",
+    "text": "New: Instrument baskets"
+   },
+   {
+    "path": "content_highlights/specialist-forceps-rampley-lister-hunter-cheatle",
+    "text": "New: Specialist forceps"
+   },
+   {
+    "path": "content_highlights/scalpel-handles-baron-and-standard",
+    "text": "New: Scalpel handles"
+   },
+   {
+    "path": "content_highlights/allis-duval-babcock-and-shaw-tissue-forceps",
+    "text": "New: Tissue forceps by name"
+   },
+   {
+    "path": "content_highlights/bulldog-clamps-and-spring-clips",
+    "text": "New: Bulldog clamps and spring clips"
+   },
+   {
+    "path": "content_highlights/fergusson-paynes-and-utility-scissors",
+    "text": "New: Fergusson, Paynes, Utility"
+   },
+   {
+    "path": "content_highlights/bruce-clarke-lawrence-masing-and-foster-gillies-needle-holders",
+    "text": "New: Four more needle holders"
+   },
+   {
+    "path": "content_highlights/goligher-miles-gossett-and-pozzi-retractors",
+    "text": "New: Goligher, Miles, Gossett, Pozzi"
+   },
+   {
+    "path": "content_highlights/kocher-landon-and-moynihan-retractors",
+    "text": "New: Kocher, Landon, Moynihan"
+   },
+   {
+    "path": "content_highlights/canny-ryall-durham-and-ballance-retractors",
+    "text": "New: Canny Ryall, Durham, Ballance"
+   },
+   {
+    "path": "content_highlights/probes-dissector-and-aneurysm-needles",
+    "text": "New: Probes, dissector, needles"
+   },
+   {
+    "path": "content_highlights/ring-cutter-and-bowlby-dilator",
+    "text": "New: Ring cutter and Bowlby dilator"
+   },
+   {
+    "path": "content_highlights/turner-warwick-set-blades-a-b-c-d",
+    "text": "New: Turner Warwick set: blades A-D"
+   },
+   {
+    "path": "content_highlights/turner-warwick-set-blades-e-f-g-j",
+    "text": "New: Turner Warwick set: blades E-J"
+   },
+   {
+    "path": "content_highlights/turner-warwick-set-clip-blades-k-l",
+    "text": "New: Turner Warwick set: blades K, L"
+   },
+   {
+    "path": "content_highlights/eye-set-intraocular-needle-holders-and-scissors",
+    "text": "New: Intraocular set: holders, scissors"
+   },
+   {
+    "path": "content_highlights/eye-set-intraocular-forceps",
+    "text": "New: Intraocular set: forceps"
+   },
+   {
+    "path": "content_highlights/eye-set-intraocular-loops-cautery-and-cannula",
+    "text": "New: Intraocular set: loops, cautery"
+   },
+   {
+    "path": "content_highlights/eye-set-eyelid-holder-scissors-and-hooks",
+    "text": "New: Eyelid set: holder, scissors, hooks"
+   },
+   {
+    "path": "content_highlights/eye-set-eyelid-artery-and-toothed-forceps",
+    "text": "New: Eyelid set: forceps and cautery"
+   },
+   {
+    "path": "content_highlights/eye-set-eyelid-clamps-retractor-and-speculum",
+    "text": "New: Eyelid set: clamps and speculum"
+   }
+  ]
+ },
+ "content_highlights": {
+  "crile-kelly-kocher-and-allis-clamps": {
+   "slug": "crile-kelly-kocher-and-allis-clamps",
+   "title": "Common clamps by name",
+   "image": "/assets/content/crile-kelly-kocher-and-allis-clamps.jpg",
+   "caption": "A picture guide to common clamps by name: Crile hemostat: Atraumatic, non-toothed. Grasps vessels that will be tied off; Kelly clamp: Larger hemostat for grasping larger tissues or vessels.",
+   "body": "<p><strong>In short:</strong> A picture guide to common clamps by name: Crile hemostat: Atraumatic, non-toothed. Grasps vessels that will be tied off; Kelly clamp: Larger hemostat for grasping larger tissues or vessels.</p>\n<h2>Common clamps by name</h2>\n<ul><li>Crile hemostat: Atraumatic, non-toothed. Grasps vessels that will be tied off</li><li>Kelly clamp: Larger hemostat for grasping larger tissues or vessels</li><li>Kocher clamp: Traumatic, toothed. Holds tissue that will be removed</li><li>Allis and Babcock: Slightly rounded jaws. Both are used to grasp intestine</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Locking clamps can be traumatic or atraumatic. Check the jaws.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Common clamps by name&quot;.</summary><p>Crile hemostat: Atraumatic, non-toothed. Grasps vessels that will be tied off; Kelly clamp: Larger hemostat for grasping larger tissues or vessels; Kocher clamp: Traumatic, toothed. Holds tissue that will be removed; Allis and Babcock: Slightly rounded jaws. Both are used to grasp intestine.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -59
+  },
+  "adson-bonney-debakey-and-russian-forceps": {
+   "slug": "adson-bonney-debakey-and-russian-forceps",
+   "title": "Named tissue forceps",
+   "image": "/assets/content/adson-bonney-debakey-and-russian-forceps.jpg",
+   "caption": "A picture guide to named tissue forceps: Adson: Toothed at the tip. Handles dense tissue, such as in skin closures; Bonney: Heavy forceps for holding thick tissue, e.g. fascial closure.",
+   "body": "<p><strong>In short:</strong> A picture guide to named tissue forceps: Adson: Toothed at the tip. Handles dense tissue, such as in skin closures; Bonney: Heavy forceps for holding thick tissue, e.g. fascial closure.</p>\n<h2>Named tissue forceps</h2>\n<ul><li>Adson: Toothed at the tip. Handles dense tissue, such as in skin closures</li><li>Bonney: Heavy forceps for holding thick tissue, e.g. fascial closure</li><li>DeBakey: Atraumatic tissue grasping during dissection</li><li>Russian: Atraumatic tissue grasping during dissection</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Match the forceps to the tissue: fine for delicate, heavy for fascia.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Named tissue forceps&quot;.</summary><p>Adson: Toothed at the tip. Handles dense tissue, such as in skin closures; Bonney: Heavy forceps for holding thick tissue, e.g. fascial closure; DeBakey: Atraumatic tissue grasping during dissection; Russian: Atraumatic tissue grasping during dissection.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -58
+  },
+  "mayo-metzenbaum-potts-and-iris-scissors": {
+   "slug": "mayo-metzenbaum-potts-and-iris-scissors",
+   "title": "Scissors by name",
+   "image": "/assets/content/mayo-metzenbaum-potts-and-iris-scissors.jpg",
+   "caption": "A picture guide to scissors by name: Mayo: Heavy. Straight cuts suture, curved cuts heavy tissue such as fascia; Metzenbaum (\"Metz\"): Lighter. Cuts delicate tissue and does blunt dissection.",
+   "body": "<p><strong>In short:</strong> A picture guide to scissors by name: Mayo: Heavy. Straight cuts suture, curved cuts heavy tissue such as fascia; Metzenbaum (&quot;Metz&quot;): Lighter. Cuts delicate tissue and does blunt dissection.</p>\n<h2>Scissors by name</h2>\n<ul><li>Mayo: Heavy. Straight cuts suture, curved cuts heavy tissue such as fascia</li><li>Metzenbaum (&quot;Metz&quot;): Lighter. Cuts delicate tissue and does blunt dissection</li><li>Pott&#x27;s: Fine scissors for creating incisions in blood vessels</li><li>Iris: Fine dissection and fine suture. Made for eye surgery, now multipurpose</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Heavy scissors for heavy tissue. Light scissors for delicate tissue.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Scissors by name&quot;.</summary><p>Mayo: Heavy. Straight cuts suture, curved cuts heavy tissue such as fascia; Metzenbaum (&quot;Metz&quot;): Lighter. Cuts delicate tissue and does blunt dissection; Pott&#x27;s: Fine scissors for creating incisions in blood vessels; Iris: Fine dissection and fine suture. Made for eye surgery, now multipurpose.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -57
+  },
+  "deaver-army-navy-malleable-and-rake-retractors": {
+   "slug": "deaver-army-navy-malleable-and-rake-retractors",
+   "title": "Hand-held retractors",
+   "image": "/assets/content/deaver-army-navy-malleable-and-rake-retractors.jpg",
+   "caption": "A picture guide to hand-held retractors: Deaver: Holds back the abdominal wall; Army-Navy: Gains exposure of the skin layers.",
+   "body": "<p><strong>In short:</strong> A picture guide to hand-held retractors: Deaver: Holds back the abdominal wall; Army-Navy: Gains exposure of the skin layers.</p>\n<h2>Hand-held retractors</h2>\n<ul><li>Deaver: Holds back the abdominal wall</li><li>Army-Navy: Gains exposure of the skin layers</li><li>Malleable: Can be bent to shape. Also protects the intestines during abdominal closure</li><li>Rake: Hand-held, with sharp teeth. Holds back surface structures</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Retractors hold tissue back so the surgeon keeps a clear field.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Hand-held retractors&quot;.</summary><p>Deaver: Holds back the abdominal wall; Army-Navy: Gains exposure of the skin layers; Malleable: Can be bent to shape. Also protects the intestines during abdominal closure; Rake: Hand-held, with sharp teeth. Holds back surface structures.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -56
+  },
+  "weitlaner-richardson-and-bookwalter-retractors": {
+   "slug": "weitlaner-richardson-and-bookwalter-retractors",
+   "title": "Richardson, Weitlaner, Bookwalter",
+   "image": "/assets/content/weitlaner-richardson-and-bookwalter-retractors.jpg",
+   "caption": "A picture guide to richardson, Weitlaner, Bookwalter: Weitlaner (\"Wheaty\"): Self-retaining. Exposes deep or smaller surgical sites; Richardson (\"Rich\"): Holds back deep tissue structures.",
+   "body": "<p><strong>In short:</strong> A picture guide to richardson, Weitlaner, Bookwalter: Weitlaner (&quot;Wheaty&quot;): Self-retaining. Exposes deep or smaller surgical sites; Richardson (&quot;Rich&quot;): Holds back deep tissue structures.</p>\n<h2>Richardson, Weitlaner, Bookwalter</h2>\n<ul><li>Weitlaner (&quot;Wheaty&quot;): Self-retaining. Exposes deep or smaller surgical sites</li><li>Richardson (&quot;Rich&quot;): Holds back deep tissue structures</li><li>Bookwalter: Self-retaining system that is anchored to the operating table</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Self-retaining retractors hold themselves open with a ratchet.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Richardson, Weitlaner, Bookwalter&quot;.</summary><p>Weitlaner (&quot;Wheaty&quot;): Self-retaining. Exposes deep or smaller surgical sites; Richardson (&quot;Rich&quot;): Holds back deep tissue structures; Bookwalter: Self-retaining system that is anchored to the operating table.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -55
+  },
+  "yankauer-poole-and-frazier-suction-tips": {
+   "slug": "yankauer-poole-and-frazier-suction-tips",
+   "title": "Suction tips by name",
+   "image": "/assets/content/yankauer-poole-and-frazier-suction-tips.jpg",
+   "caption": "A picture guide to suction tips by name: Yankauer: Mainly surface suction, and some intra-abdominal suction; Poole: Removes large amounts of fluid. Also intra-abdominal suction.",
+   "body": "<p><strong>In short:</strong> A picture guide to suction tips by name: Yankauer: Mainly surface suction, and some intra-abdominal suction; Poole: Removes large amounts of fluid. Also intra-abdominal suction.</p>\n<h2>Suction tips by name</h2>\n<ul><li>Yankauer: Mainly surface suction, and some intra-abdominal suction</li><li>Poole: Removes large amounts of fluid. Also intra-abdominal suction</li><li>Frazier: Used mainly in ENT and neurosurgery. Usually angled</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Suction also clears surgical smoke from the field.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Suction tips by name&quot;.</summary><p>Yankauer: Mainly surface suction, and some intra-abdominal suction; Poole: Removes large amounts of fluid. Also intra-abdominal suction; Frazier: Used mainly in ENT and neurosurgery. Usually angled.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -54
+  },
+  "linear-circular-staplers-and-clips": {
+   "slug": "linear-circular-staplers-and-clips",
+   "title": "Staplers and clips",
+   "image": "/assets/content/linear-circular-staplers-and-clips.jpg",
+   "caption": "A picture guide to staplers and clips: Linear stapler: Makes a staple line with no cutting. Used in ligation and anastomosis; Linear cutter: Cuts and immediately staples both free edges.",
+   "body": "<p><strong>In short:</strong> A picture guide to staplers and clips: Linear stapler: Makes a staple line with no cutting. Used in ligation and anastomosis; Linear cutter: Cuts and immediately staples both free edges.</p>\n<h2>Staplers and clips</h2>\n<ul><li>Linear stapler: Makes a staple line with no cutting. Used in ligation and anastomosis</li><li>Linear cutter: Cuts and immediately staples both free edges</li><li>Circular cutter: Circular cut and staple, e.g. to rejoin the large bowel</li><li>Clips: Ligate vessels. Metal or absorbable, open and lap applicators</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Staplers can be single-use, reloadable, manual or powered.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Staplers and clips&quot;.</summary><p>Linear stapler: Makes a staple line with no cutting. Used in ligation and anastomosis; Linear cutter: Cuts and immediately staples both free edges; Circular cutter: Circular cut and staple, e.g. to rejoin the large bowel; Clips: Ligate vessels. Metal or absorbable, open and lap applicators.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -53
+  },
+  "energy-systems-in-theatre": {
+   "slug": "energy-systems-in-theatre",
+   "title": "Energy systems",
+   "image": "/assets/content/energy-systems-in-theatre.jpg",
+   "caption": "A picture guide to energy systems: Electrosurgery: Cuts or cauterises tissue using an alternating electrical current; Ultrasonic (Harmonic): High-frequency sound cuts and seals at once. Less thermal spread.",
+   "body": "<p><strong>In short:</strong> A picture guide to energy systems: Electrosurgery: Cuts or cauterises tissue using an alternating electrical current; Ultrasonic (Harmonic): High-frequency sound cuts and seals at once. Less thermal spread.</p>\n<h2>Energy systems</h2>\n<ul><li>Electrosurgery: Cuts or cauterises tissue using an alternating electrical current</li><li>Ultrasonic (Harmonic): High-frequency sound cuts and seals at once. Less thermal spread</li><li>Endostapler: Laparoscopic cutting and stapling together. Manual or electronic</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Energy systems cut tissue or seal vessels with electricity or sound.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Energy systems&quot;.</summary><p>Electrosurgery: Cuts or cauterises tissue using an alternating electrical current; Ultrasonic (Harmonic): High-frequency sound cuts and seals at once. Less thermal spread; Endostapler: Laparoscopic cutting and stapling together. Manual or electronic.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -52
+  },
+  "laparoscopy-camera-light-and-insufflator": {
+   "slug": "laparoscopy-camera-light-and-insufflator",
+   "title": "Laparoscopy: see and inflate",
+   "image": "/assets/content/laparoscopy-camera-light-and-insufflator.jpg",
+   "caption": "A picture guide to laparoscopy: see and inflate: Camera and lens: The hand-held camera connects to lenses with different viewing angles; Light source: Fibre-optic cable lights the field. The light output can be hot.",
+   "body": "<p><strong>In short:</strong> A picture guide to laparoscopy: see and inflate: Camera and lens: The hand-held camera connects to lenses with different viewing angles; Light source: Fibre-optic cable lights the field. The light output can be hot.</p>\n<h2>Laparoscopy: see and inflate</h2>\n<ul><li>Camera and lens: The hand-held camera connects to lenses with different viewing angles</li><li>Light source: Fibre-optic cable lights the field. The light output can be hot</li><li>Insufflator: Injects carbon dioxide to create a working space in the abdomen</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Take care near internal structures: the light output can be hot.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Laparoscopy: see and inflate&quot;.</summary><p>Camera and lens: The hand-held camera connects to lenses with different viewing angles; Light source: Fibre-optic cable lights the field. The light output can be hot; Insufflator: Injects carbon dioxide to create a working space in the abdomen.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -51
+  },
+  "veress-needle-trocars-and-laparoscopic-instruments": {
+   "slug": "veress-needle-trocars-and-laparoscopic-instruments",
+   "title": "Laparoscopy: access and tools",
+   "image": "/assets/content/veress-needle-trocars-and-laparoscopic-instruments.jpg",
+   "caption": "A picture guide to laparoscopy: access and tools: Veress needle: Blind needle placement, then gas injection, to create pneumoperitoneum; Trocars: Working ports for instruments, e.g. 5, 10 and 12 mm sizes.",
+   "body": "<p><strong>In short:</strong> A picture guide to laparoscopy: access and tools: Veress needle: Blind needle placement, then gas injection, to create pneumoperitoneum; Trocars: Working ports for instruments, e.g. 5, 10 and 12 mm sizes.</p>\n<h2>Laparoscopy: access and tools</h2>\n<ul><li>Veress needle: Blind needle placement, then gas injection, to create pneumoperitoneum</li><li>Trocars: Working ports for instruments, e.g. 5, 10 and 12 mm sizes</li><li>Laparoscopic instruments: Shafted tools that grasp, retract, cut and cauterise through trocars</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Laparoscopic work is done through ports placed in the skin.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Laparoscopy: access and tools&quot;.</summary><p>Veress needle: Blind needle placement, then gas injection, to create pneumoperitoneum; Trocars: Working ports for instruments, e.g. 5, 10 and 12 mm sizes; Laparoscopic instruments: Shafted tools that grasp, retract, cut and cauterise through trocars.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module. Trocar photo: Magnus1313 at English Wikipedia. Laparoscopic instruments photo: Ignis.</small></p>",
+   "status": "published",
+   "order": -50
+  },
+  "orthopaedic-equipment-overview": {
+   "slug": "orthopaedic-equipment-overview",
+   "title": "Orthopaedic equipment",
+   "image": "/assets/content/orthopaedic-equipment-overview.jpg",
+   "caption": "A picture guide to orthopaedic equipment: Arthroscope: Endoscopic view of a joint. Saline creates the joint space; Orthopaedic implants: Pins, nails or prostheses that fix bones or replace worn joints.",
+   "body": "<p><strong>In short:</strong> A picture guide to orthopaedic equipment: Arthroscope: Endoscopic view of a joint. Saline creates the joint space; Orthopaedic implants: Pins, nails or prostheses that fix bones or replace worn joints.</p>\n<h2>Orthopaedic equipment</h2>\n<ul><li>Arthroscope: Endoscopic view of a joint. Saline creates the joint space</li><li>Orthopaedic implants: Pins, nails or prostheses that fix bones or replace worn joints</li><li>Rongeur: Sharp-edged, sturdy. Removes bone or creates a window in bone</li><li>Bone saw: Battery powered. Cuts bone freehand or with a jig</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Joint replacements need specialised equipment. Check it before the case.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Orthopaedic equipment&quot;.</summary><p>Arthroscope: Endoscopic view of a joint. Saline creates the joint space; Orthopaedic implants: Pins, nails or prostheses that fix bones or replace worn joints; Rongeur: Sharp-edged, sturdy. Removes bone or creates a window in bone; Bone saw: Battery powered. Cuts bone freehand or with a jig.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module. Image credits in the source: Arthroscopist, Netha Hussain, Bszsurgico.</small></p>",
+   "status": "published",
+   "order": -49
+  },
+  "robot-assisted-surgery-equipment": {
+   "slug": "robot-assisted-surgery-equipment",
+   "title": "Robot-assisted surgery",
+   "image": "/assets/content/robot-assisted-surgery-equipment.jpg",
+   "caption": "A picture guide to robot-assisted surgery: Robotic system: Powered, with several arms and interchangeable tools; Surgeon console: Controls for the arms and 3D video of the field.",
+   "body": "<p><strong>In short:</strong> A picture guide to robot-assisted surgery: Robotic system: Powered, with several arms and interchangeable tools; Surgeon console: Controls for the arms and 3D video of the field.</p>\n<h2>Robot-assisted surgery</h2>\n<ul><li>Robotic system: Powered, with several arms and interchangeable tools</li><li>Surgeon console: Controls for the arms and 3D video of the field</li><li>Robotic arm: Holds instruments and gives more range of motion than laparoscopy</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>The surgeon works at the console. Technicians change the instruments.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Robot-assisted surgery&quot;.</summary><p>Robotic system: Powered, with several arms and interchangeable tools; Surgeon console: Controls for the arms and 3D video of the field; Robotic arm: Holds instruments and gives more range of motion than laparoscopy.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -48
+  },
+  "artery-forceps-halstead-cushing-adson-cairns": {
+   "slug": "artery-forceps-halstead-cushing-adson-cairns",
+   "title": "Artery forceps: four patterns",
+   "image": "/assets/content/artery-forceps-halstead-cushing-adson-cairns.jpg",
+   "caption": "A picture guide to artery forceps: four patterns: Halstead Mosquito: Standard haemostatic pattern with a box joint; Cushing: Box joint, fine, half-serrated jaws, 140mm long.",
+   "body": "<p><strong>In short:</strong> A picture guide to artery forceps: four patterns: Halstead Mosquito: Standard haemostatic pattern with a box joint; Cushing: Box joint, fine, half-serrated jaws, 140mm long.</p>\n<h2>Artery forceps: four patterns</h2>\n<ul><li>Halstead Mosquito: Standard haemostatic pattern with a box joint</li><li>Cushing: Box joint, fine, half-serrated jaws, 140mm long</li><li>Adson: Box joint, 180mm long</li><li>Cairns: Box joint, half-serrated jaws, 145mm long</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Artery forceps control bleeding from vessels. They are not needle holders.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Artery forceps: four patterns&quot;.</summary><p>Halstead Mosquito: Standard haemostatic pattern with a box joint; Cushing: Box joint, fine, half-serrated jaws, 140mm long; Adson: Box joint, 180mm long; Cairns: Box joint, half-serrated jaws, 145mm long.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); University of Bristol Clinical Skills Lab, Surgical Instruments booklet.</small></p>",
+   "status": "published",
+   "order": -47
+  },
+  "artery-forceps-crile-dunhill-lawson-tait-kocher": {
+   "slug": "artery-forceps-crile-dunhill-lawson-tait-kocher",
+   "title": "Artery forceps: more names",
+   "image": "/assets/content/artery-forceps-crile-dunhill-lawson-tait-kocher.jpg",
+   "caption": "A picture guide to artery forceps: more names: Crile: Box joint, serrated jaws; Dunhill: Box joint, fine serrations.",
+   "body": "<p><strong>In short:</strong> A picture guide to artery forceps: more names: Crile: Box joint, serrated jaws; Dunhill: Box joint, fine serrations.</p>\n<h2>Artery forceps: more names</h2>\n<ul><li>Crile: Box joint, serrated jaws</li><li>Dunhill: Box joint, fine serrations</li><li>Lawson Tait: Box joint, straight jaw</li><li>Kocher: Box joint with 1-2 teeth</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Teeth on the jaws hold firmly but can damage tissue.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Artery forceps: more names&quot;.</summary><p>Crile: Box joint, serrated jaws; Dunhill: Box joint, fine serrations; Lawson Tait: Box joint, straight jaw; Kocher: Box joint with 1-2 teeth.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); University of Bristol Clinical Skills Lab, Surgical Instruments booklet.</small></p>",
+   "status": "published",
+   "order": -46
+  },
+  "spencer-wells-and-rochester-pean-artery-forceps": {
+   "slug": "spencer-wells-and-rochester-pean-artery-forceps",
+   "title": "Spencer Wells, Rochester-Pean",
+   "image": "/assets/content/spencer-wells-and-rochester-pean-artery-forceps.jpg",
+   "caption": "A picture guide to spencer Wells, Rochester-Pean: Spencer Wells: Box joint, serrated jaws; Rochester-Pean: Box joint.",
+   "body": "<p><strong>In short:</strong> A picture guide to spencer Wells, Rochester-Pean: Spencer Wells: Box joint, serrated jaws; Rochester-Pean: Box joint.</p>\n<h2>Spencer Wells, Rochester-Pean</h2>\n<ul><li>Spencer Wells: Box joint, serrated jaws</li><li>Rochester-Pean: Box joint</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Artery forceps are ratcheted. Open the ratchet before cleaning.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Spencer Wells, Rochester-Pean&quot;.</summary><p>Spencer Wells: Box joint, serrated jaws; Rochester-Pean: Box joint.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -45
+  },
+  "gillies-lanes-dunhill-and-coole-dissecting-forceps": {
+   "slug": "gillies-lanes-dunhill-and-coole-dissecting-forceps",
+   "title": "Dissecting forceps: the tips",
+   "image": "/assets/content/gillies-lanes-dunhill-and-coole-dissecting-forceps.jpg",
+   "caption": "A picture guide to dissecting forceps: the tips: Gillies: 1-2 teeth; Lane's: 1-2 teeth on serrated jaws, 140mm long.",
+   "body": "<p><strong>In short:</strong> A picture guide to dissecting forceps: the tips: Gillies: 1-2 teeth; Lane&#x27;s: 1-2 teeth on serrated jaws, 140mm long.</p>\n<h2>Dissecting forceps: the tips</h2>\n<ul><li>Gillies: 1-2 teeth</li><li>Lane&#x27;s: 1-2 teeth on serrated jaws, 140mm long</li><li>Dunhill: Light, with fine serrated jaws</li><li>Fredrick Coole: Extra fine serrated jaws</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Fine tips for fine tissue. Too much regripping can damage tissue.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Dissecting forceps: the tips&quot;.</summary><p>Gillies: 1-2 teeth; Lane&#x27;s: 1-2 teeth on serrated jaws, 140mm long; Dunhill: Light, with fine serrated jaws; Fredrick Coole: Extra fine serrated jaws.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); University of Bristol Clinical Skills Lab, Surgical Instruments booklet.</small></p>",
+   "status": "published",
+   "order": -44
+  },
+  "mcindoe-jean-and-charnley-dissecting-forceps": {
+   "slug": "mcindoe-jean-and-charnley-dissecting-forceps",
+   "title": "More dissecting forceps",
+   "image": "/assets/content/mcindoe-jean-and-charnley-dissecting-forceps.jpg",
+   "caption": "A picture guide to more dissecting forceps: McIndoe: 152mm long; McIndoe modified: 152mm long with a 1mm tip, for fine, powerful dissection.",
+   "body": "<p><strong>In short:</strong> A picture guide to more dissecting forceps: McIndoe: 152mm long; McIndoe modified: 152mm long with a 1mm tip, for fine, powerful dissection.</p>\n<h2>More dissecting forceps</h2>\n<ul><li>McIndoe: 152mm long</li><li>McIndoe modified: 152mm long with a 1mm tip, for fine, powerful dissection</li><li>Jean: Serrated jaws, 140mm long</li><li>Charnley-McIndoe: 150mm long</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Hold forceps in a pen grip for the best control.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;More dissecting forceps&quot;.</summary><p>McIndoe: 152mm long; McIndoe modified: 152mm long with a 1mm tip, for fine, powerful dissection; Jean: Serrated jaws, 140mm long; Charnley-McIndoe: 150mm long.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); University of Bristol Clinical Skills Lab, Surgical Instruments booklet.</small></p>",
+   "status": "published",
+   "order": -43
+  },
+  "michel-clip-instruments": {
+   "slug": "michel-clip-instruments",
+   "title": "Michel clip instruments",
+   "image": "/assets/content/michel-clip-instruments.jpg",
+   "caption": "A picture guide to michel clip instruments: Michel skin holding forceps: Comes with a magazine for Michel clips; Michel clip extracting forceps: Box joint.",
+   "body": "<p><strong>In short:</strong> A picture guide to michel clip instruments: Michel skin holding forceps: Comes with a magazine for Michel clips; Michel clip extracting forceps: Box joint.</p>\n<h2>Michel clip instruments</h2>\n<ul><li>Michel skin holding forceps: Comes with a magazine for Michel clips</li><li>Michel clip extracting forceps: Box joint</li><li>Childe approximating forceps: Comes with a magazine for Michel clips</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Skin clips are an alternative to sutures for skin closure.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Michel clip instruments&quot;.</summary><p>Michel skin holding forceps: Comes with a magazine for Michel clips; Michel clip extracting forceps: Box joint; Childe approximating forceps: Comes with a magazine for Michel clips.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -42
+  },
+  "mayo-crile-wood-gillies-and-olsen-hegar-needle-holders": {
+   "slug": "mayo-crile-wood-gillies-and-olsen-hegar-needle-holders",
+   "title": "Needle holders by name",
+   "image": "/assets/content/mayo-crile-wood-gillies-and-olsen-hegar-needle-holders.jpg",
+   "caption": "A picture guide to needle holders by name: Mayo: Box joint, straight. Has a ratchet to stop the needle slipping; Crile-Wood: Straight, baby, fine.",
+   "body": "<p><strong>In short:</strong> A picture guide to needle holders by name: Mayo: Box joint, straight. Has a ratchet to stop the needle slipping; Crile-Wood: Straight, baby, fine.</p>\n<h2>Needle holders by name</h2>\n<ul><li>Mayo: Box joint, straight. Has a ratchet to stop the needle slipping</li><li>Crile-Wood: Straight, baby, fine</li><li>Gillies: Heavy pattern, 158mm. No ratchet, so holding the needle takes practice</li><li>Olsen-Hegar: Screw joint. A combined scissor and needle holder</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Mayo holders can be used by right and left handers.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Needle holders by name&quot;.</summary><p>Mayo: Box joint, straight. Has a ratchet to stop the needle slipping; Crile-Wood: Straight, baby, fine; Gillies: Heavy pattern, 158mm. No ratchet, so holding the needle takes practice; Olsen-Hegar: Screw joint. A combined scissor and needle holder.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); University of Bristol Clinical Skills Lab, Surgical Instruments booklet.</small></p>",
+   "status": "published",
+   "order": -41
+  },
+  "kilner-macphail-mathieu-and-naughton-morgan-needle-holders": {
+   "slug": "kilner-macphail-mathieu-and-naughton-morgan-needle-holders",
+   "title": "Needle holders: more patterns",
+   "image": "/assets/content/kilner-macphail-mathieu-and-naughton-morgan-needle-holders.jpg",
+   "caption": "A picture guide to needle holders: more patterns: Kilner: Box joint, cross-serrated jaw; MacPhail: Screw joint, with one copper jaw.",
+   "body": "<p><strong>In short:</strong> A picture guide to needle holders: more patterns: Kilner: Box joint, cross-serrated jaw; MacPhail: Screw joint, with one copper jaw.</p>\n<h2>Needle holders: more patterns</h2>\n<ul><li>Kilner: Box joint, cross-serrated jaw</li><li>MacPhail: Screw joint, with one copper jaw</li><li>Mathieu: Screw joint</li><li>Naughton Morgan: Box joints, cross-serrated jaws</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Check the jaws: a worn needle holder lets the needle twist.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Needle holders: more patterns&quot;.</summary><p>Kilner: Box joint, cross-serrated jaw; MacPhail: Screw joint, with one copper jaw; Mathieu: Screw joint; Naughton Morgan: Box joints, cross-serrated jaws.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -40
+  },
+  "tungsten-carbide-needle-holders-gold-handles": {
+   "slug": "tungsten-carbide-needle-holders-gold-handles",
+   "title": "Gold handles: tungsten carbide",
+   "image": "/assets/content/tungsten-carbide-needle-holders-gold-handles.jpg",
+   "caption": "A picture guide to gold handles: tungsten carbide: Halsey: Tungsten carbide insert, box joint, satin finish, straight; Derf: Tungsten carbide insert.",
+   "body": "<p><strong>In short:</strong> A picture guide to gold handles: tungsten carbide: Halsey: Tungsten carbide insert, box joint, satin finish, straight; Derf: Tungsten carbide insert.</p>\n<h2>Gold handles: tungsten carbide</h2>\n<ul><li>Halsey: Tungsten carbide insert, box joint, satin finish, straight</li><li>Derf: Tungsten carbide insert</li><li>Ryder: Tungsten carbide insert, box joint, satin finish, straight</li><li>DeBakey: 250mm long</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Gold bows identify tungsten carbide needle holders.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Gold handles: tungsten carbide&quot;.</summary><p>Halsey: Tungsten carbide insert, box joint, satin finish, straight; Derf: Tungsten carbide insert; Ryder: Tungsten carbide insert, box joint, satin finish, straight; DeBakey: 250mm long.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -39
+  },
+  "supercut-scissors-black-handles": {
+   "slug": "supercut-scissors-black-handles",
+   "title": "Black handles: supercut scissors",
+   "image": "/assets/content/supercut-scissors-black-handles.jpg",
+   "caption": "A picture guide to black handles: supercut scissors: Boyd: Supercut, blunt/blunt; Iris: Supercut.",
+   "body": "<p><strong>In short:</strong> A picture guide to black handles: supercut scissors: Boyd: Supercut, blunt/blunt; Iris: Supercut.</p>\n<h2>Black handles: supercut scissors</h2>\n<ul><li>Boyd: Supercut, blunt/blunt</li><li>Iris: Supercut</li><li>Dressing scissors: Supercut, tungsten carbide</li><li>Mayo: Supercut, tungsten carbide</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Black bows identify supercut scissors.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Black handles: supercut scissors&quot;.</summary><p>Boyd: Supercut, blunt/blunt; Iris: Supercut; Dressing scissors: Supercut, tungsten carbide; Mayo: Supercut, tungsten carbide.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -38
+  },
+  "dressing-and-bandage-scissors": {
+   "slug": "dressing-and-bandage-scissors",
+   "title": "Scissors for dressings",
+   "image": "/assets/content/dressing-and-bandage-scissors.jpg",
+   "caption": "A picture guide to scissors for dressings: Lister bandage scissors: Angled blades for cutting bandages; Mayo-Harrington dressing: Tungsten carbide hard insert.",
+   "body": "<p><strong>In short:</strong> A picture guide to scissors for dressings: Lister bandage scissors: Angled blades for cutting bandages; Mayo-Harrington dressing: Tungsten carbide hard insert.</p>\n<h2>Scissors for dressings</h2>\n<ul><li>Lister bandage scissors: Angled blades for cutting bandages</li><li>Mayo-Harrington dressing: Tungsten carbide hard insert</li><li>Dressing scissors: Tungsten carbide hard insert, sharp/sharp</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Dressing scissors cut dressings. Do not use them in surgery.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Scissors for dressings&quot;.</summary><p>Lister bandage scissors: Angled blades for cutting bandages; Mayo-Harrington dressing: Tungsten carbide hard insert; Dressing scissors: Tungsten carbide hard insert, sharp/sharp.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); University of Bristol Clinical Skills Lab, Surgical Instruments booklet.</small></p>",
+   "status": "published",
+   "order": -37
+  },
+  "fine-pattern-dissecting-scissors": {
+   "slug": "fine-pattern-dissecting-scissors",
+   "title": "Fine-pattern scissors",
+   "image": "/assets/content/fine-pattern-dissecting-scissors.jpg",
+   "caption": "A picture guide to fine-pattern scissors: Littler: Fine pattern, with an eye for suture; Kilner: Fine pattern.",
+   "body": "<p><strong>In short:</strong> A picture guide to fine-pattern scissors: Littler: Fine pattern, with an eye for suture; Kilner: Fine pattern.</p>\n<h2>Fine-pattern scissors</h2>\n<ul><li>Littler: Fine pattern, with an eye for suture</li><li>Kilner: Fine pattern</li><li>Ligature stitch: Fine pattern</li><li>McIndoe: 178mm long</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Fine scissors are for fine work. Keep them off heavy materials.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Fine-pattern scissors&quot;.</summary><p>Littler: Fine pattern, with an eye for suture; Kilner: Fine pattern; Ligature stitch: Fine pattern; McIndoe: 178mm long.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -36
+  },
+  "towel-clips-backhaus-moynihan-jones-shardles": {
+   "slug": "towel-clips-backhaus-moynihan-jones-shardles",
+   "title": "Towel clips",
+   "image": "/assets/content/towel-clips-backhaus-moynihan-jones-shardles.jpg",
+   "caption": "A picture guide to towel clips: Backhaus: Box joint. Holds drapes in place on the patient; Moynihan: Screw joint, 2-2 teeth, for the sides of an incision.",
+   "body": "<p><strong>In short:</strong> A picture guide to towel clips: Backhaus: Box joint. Holds drapes in place on the patient; Moynihan: Screw joint, 2-2 teeth, for the sides of an incision.</p>\n<h2>Towel clips</h2>\n<ul><li>Backhaus: Box joint. Holds drapes in place on the patient</li><li>Moynihan: Screw joint, 2-2 teeth, for the sides of an incision</li><li>Jones: Spring forceps type</li><li>Shardles: Spring, curved, cross action</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Tell the anaesthetist before placing clips: it is the first painful stimulus.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Towel clips&quot;.</summary><p>Backhaus: Box joint. Holds drapes in place on the patient; Moynihan: Screw joint, 2-2 teeth, for the sides of an incision; Jones: Spring forceps type; Shardles: Spring, curved, cross action.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); University of Bristol Clinical Skills Lab, Surgical Instruments booklet.</small></p>",
+   "status": "published",
+   "order": -35
+  },
+  "czerny-lane-morris-and-langenbeck-retractors": {
+   "slug": "czerny-lane-morris-and-langenbeck-retractors",
+   "title": "Czerny, Lane, Morris, Langenbeck",
+   "image": "/assets/content/czerny-lane-morris-and-langenbeck-retractors.jpg",
+   "caption": "A picture guide to czerny, Lane, Morris, Langenbeck: Czerny: Double ended; Lane: Double-ended blade, 229mm long.",
+   "body": "<p><strong>In short:</strong> A picture guide to czerny, Lane, Morris, Langenbeck: Czerny: Double ended; Lane: Double-ended blade, 229mm long.</p>\n<h2>Czerny, Lane, Morris, Langenbeck</h2>\n<ul><li>Czerny: Double ended</li><li>Lane: Double-ended blade, 229mm long</li><li>Morris: Double ended, 216mm long</li><li>Langenbeck: Single ended</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Single or double ended: know which end you are handing over.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Czerny, Lane, Morris, Langenbeck&quot;.</summary><p>Czerny: Double ended; Lane: Double-ended blade, 229mm long; Morris: Double ended, 216mm long; Langenbeck: Single ended.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -34
+  },
+  "deaver-type-abdominal-retractors": {
+   "slug": "deaver-type-abdominal-retractors",
+   "title": "Deaver-type retractors",
+   "image": "/assets/content/deaver-type-abdominal-retractors.jpg",
+   "caption": "A picture guide to deaver-type retractors: Deaver: With round handles. Holds back the abdominal wall; Elliot (modified Deaver): A modified Deaver pattern.",
+   "body": "<p><strong>In short:</strong> A picture guide to deaver-type retractors: Deaver: With round handles. Holds back the abdominal wall; Elliot (modified Deaver): A modified Deaver pattern.</p>\n<h2>Deaver-type retractors</h2>\n<ul><li>Deaver: With round handles. Holds back the abdominal wall</li><li>Elliot (modified Deaver): A modified Deaver pattern</li><li>Dyball and Lock: For the liver</li><li>Kelly retractor blade: 267mm long</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Deep retractors hold back the abdominal wall and organs.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Deaver-type retractors&quot;.</summary><p>Deaver: With round handles. Holds back the abdominal wall; Elliot (modified Deaver): A modified Deaver pattern; Dyball and Lock: For the liver; Kelly retractor blade: 267mm long.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -33
+  },
+  "small-hand-retractors-senn-volkmann-kilner": {
+   "slug": "small-hand-retractors-senn-volkmann-kilner",
+   "title": "Small hand retractors",
+   "image": "/assets/content/small-hand-retractors-senn-volkmann-kilner.jpg",
+   "caption": "A picture guide to small hand retractors: Senn-Miller: 170mm long; Volkmann: Hand-held retractor.",
+   "body": "<p><strong>In short:</strong> A picture guide to small hand retractors: Senn-Miller: 170mm long; Volkmann: Hand-held retractor.</p>\n<h2>Small hand retractors</h2>\n<ul><li>Senn-Miller: 170mm long</li><li>Volkmann: Hand-held retractor</li><li>Kilner &quot;cat&#x27;s paw&quot;: Double ended</li><li>Single hook: Sharp</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Small retractors expose small wounds. Count them after use.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Small hand retractors&quot;.</summary><p>Senn-Miller: 170mm long; Volkmann: Hand-held retractor; Kilner &quot;cat&#x27;s paw&quot;: Double ended; Single hook: Sharp.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -32
+  },
+  "self-retaining-retractors-with-teeth": {
+   "slug": "self-retaining-retractors-with-teeth",
+   "title": "Self-retaining retractors",
+   "image": "/assets/content/self-retaining-retractors-with-teeth.jpg",
+   "caption": "A picture guide to self-retaining retractors: Travers: Self-retaining, with an internal rack, 210mm long; Irwin: Self-retaining, with a cam rack, 4 x 4 teeth.",
+   "body": "<p><strong>In short:</strong> A picture guide to self-retaining retractors: Travers: Self-retaining, with an internal rack, 210mm long; Irwin: Self-retaining, with a cam rack, 4 x 4 teeth.</p>\n<h2>Self-retaining retractors</h2>\n<ul><li>Travers: Self-retaining, with an internal rack, 210mm long</li><li>Irwin: Self-retaining, with a cam rack, 4 x 4 teeth</li><li>West: Self-retaining, 140mm long</li><li>Norfolk and Norwich: 4 x 5 teeth, 50mm blades, 223mm long</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Self-retaining retractors hold themselves open with a ratchet or rack.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Self-retaining retractors&quot;.</summary><p>Travers: Self-retaining, with an internal rack, 210mm long; Irwin: Self-retaining, with a cam rack, 4 x 4 teeth; West: Self-retaining, 140mm long; Norfolk and Norwich: 4 x 5 teeth, 50mm blades, 223mm long.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -31
+  },
+  "abdominal-self-retaining-balfour-gelpi-collin": {
+   "slug": "abdominal-self-retaining-balfour-gelpi-collin",
+   "title": "Abdominal frame retractors",
+   "image": "/assets/content/abdominal-self-retaining-balfour-gelpi-collin.jpg",
+   "caption": "A picture guide to abdominal frame retractors: Balfour: Abdominal retractor, trivalve, frame 203mm; Gelpi: Self-retaining.",
+   "body": "<p><strong>In short:</strong> A picture guide to abdominal frame retractors: Balfour: Abdominal retractor, trivalve, frame 203mm; Gelpi: Self-retaining.</p>\n<h2>Abdominal frame retractors</h2>\n<ul><li>Balfour: Abdominal retractor, trivalve, frame 203mm</li><li>Gelpi: Self-retaining</li><li>Collin: 110mm fully open, 235mm long</li><li>Joll thyroid: Self-retaining, with a lock-in nut</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Check the ratchet or nut is locked before the surgeon lets go.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Abdominal frame retractors&quot;.</summary><p>Balfour: Abdominal retractor, trivalve, frame 203mm; Gelpi: Self-retaining; Collin: 110mm fully open, 235mm long; Joll thyroid: Self-retaining, with a lock-in nut.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -30
+  },
+  "theatre-hollowware-gallipot-jug-jar-tray": {
+   "slug": "theatre-hollowware-gallipot-jug-jar-tray",
+   "title": "Hollowware on the trolley",
+   "image": "/assets/content/theatre-hollowware-gallipot-jug-jar-tray.jpg",
+   "caption": "A picture guide to hollowware on the trolley: Gallipot: Small bowl for lotions and solutions; Measuring jug: Measures fluids.",
+   "body": "<p><strong>In short:</strong> A picture guide to hollowware on the trolley: Gallipot: Small bowl for lotions and solutions; Measuring jug: Measures fluids.</p>\n<h2>Hollowware on the trolley</h2>\n<ul><li>Gallipot: Small bowl for lotions and solutions</li><li>Measuring jug: Measures fluids</li><li>Cheatle jar: Jar for holding Cheatle forceps</li><li>Instrument tray: Stainless steel tray for instruments</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Label what is in each bowl so nothing is mixed up.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Hollowware on the trolley&quot;.</summary><p>Gallipot: Small bowl for lotions and solutions; Measuring jug: Measures fluids; Cheatle jar: Jar for holding Cheatle forceps; Instrument tray: Stainless steel tray for instruments.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -29
+  },
+  "instrument-baskets-and-containers": {
+   "slug": "instrument-baskets-and-containers",
+   "title": "Instrument baskets",
+   "image": "/assets/content/instrument-baskets-and-containers.jpg",
+   "caption": "A picture guide to instrument baskets: ENT basket: Wire mesh base, perforated sides, two carrying handles, with a lid; Arthroscope basket: Wire mesh base with two fixing clamps.",
+   "body": "<p><strong>In short:</strong> A picture guide to instrument baskets: ENT basket: Wire mesh base, perforated sides, two carrying handles, with a lid; Arthroscope basket: Wire mesh base with two fixing clamps.</p>\n<h2>Instrument baskets</h2>\n<ul><li>ENT basket: Wire mesh base, perforated sides, two carrying handles, with a lid</li><li>Arthroscope basket: Wire mesh base with two fixing clamps</li><li>Fine mesh basket: Fine mesh container for small items</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Baskets keep sets together through cleaning and sterilising.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Instrument baskets&quot;.</summary><p>ENT basket: Wire mesh base, perforated sides, two carrying handles, with a lid; Arthroscope basket: Wire mesh base with two fixing clamps; Fine mesh basket: Fine mesh container for small items.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -28
+  },
+  "specialist-forceps-rampley-lister-hunter-cheatle": {
+   "slug": "specialist-forceps-rampley-lister-hunter-cheatle",
+   "title": "Specialist forceps",
+   "image": "/assets/content/specialist-forceps-rampley-lister-hunter-cheatle.jpg",
+   "caption": "A picture guide to specialist forceps: Rampley sponge holding: Box joint, straight, serrated jaws; Lister sinus: Box joint, serrated tip.",
+   "body": "<p><strong>In short:</strong> A picture guide to specialist forceps: Rampley sponge holding: Box joint, straight, serrated jaws; Lister sinus: Box joint, serrated tip.</p>\n<h2>Specialist forceps</h2>\n<ul><li>Rampley sponge holding: Box joint, straight, serrated jaws</li><li>Lister sinus: Box joint, serrated tip</li><li>Cheatle sterilizer: Screw joint</li><li>Hunter splinter: Serrated, grooved, pointed jaws</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Some forceps have one job. Learn the name and the job together.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Specialist forceps&quot;.</summary><p>Rampley sponge holding: Box joint, straight, serrated jaws; Lister sinus: Box joint, serrated tip; Cheatle sterilizer: Screw joint; Hunter splinter: Serrated, grooved, pointed jaws.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -27
+  },
+  "scalpel-handles-baron-and-standard": {
+   "slug": "scalpel-handles-baron-and-standard",
+   "title": "Scalpel handles",
+   "image": "/assets/content/scalpel-handles-baron-and-standard.jpg",
+   "caption": "A picture guide to scalpel handles: Standard handle: 127mm long. Blades fit only certain handles; Baron handle: 130mm long.",
+   "body": "<p><strong>In short:</strong> A picture guide to scalpel handles: Standard handle: 127mm long. Blades fit only certain handles; Baron handle: 130mm long.</p>\n<h2>Scalpel handles</h2>\n<ul><li>Standard handle: 127mm long. Blades fit only certain handles</li><li>Baron handle: 130mm long</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Load and remove blades with forceps, never with your fingers.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Scalpel handles&quot;.</summary><p>Standard handle: 127mm long. Blades fit only certain handles; Baron handle: 130mm long.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); University of Bristol Clinical Skills Lab, Surgical Instruments booklet.</small></p>",
+   "status": "published",
+   "order": -26
+  },
+  "allis-duval-babcock-and-shaw-tissue-forceps": {
+   "slug": "allis-duval-babcock-and-shaw-tissue-forceps",
+   "title": "Tissue forceps by name",
+   "image": "/assets/content/allis-duval-babcock-and-shaw-tissue-forceps.jpg",
+   "caption": "A picture guide to tissue forceps by name: Allis: Box joint; Duval: Box joint.",
+   "body": "<p><strong>In short:</strong> A picture guide to tissue forceps by name: Allis: Box joint; Duval: Box joint.</p>\n<h2>Tissue forceps by name</h2>\n<ul><li>Allis: Box joint</li><li>Duval: Box joint</li><li>Babcock: Box joint, serrated jaws</li><li>Shaw: Box joint</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Allis and Babcock have rounded jaws for grasping intestine. Be gentle.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Tissue forceps by name&quot;.</summary><p>Allis: Box joint; Duval: Box joint; Babcock: Box joint, serrated jaws; Shaw: Box joint.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -25
+  },
+  "bulldog-clamps-and-spring-clips": {
+   "slug": "bulldog-clamps-and-spring-clips",
+   "title": "Bulldog clamps and spring clips",
+   "image": "/assets/content/bulldog-clamps-and-spring-clips.jpg",
+   "caption": "A picture guide to bulldog clamps and spring clips: Dieffenbach bulldog: Small spring clamp that closes a vessel temporarily; Blalock bulldog: Small spring clamp that closes a vessel temporarily.",
+   "body": "<p><strong>In short:</strong> A picture guide to bulldog clamps and spring clips: Dieffenbach bulldog: Small spring clamp that closes a vessel temporarily; Blalock bulldog: Small spring clamp that closes a vessel temporarily.</p>\n<h2>Bulldog clamps and spring clips</h2>\n<ul><li>Dieffenbach bulldog: Small spring clamp that closes a vessel temporarily</li><li>Blalock bulldog: Small spring clamp that closes a vessel temporarily</li><li>Spring clip: Serrated pattern, stainless steel, for fixing slings to leg splints</li><li>Spring bag clip: Serrated pattern, stainless steel</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Bulldog clamps close a vessel temporarily. Count them back at the end.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Bulldog clamps and spring clips&quot;.</summary><p>Dieffenbach bulldog: Small spring clamp that closes a vessel temporarily; Blalock bulldog: Small spring clamp that closes a vessel temporarily; Spring clip: Serrated pattern, stainless steel, for fixing slings to leg splints; Spring bag clip: Serrated pattern, stainless steel.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -24
+  },
+  "fergusson-paynes-and-utility-scissors": {
+   "slug": "fergusson-paynes-and-utility-scissors",
+   "title": "Fergusson, Paynes, Utility",
+   "image": "/assets/content/fergusson-paynes-and-utility-scissors.jpg",
+   "caption": "A picture guide to fergusson, Paynes, Utility: Fergusson: Angled on flat; Paynes suture scissors: For cutting sutures.",
+   "body": "<p><strong>In short:</strong> A picture guide to fergusson, Paynes, Utility: Fergusson: Angled on flat; Paynes suture scissors: For cutting sutures.</p>\n<h2>Fergusson, Paynes, Utility</h2>\n<ul><li>Fergusson: Angled on flat</li><li>Paynes suture scissors: For cutting sutures</li><li>Utility scissors: Black-handled utility pattern</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Use scissors only for what they are made to cut.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Fergusson, Paynes, Utility&quot;.</summary><p>Fergusson: Angled on flat; Paynes suture scissors: For cutting sutures; Utility scissors: Black-handled utility pattern.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -23
+  },
+  "bruce-clarke-lawrence-masing-and-foster-gillies-needle-holders": {
+   "slug": "bruce-clarke-lawrence-masing-and-foster-gillies-needle-holders",
+   "title": "Four more needle holders",
+   "image": "/assets/content/bruce-clarke-lawrence-masing-and-foster-gillies-needle-holders.jpg",
+   "caption": "A picture guide to four more needle holders: Bruce Clarke: Screw joint; Lawrence: Fine jaw, 150mm long.",
+   "body": "<p><strong>In short:</strong> A picture guide to four more needle holders: Bruce Clarke: Screw joint; Lawrence: Fine jaw, 150mm long.</p>\n<h2>Four more needle holders</h2>\n<ul><li>Bruce Clarke: Screw joint</li><li>Lawrence: Fine jaw, 150mm long</li><li>Masing: Tungsten carbide insert, one angled bow</li><li>Foster Gillies: Scissor/needle holder, fine pattern</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Needle holders and artery forceps look alike. Check the jaws.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Four more needle holders&quot;.</summary><p>Bruce Clarke: Screw joint; Lawrence: Fine jaw, 150mm long; Masing: Tungsten carbide insert, one angled bow; Foster Gillies: Scissor/needle holder, fine pattern.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -22
+  },
+  "goligher-miles-gossett-and-pozzi-retractors": {
+   "slug": "goligher-miles-gossett-and-pozzi-retractors",
+   "title": "Goligher, Miles, Gossett, Pozzi",
+   "image": "/assets/content/goligher-miles-gossett-and-pozzi-retractors.jpg",
+   "caption": "A picture guide to goligher, Miles, Gossett, Pozzi: Goligher: Complete with 2 centre blades, 90mm wide x 50mm deep; Miles: Complete with 2 centre blades, 90mm wide x 50mm deep.",
+   "body": "<p><strong>In short:</strong> A picture guide to goligher, Miles, Gossett, Pozzi: Goligher: Complete with 2 centre blades, 90mm wide x 50mm deep; Miles: Complete with 2 centre blades, 90mm wide x 50mm deep.</p>\n<h2>Goligher, Miles, Gossett, Pozzi</h2>\n<ul><li>Goligher: Complete with 2 centre blades, 90mm wide x 50mm deep</li><li>Miles: Complete with 2 centre blades, 90mm wide x 50mm deep</li><li>Gossett: Abdominal retractor</li><li>Pozzi: Abdominal retractors</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Frame retractors come in parts. Check every blade is present.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Goligher, Miles, Gossett, Pozzi&quot;.</summary><p>Goligher: Complete with 2 centre blades, 90mm wide x 50mm deep; Miles: Complete with 2 centre blades, 90mm wide x 50mm deep; Gossett: Abdominal retractor; Pozzi: Abdominal retractors.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -21
+  },
+  "kocher-landon-and-moynihan-retractors": {
+   "slug": "kocher-landon-and-moynihan-retractors",
+   "title": "Kocher, Landon, Moynihan",
+   "image": "/assets/content/kocher-landon-and-moynihan-retractors.jpg",
+   "caption": "A picture guide to kocher, Landon, Moynihan: Kocher: Hand-held retractor; Kocher Langenbeck: Hand-held retractor, 215mm long.",
+   "body": "<p><strong>In short:</strong> A picture guide to kocher, Landon, Moynihan: Kocher: Hand-held retractor; Kocher Langenbeck: Hand-held retractor, 215mm long.</p>\n<h2>Kocher, Landon, Moynihan</h2>\n<ul><li>Kocher: Hand-held retractor</li><li>Kocher Langenbeck: Hand-held retractor, 215mm long</li><li>Landon: Hand-held retractor</li><li>Moynihan: Hand-held retractor</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Retractors hold tissue back so the surgeon keeps a clear field.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Kocher, Landon, Moynihan&quot;.</summary><p>Kocher: Hand-held retractor; Kocher Langenbeck: Hand-held retractor, 215mm long; Landon: Hand-held retractor; Moynihan: Hand-held retractor.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023); ACS Division of Education, Common Surgical Instruments module.</small></p>",
+   "status": "published",
+   "order": -20
+  },
+  "canny-ryall-durham-and-ballance-retractors": {
+   "slug": "canny-ryall-durham-and-ballance-retractors",
+   "title": "Canny Ryall, Durham, Ballance",
+   "image": "/assets/content/canny-ryall-durham-and-ballance-retractors.jpg",
+   "caption": "A picture guide to canny Ryall, Durham, Ballance: Canny Ryall Navy: Double ended: one single hook blade 5mm wide and one fenestrated; Canny Ryall Army: Double prong, 13mm wide, 165mm long.",
+   "body": "<p><strong>In short:</strong> A picture guide to canny Ryall, Durham, Ballance: Canny Ryall Navy: Double ended: one single hook blade 5mm wide and one fenestrated; Canny Ryall Army: Double prong, 13mm wide, 165mm long.</p>\n<h2>Canny Ryall, Durham, Ballance</h2>\n<ul><li>Canny Ryall Navy: Double ended: one single hook blade 5mm wide and one fenestrated</li><li>Canny Ryall Army: Double prong, 13mm wide, 165mm long</li><li>Durham: With fenestrated blade, 216mm long</li><li>Ballance (Volkmann): 203mm long</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Know the length and blade width: it decides which wound it suits.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Canny Ryall, Durham, Ballance&quot;.</summary><p>Canny Ryall Navy: Double ended: one single hook blade 5mm wide and one fenestrated; Canny Ryall Army: Double prong, 13mm wide, 165mm long; Durham: With fenestrated blade, 216mm long; Ballance (Volkmann): 203mm long.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -19
+  },
+  "probes-dissector-and-aneurysm-needles": {
+   "slug": "probes-dissector-and-aneurysm-needles",
+   "title": "Probes, dissector, needles",
+   "image": "/assets/content/probes-dissector-and-aneurysm-needles.jpg",
+   "caption": "A picture guide to probes, dissector, needles: Fish tail probe: Silver plated; Watson Cheyne dissector: Fine, double ended, with a probe end.",
+   "body": "<p><strong>In short:</strong> A picture guide to probes, dissector, needles: Fish tail probe: Silver plated; Watson Cheyne dissector: Fine, double ended, with a probe end.</p>\n<h2>Probes, dissector, needles</h2>\n<ul><li>Fish tail probe: Silver plated</li><li>Watson Cheyne dissector: Fine, double ended, with a probe end</li><li>Aneurysm needle: Small, for infusions</li><li>Syme aneurysm needle: Hooked aneurysm needle</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Fine instruments bend easily. Keep them away from heavy ones.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Probes, dissector, needles&quot;.</summary><p>Fish tail probe: Silver plated; Watson Cheyne dissector: Fine, double ended, with a probe end; Aneurysm needle: Small, for infusions; Syme aneurysm needle: Hooked aneurysm needle.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -18
+  },
+  "ring-cutter-and-bowlby-dilator": {
+   "slug": "ring-cutter-and-bowlby-dilator",
+   "title": "Ring cutter and Bowlby dilator",
+   "image": "/assets/content/ring-cutter-and-bowlby-dilator.jpg",
+   "caption": "A picture guide to ring cutter and Bowlby dilator: Ring cutter: Cuts through a ring so it can be removed; Bowlby dilator: Curved.",
+   "body": "<p><strong>In short:</strong> A picture guide to ring cutter and Bowlby dilator: Ring cutter: Cuts through a ring so it can be removed; Bowlby dilator: Curved.</p>\n<h2>Ring cutter and Bowlby dilator</h2>\n<ul><li>Ring cutter: Cuts through a ring so it can be removed</li><li>Bowlby dilator: Curved</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Not every instrument cuts or clamps. Learn the odd ones too.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Ring cutter and Bowlby dilator&quot;.</summary><p>Ring cutter: Cuts through a ring so it can be removed; Bowlby dilator: Curved.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -17
+  },
+  "turner-warwick-set-blades-a-b-c-d": {
+   "slug": "turner-warwick-set-blades-a-b-c-d",
+   "title": "Turner Warwick set: blades A-D",
+   "image": "/assets/content/turner-warwick-set-blades-a-b-c-d.jpg",
+   "caption": "A picture guide to turner Warwick set: blades A-D: Blade A: Flat blade, 19mm x 76mm; Blade B: Flat blade, 38mm x 102mm.",
+   "body": "<p><strong>In short:</strong> A picture guide to turner Warwick set: blades A-D: Blade A: Flat blade, 19mm x 76mm; Blade B: Flat blade, 38mm x 102mm.</p>\n<h2>Turner Warwick set: blades A-D</h2>\n<ul><li>Blade A: Flat blade, 19mm x 76mm</li><li>Blade B: Flat blade, 38mm x 102mm</li><li>Blade C: Flat blade, 57mm x 89mm</li><li>Blade D: Flat blade, 57mm x 114mm</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>The full set has frames A-D and blades A, B, C, D, E, F, K and L.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Turner Warwick set: blades A-D&quot;.</summary><p>Blade A: Flat blade, 19mm x 76mm; Blade B: Flat blade, 38mm x 102mm; Blade C: Flat blade, 57mm x 89mm; Blade D: Flat blade, 57mm x 114mm.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -16
+  },
+  "turner-warwick-set-blades-e-f-g-j": {
+   "slug": "turner-warwick-set-blades-e-f-g-j",
+   "title": "Turner Warwick set: blades E-J",
+   "image": "/assets/content/turner-warwick-set-blades-e-f-g-j.jpg",
+   "caption": "A picture guide to turner Warwick set: blades E-J: Blade E: Curved stainless steel blade, 51mm x 38mm; Blade F: Curved stainless steel blade, 76mm x 60mm.",
+   "body": "<p><strong>In short:</strong> A picture guide to turner Warwick set: blades E-J: Blade E: Curved stainless steel blade, 51mm x 38mm; Blade F: Curved stainless steel blade, 76mm x 60mm.</p>\n<h2>Turner Warwick set: blades E-J</h2>\n<ul><li>Blade E: Curved stainless steel blade, 51mm x 38mm</li><li>Blade F: Curved stainless steel blade, 76mm x 60mm</li><li>Blade G: Flat stainless steel blade, 89mm x 60mm</li><li>Blade J: Single hook blade, 13mm deep</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Blades are sold singly, so count the ones in your set.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Turner Warwick set: blades E-J&quot;.</summary><p>Blade E: Curved stainless steel blade, 51mm x 38mm; Blade F: Curved stainless steel blade, 76mm x 60mm; Blade G: Flat stainless steel blade, 89mm x 60mm; Blade J: Single hook blade, 13mm deep.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -15
+  },
+  "turner-warwick-set-clip-blades-k-l": {
+   "slug": "turner-warwick-set-clip-blades-k-l",
+   "title": "Turner Warwick set: blades K, L",
+   "image": "/assets/content/turner-warwick-set-clip-blades-k-l.jpg",
+   "caption": "A picture guide to turner Warwick set: blades K, L: Blade K: Flat blade with clip, 55mm x 90mm; Blade L: Flat blade with clip, 55mm x 120mm.",
+   "body": "<p><strong>In short:</strong> A picture guide to turner Warwick set: blades K, L: Blade K: Flat blade with clip, 55mm x 90mm; Blade L: Flat blade with clip, 55mm x 120mm.</p>\n<h2>Turner Warwick set: blades K, L</h2>\n<ul><li>Blade K: Flat blade with clip, 55mm x 90mm</li><li>Blade L: Flat blade with clip, 55mm x 120mm</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>The set also has circular frames A, B, C and an oval frame D.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Turner Warwick set: blades K, L&quot;.</summary><p>Blade K: Flat blade with clip, 55mm x 90mm; Blade L: Flat blade with clip, 55mm x 120mm.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Surgical Holdings General Instruments Catalogue (Jan 2023).</small></p>",
+   "status": "published",
+   "order": -14
+  },
+  "eye-set-intraocular-needle-holders-and-scissors": {
+   "slug": "eye-set-intraocular-needle-holders-and-scissors",
+   "title": "Intraocular set: holders, scissors",
+   "image": "/assets/content/eye-set-intraocular-needle-holders-and-scissors.jpg",
+   "caption": "A picture guide to intraocular set: holders, scissors: A: Heavy needle holder for large needles; B: Fine needle holder for fine needles.",
+   "body": "<p><strong>In short:</strong> A picture guide to intraocular set: holders, scissors: A: Heavy needle holder for large needles; B: Fine needle holder for fine needles.</p>\n<h2>Intraocular set: holders, scissors</h2>\n<ul><li>A: Heavy needle holder for large needles</li><li>B: Fine needle holder for fine needles</li><li>C: Conjunctival scissors</li><li>D: Intraocular scissors (Vannas)</li><li>E: Right and left corneal scissors</li><li>F: Iridectomy scissors (De Wecker&#x27;s)</li><li>G: Razor blade fragment holder</li><li>H: Scalpel blade (Bard-Parker)</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Lay instruments out on trays before sterilising to limit damage.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Intraocular set: holders, scissors&quot;.</summary><p>A: Heavy needle holder for large needles; B: Fine needle holder for fine needles; C: Conjunctival scissors; D: Intraocular scissors (Vannas); E: Right and left corneal scissors; F: Iridectomy scissors (De Wecker&#x27;s); G: Razor blade fragment holder; H: Scalpel blade (Bard-Parker).</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Eye Surgery in Hot Climates (ICEH), Figs 3.5 and 3.6.</small></p>",
+   "status": "published",
+   "order": -13
+  },
+  "eye-set-intraocular-forceps": {
+   "slug": "eye-set-intraocular-forceps",
+   "title": "Intraocular set: forceps",
+   "image": "/assets/content/eye-set-intraocular-forceps.jpg",
+   "caption": "A picture guide to intraocular set: forceps: I: Heavy toothed forceps; J: Conjunctival forceps.",
+   "body": "<p><strong>In short:</strong> A picture guide to intraocular set: forceps: I: Heavy toothed forceps; J: Conjunctival forceps.</p>\n<h2>Intraocular set: forceps</h2>\n<ul><li>I: Heavy toothed forceps</li><li>J: Conjunctival forceps</li><li>K: Fine corneo-scleral forceps, teeth at the tip</li><li>L: Fine corneo-scleral forceps, cups at the tip</li><li>M: Curved fine corneo-scleral forceps</li><li>N: Intraocular forceps for the lens capsule (Kelman McPherson)</li><li>O: Capsule forceps for intracapsular extraction (Arruga)</li><li>P: Fine suture tying forceps</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Use the &quot;no touch&quot; technique: never touch the end that enters the eye.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Intraocular set: forceps&quot;.</summary><p>I: Heavy toothed forceps; J: Conjunctival forceps; K: Fine corneo-scleral forceps, teeth at the tip; L: Fine corneo-scleral forceps, cups at the tip; M: Curved fine corneo-scleral forceps; N: Intraocular forceps for the lens capsule (Kelman McPherson); O: Capsule forceps for intracapsular extraction (Arruga); P: Fine suture tying forceps.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Eye Surgery in Hot Climates (ICEH), Figs 3.5 and 3.6.</small></p>",
+   "status": "published",
+   "order": -12
+  },
+  "eye-set-intraocular-loops-cautery-and-cannula": {
+   "slug": "eye-set-intraocular-loops-cautery-and-cannula",
+   "title": "Intraocular set: loops, cautery",
+   "image": "/assets/content/eye-set-intraocular-loops-cautery-and-cannula.jpg",
+   "caption": "A picture guide to intraocular set: loops, cautery: Q: Right and left lens expressor; R: Lens loop.",
+   "body": "<p><strong>In short:</strong> A picture guide to intraocular set: loops, cautery: Q: Right and left lens expressor; R: Lens loop.</p>\n<h2>Intraocular set: loops, cautery</h2>\n<ul><li>Q: Right and left lens expressor</li><li>R: Lens loop</li><li>S: Iris repositor</li><li>T: Hot point cautery for use with a spirit lamp</li><li>U: Irrigating cystitome</li><li>X: 2-way irrigating/aspirating cannula for extracapsular extraction</li><li>Y: Intraocular swabs</li><li>Z: 2 cc and 5 cc syringes</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>The exact instruments in a set depend on the surgeon&#x27;s preference.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Intraocular set: loops, cautery&quot;.</summary><p>Q: Right and left lens expressor; R: Lens loop; S: Iris repositor; T: Hot point cautery for use with a spirit lamp; U: Irrigating cystitome; X: 2-way irrigating/aspirating cannula for extracapsular extraction; Y: Intraocular swabs; Z: 2 cc and 5 cc syringes.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Eye Surgery in Hot Climates (ICEH), Figs 3.5 and 3.6. The book&#x27;s key lists V and W together with other speculum patterns, so they are not listed here.</small></p>",
+   "status": "published",
+   "order": -11
+  },
+  "eye-set-eyelid-holder-scissors-and-hooks": {
+   "slug": "eye-set-eyelid-holder-scissors-and-hooks",
+   "title": "Eyelid set: holder, scissors, hooks",
+   "image": "/assets/content/eye-set-eyelid-holder-scissors-and-hooks.jpg",
+   "caption": "A picture guide to eyelid set: holder, scissors, hooks: A: Needle holder; B: Straight scissors.",
+   "body": "<p><strong>In short:</strong> A picture guide to eyelid set: holder, scissors, hooks: A: Needle holder; B: Straight scissors.</p>\n<h2>Eyelid set: holder, scissors, hooks</h2>\n<ul><li>A: Needle holder</li><li>B: Straight scissors</li><li>C: Curved spring scissors</li><li>D: Scalpel blade</li><li>E: Squint hooks</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>A set is the basic instruments for one kind of surgery.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Eyelid set: holder, scissors, hooks&quot;.</summary><p>A: Needle holder; B: Straight scissors; C: Curved spring scissors; D: Scalpel blade; E: Squint hooks.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Eye Surgery in Hot Climates (ICEH), Figs 3.5 and 3.6.</small></p>",
+   "status": "published",
+   "order": -10
+  },
+  "eye-set-eyelid-artery-and-toothed-forceps": {
+   "slug": "eye-set-eyelid-artery-and-toothed-forceps",
+   "title": "Eyelid set: forceps and cautery",
+   "image": "/assets/content/eye-set-eyelid-artery-and-toothed-forceps.jpg",
+   "caption": "A picture guide to eyelid set: forceps and cautery: F: Fine straight artery forceps; G: Curved artery forceps.",
+   "body": "<p><strong>In short:</strong> A picture guide to eyelid set: forceps and cautery: F: Fine straight artery forceps; G: Curved artery forceps.</p>\n<h2>Eyelid set: forceps and cautery</h2>\n<ul><li>F: Fine straight artery forceps</li><li>G: Curved artery forceps</li><li>H: Conjunctival forceps without teeth</li><li>I: Heavy toothed forceps</li><li>J: Fine toothed forceps</li><li>K: Battery cautery</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Toothed forceps grip firmly. Forceps without teeth are gentler.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Eyelid set: forceps and cautery&quot;.</summary><p>F: Fine straight artery forceps; G: Curved artery forceps; H: Conjunctival forceps without teeth; I: Heavy toothed forceps; J: Fine toothed forceps; K: Battery cautery.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Eye Surgery in Hot Climates (ICEH), Figs 3.5 and 3.6.</small></p>",
+   "status": "published",
+   "order": -9
+  },
+  "eye-set-eyelid-clamps-retractor-and-speculum": {
+   "slug": "eye-set-eyelid-clamps-retractor-and-speculum",
+   "title": "Eyelid set: clamps and speculum",
+   "image": "/assets/content/eye-set-eyelid-clamps-retractor-and-speculum.jpg",
+   "caption": "A picture guide to eyelid set: clamps and speculum: L: Meibomian cyst lid clamp; M: Small curette.",
+   "body": "<p><strong>In short:</strong> A picture guide to eyelid set: clamps and speculum: L: Meibomian cyst lid clamp; M: Small curette.</p>\n<h2>Eyelid set: clamps and speculum</h2>\n<ul><li>L: Meibomian cyst lid clamp</li><li>M: Small curette</li><li>N: Eyelid retractor (Desmarres)</li><li>O: Eyelid guard</li><li>P: Large eyelid clamp</li><li>Q: Eyelid clamp (Cruikshank or Erhardt)</li><li>R: Adjustable speculum (Laing)</li></ul>\n<h2>Why it matters in theatre</h2>\n<p>Instruments and equipment are the working tools of surgery. Recognising each one by name and purpose lets you prepare and pass the right one quickly and care for it properly.</p>\n<h2>Remember</h2>\n<p>Count every item in the set before and after the case.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Name the items shown on &quot;Eyelid set: clamps and speculum&quot;.</summary><p>L: Meibomian cyst lid clamp; M: Small curette; N: Eyelid retractor (Desmarres); O: Eyelid guard; P: Large eyelid clamp; Q: Eyelid clamp (Cruikshank or Erhardt); R: Adjustable speculum (Laing).</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Sources: Eye Surgery in Hot Climates (ICEH), Figs 3.5 and 3.6.</small></p>",
+   "status": "published",
+   "order": -8
+  }
+ }
+}

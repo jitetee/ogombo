@@ -1,6 +1,13 @@
 {
  "patches": [
   {
+   "id": "2026-11-06-52-instrument-cards",
+   "file": "2026-11-06-52-instrument-cards.json",
+   "name": "52 theatre instrument and equipment cards",
+   "date": "2026-11-06",
+   "notes": "52 new content cards (images are in assets/content). They are numbered to sit at the front of the recent group, so the shuffled Content page favours them. Existing cards are untouched (merge)."
+  },
+  {
    "id": "2026-11-05-clean-display-names",
    "file": "2026-11-05-clean-display-names.json",
    "name": "Remove file extensions from visible wording",
