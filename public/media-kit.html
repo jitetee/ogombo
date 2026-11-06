@@ -25,8 +25,17 @@
 @media print{header.site,footer.site,.mk-cta,#theme-toggle{display:none!important}body{background:#fff!important;color:#111!important}.mk-card,.mk-stats div,.mk-shots figure{border-color:#bbb;background:#fff}h1,h2,h3,.mk-stats b,.mk-price{color:#111!important}.mk-shots{grid-template-columns:1fr 1fr}}
 </style>
 </head>
-<body data-page="media-kit">
-<header class="site"><div class="wrap"><a class="logo" href="/">ezraogombo</a><nav class="site-nav"><a href="/">home</a><a href="/about">about</a><a href="/content">content</a><a href="/videos">videos</a><a href="/advertise">advertise</a></nav><button id="theme-toggle" data-theme-toggle type="button">Light</button></div></header>
+<body data-kind="content" data-page="media-kit">
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="/">ezraogombo</a>
+    <nav class="site-nav"><a href="/">home</a><a href="/about">about</a><a href="/content">content</a><a href="/videos">videos</a><a href="/blog">blog</a><a href="/writing">writing</a><a href="/materials">materials</a><a href="/contact">contact</a></nav>
+    <button id="theme-toggle" data-theme-toggle type="button">Light</button>
+    <a id="search-link" href="/search" title="Search" aria-label="Search" style="color:var(--ink-dim); text-decoration:none; font-size:1rem; margin-left:0.3rem;"><i data-i="search" data-s="20"></i></a>
+  </div>
+</header>
+
+<div class="ticker"><span id="status-ticker">loading status…</span></div>
 <main><div class="wrap">
 <section class="hero"><span class="kicker">MEDIA KIT</span><h1>Ezra Ogombo<br>Media kit</h1><p class="hint" id="tag">Making theatre easier to understand.</p>
 <p>Perioperative Theatre Technology graduate and medical-education creator in Kenya. I turn theatre, instruments and sterility into clear, visual, exam-ready lessons for students.</p>
@@ -53,11 +62,27 @@
 <section id="psec" hidden><h2>Past partners</h2><ul id="past"></ul></section>
 <section><h2>How it works</h2><ol><li>Email me what you sell and who you want to reach.</li><li>I suggest a format and send a script outline for approval.</li><li>You approve, I publish, and I send a short results report.</li></ol><p class="hint">Educational content only. Sponsored items are always labelled. I only promote things I would use in theatre or study.</p></section>
 </div></main>
-<footer class="site"><div class="wrap"><p>© <span data-year></span> Ezra Ogombo (@ezraogombo).</p><p>Nairobi &amp; Matunda, Kenya</p></div></footer>
-<script src="/js/firebase-config.js"></script><script src="/js/db.js"></script><script src="/js/icons.js"></script>
+<footer class="site">
+  <div class="wrap">
+    <p>© <span data-year></span> <span data-site-name>Ezra Ogombo</span> (@ezraogombo).</p>
+    <p>Nairobi &amp; Matunda, Kenya</p>
+  </div>
+</footer>
+<script src="/js/firebase-config.js"></script>
+<script src="/js/db.js"></script>
+<script src="/js/vendor/qrcode.js"></script>
+<script src="/js/qr.js"></script>
+<script src="/js/site.js"></script>
+<script src="/js/ads.js"></script>
+<script src="/js/icons.js"></script>
 <script src="/js/theme.js"></script>
+<script src="/js/search.js"></script>
+<script src="/js/chatbot.js"></script>
+<script src="/js/support.js"></script>
+<script src="/js/analytics.js"></script>
 <script>
 (async()=>{
+ try{const st=await window.EO_DB.getNode("status");if(st)document.getElementById("status-ticker").textContent=`STATUS: ${st.note||"building"}  ·  last updated ${st.updated||"recently"}`;}catch(e){}
  const E=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])),$=s=>document.querySelector(s);
  let K={};try{K=await fetch("/data/media-kit.json",{cache:"no-store"}).then(r=>r.json())}catch(e){}
  if(K.tagline)$("#tag").textContent=K.tagline; if(K.contactEmail)$("#mail").href="mailto:"+K.contactEmail+"?subject=Partnership%20enquiry";

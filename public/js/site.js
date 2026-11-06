@@ -98,6 +98,8 @@
     const nav = document.querySelector("header.site .site-nav");
     if (!nav || !cfg.nav || !cfg.nav.length) return;
     const here = pathNorm(location.pathname);
+    const have = (u) => cfg.nav.some((n) => n && pathNorm(n.url || "") === u);
+    if (!have("/videos")) cfg.nav = cfg.nav.concat([{ label: "videos", url: "/videos", order: 3.5, visible: true }]);
     const items = cfg.nav.filter((n) => n && n.label && n.url && n.visible !== false).sort((a, b) => (a.order || 0) - (b.order || 0));
     nav.innerHTML = items.map((n) => {
       const target = pathNorm(n.url);
