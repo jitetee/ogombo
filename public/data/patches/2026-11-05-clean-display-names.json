@@ -8,7 +8,8 @@
    "materials": "merge",
    "pages": "merge",
    "chatbot_faq": "merge",
-   "chatbot_config": "merge"
+   "chatbot_config": "merge",
+   "site_settings": "merge"
   },
   "changelog": [
    {
@@ -230,6 +231,46 @@
    {
     "path": "materials/unit-15-managing-clinical-services",
     "text": "Link now points to the Google Doc"
+   },
+   {
+    "path": "pages/home",
+    "text": "Kicker \"MATUNDA, KENYA\" (no SESSION ACTIVE)"
+   },
+   {
+    "path": "materials/theatre-register",
+    "text": "New template (draft until you publish it)"
+   },
+   {
+    "path": "materials/swab-sharps-instrument-count-sheet",
+    "text": "New template (draft until you publish it)"
+   },
+   {
+    "path": "materials/specimen-log",
+    "text": "New template (draft until you publish it)"
+   },
+   {
+    "path": "materials/supplies-requisition-form",
+    "text": "New template (draft until you publish it)"
+   },
+   {
+    "path": "materials/incident-and-needlestick-report",
+    "text": "New template (draft until you publish it)"
+   },
+   {
+    "path": "materials/surgical-safety-checklist",
+    "text": "New template (draft until you publish it)"
+   },
+   {
+    "path": "materials/emergency-trolley-daily-check",
+    "text": "New template (draft until you publish it)"
+   },
+   {
+    "path": "materials/equipment-and-sterilisation-log",
+    "text": "New template (draft until you publish it)"
+   },
+   {
+    "path": "site_settings/downloads",
+    "text": "CV and business card PDF links from Drive"
    }
   ]
  },
@@ -327,6 +368,118 @@
   },
   "ptt-level-6-complete-study-guide": {
    "drive_url": "https://docs.google.com/document/d/17YmEG2EPrzrTUbO_vV6SEZpVh5BefDAKXu1HqASYReQ/edit"
+  },
+  "theatre-register": {
+   "slug": "theatre-register",
+   "title": "Theatre Register",
+   "description": "A blank, editable theatre form you can copy and use. Open it, then File, Make a copy.",
+   "category": "templates",
+   "file_type": "docx",
+   "access": "free",
+   "price": 0,
+   "drive_url": "https://docs.google.com/document/d/1bGSfnztNiF76l2Rw9bMiMd1CBlHUkEZunmMf_bGVcLA/edit",
+   "source_file": "01_Theatre_Register.docx",
+   "status": "draft",
+   "order": 10,
+   "created": "2026-11-06"
+  },
+  "swab-sharps-instrument-count-sheet": {
+   "slug": "swab-sharps-instrument-count-sheet",
+   "title": "Swab Sharps Instrument Count Sheet",
+   "description": "A blank, editable theatre form you can copy and use. Open it, then File, Make a copy.",
+   "category": "templates",
+   "file_type": "docx",
+   "access": "free",
+   "price": 0,
+   "drive_url": "https://docs.google.com/document/d/14HBIxuVrWj5MTA5dkUhGlnhJnEz4LIf4l73OuUkxTuk/edit",
+   "source_file": "02_Swab_Sharps_Instrument_Count_Sheet.docx",
+   "status": "draft",
+   "order": 11,
+   "created": "2026-11-06"
+  },
+  "specimen-log": {
+   "slug": "specimen-log",
+   "title": "Specimen Log",
+   "description": "A blank, editable theatre form you can copy and use. Open it, then File, Make a copy.",
+   "category": "templates",
+   "file_type": "docx",
+   "access": "free",
+   "price": 0,
+   "drive_url": "https://docs.google.com/document/d/170sWwfA0ooNT6q9b6ULN7nnoyebml50n-y0zMPBhlt0/edit",
+   "source_file": "03_Specimen_Log.docx",
+   "status": "draft",
+   "order": 12,
+   "created": "2026-11-06"
+  },
+  "supplies-requisition-form": {
+   "slug": "supplies-requisition-form",
+   "title": "Supplies Requisition Form",
+   "description": "A blank, editable theatre form you can copy and use. Open it, then File, Make a copy.",
+   "category": "templates",
+   "file_type": "docx",
+   "access": "free",
+   "price": 0,
+   "drive_url": "https://docs.google.com/document/d/13vvKkRk8dph4Bxc1FoePYD20hENdmI9Bh3wQagJ8oD4/edit",
+   "source_file": "04_Supplies_Requisition_Form.docx",
+   "status": "draft",
+   "order": 13,
+   "created": "2026-11-06"
+  },
+  "incident-and-needlestick-report": {
+   "slug": "incident-and-needlestick-report",
+   "title": "Incident and Needlestick Report",
+   "description": "A blank, editable theatre form you can copy and use. Open it, then File, Make a copy.",
+   "category": "templates",
+   "file_type": "docx",
+   "access": "free",
+   "price": 0,
+   "drive_url": "https://docs.google.com/document/d/1Y5bKg3_BpwH6xPAoDzWHVWfJabRY-va57z8Se5efBQg/edit",
+   "source_file": "05_Incident_and_Needlestick_Report.docx",
+   "status": "draft",
+   "order": 14,
+   "created": "2026-11-06"
+  },
+  "surgical-safety-checklist": {
+   "slug": "surgical-safety-checklist",
+   "title": "Surgical Safety Checklist",
+   "description": "A blank, editable theatre form you can copy and use. Open it, then File, Make a copy.",
+   "category": "templates",
+   "file_type": "docx",
+   "access": "free",
+   "price": 0,
+   "drive_url": "https://docs.google.com/document/d/1R-Wnrd0mLlsotmiyzkMaJTg0oX9Ti_TdZe88-jNBOtw/edit",
+   "source_file": "06_Surgical_Safety_Checklist.docx",
+   "status": "draft",
+   "order": 15,
+   "created": "2026-11-06"
+  },
+  "emergency-trolley-daily-check": {
+   "slug": "emergency-trolley-daily-check",
+   "title": "Emergency Trolley Daily Check",
+   "description": "A blank, editable theatre form you can copy and use. Open it, then File, Make a copy.",
+   "category": "templates",
+   "file_type": "docx",
+   "access": "free",
+   "price": 0,
+   "drive_url": "https://docs.google.com/document/d/1QEQFu2KTkEbXnP7E-XcNPaB7GH25p8NsAGpYVDZD-tk/edit",
+   "source_file": "07_Emergency_Trolley_Daily_Check.docx",
+   "status": "draft",
+   "order": 16,
+   "created": "2026-11-06"
+  },
+  "equipment-and-sterilisation-log": {
+   "slug": "equipment-and-sterilisation-log",
+   "title": "Equipment and Sterilisation Log",
+   "description": "A blank, editable theatre form you can copy and use. Open it, then File, Make a copy.",
+   "category": "templates",
+   "file_type": "docx",
+   "access": "free",
+   "price": 0,
+   "drive_url": "https://docs.google.com/document/d/1xuD0hWGt8HSJm8mZtQ4MnHTbyMXe0uqjK8zRYs8II-I/edit",
+   "source_file": "08_Equipment_and_Sterilisation_Log.docx",
+   "status": "draft",
+   "order": 17,
+   "created": "2026-11-06"
   }
  },
  "pages": {
@@ -350,6 +503,21 @@
   },
   "subscribe": {
    "kicker": "SUBSCRIBE"
+  },
+  "home": {
+   "kicker": "MATUNDA, KENYA"
+  },
+  "contact": {
+   "kicker": "CONTACT"
+  },
+  "privacy": {
+   "kicker": "PRIVACY"
+  },
+  "search": {
+   "kicker": "SEARCH"
+  },
+  "videos": {
+   "kicker": "VIDEOS"
   }
  },
  "chatbot_faq": {
@@ -359,5 +527,11 @@
  },
  "chatbot_config": {
   "name": "ASK-EZRA"
+ },
+ "site_settings": {
+  "downloads": {
+   "cv_pdf": "https://drive.google.com/file/d/13qgUvlovyl5mQ9S2FU9qPZWs26ywyeaC/view",
+   "business_card_pdf": "https://drive.google.com/file/d/1yWCfDfVmZnlQIc4LL9XNqB3Uklz5gpfS/view"
+  }
  }
 }

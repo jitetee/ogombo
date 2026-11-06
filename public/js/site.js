@@ -195,7 +195,7 @@
       return d.innerHTML;
     };
     ["kicker", "heading", "intro", "body"].forEach((f) => {
-      if (rec[f] != null && rec[f] !== "") document.querySelectorAll(`[data-pg="${f}"]`).forEach((el) => { el.innerHTML = f === "kicker" ? clean(window.EO_UTIL.displayName(rec[f])) : clean(rec[f]); });
+      if (rec[f] != null && rec[f] !== "") document.querySelectorAll(`[data-pg="${f}"]`).forEach((el) => { el.innerHTML = f === "kicker" ? clean(window.EO_UTIL.displayName(String(rec[f]).replace(/\s*[·|\-–]\s*SESSION ACTIVE\s*$/i, ""))) : clean(rec[f]); });
     });
     const paged = U.params().get("page") || U.params().get("tag");
     if (!paged && (rec.title || rec.description)) setMeta({ title: rec.title, description: rec.description });

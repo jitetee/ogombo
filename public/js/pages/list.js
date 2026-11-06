@@ -21,6 +21,29 @@
     if (bar && tags.length) bar.innerHTML = `<a class="tag${tag ? "" : " on"}" href="/blog">all</a>` + tags.map((t) => `<a class="tag${t === tag ? " on" : ""}" href="/blog?tag=${encodeURIComponent(t)}">${E(t)}</a>`).join("");
     if (tag) list = list.filter((p) => (p.tags || []).includes(tag));
   }
+  // Content cards: a fresh mix on every visit to page 1 (mostly recent cards, some featured, some older ones).
+  // The mix is kept while moving through pages 2, 3... so nothing repeats or disappears; refreshing page 1 shuffles again.
+  if (kind === "content" && list.length > 1) {
+    const pg = parseInt(U.params().get("page"), 10) || 1; let seed = 0;
+    try { seed = pg > 1 ? parseInt(sessionStorage.getItem("eo_cseed"), 10) || 0 : 0; if (!seed) { seed = 1 + Math.floor(Math.random() * 2147483000); sessionStorage.setItem("eo_cseed", String(seed)); } } catch { seed = 1 + Math.floor(Math.random() * 2147483000); }
+    const rnd = (() => { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let x = s; x = Math.imul(x ^ (x >>> 15), x | 1); x ^= x + Math.imul(x ^ (x >>> 7), x | 61); return ((x ^ (x >>> 14)) >>> 0) / 4294967296; }; })();
+    const shuf = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    const byNew = list.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+    const recentN = Math.min(byNew.length, Math.max(24, Math.round(byNew.length * 0.04)));
+    const featured = byNew.filter((c) => c.featured);
+    const fs = new Set(featured.map((c) => c.slug));
+    const recent = shuf(byNew.slice(0, recentN).filter((c) => !fs.has(c.slug)));
+    const used = new Set([...recent, ...featured].map((c) => c.slug));
+    const buckets = [{ w: 0.5, a: recent }, { w: featured.length ? 0.2 : 0, a: shuf(featured) }, { w: 0.3, a: shuf(byNew.filter((c) => !used.has(c.slug))) }];
+    const mixed = [];
+    while (buckets.some((b) => b.a.length)) {
+      const live = buckets.filter((b) => b.a.length && b.w > 0), pool = live.length ? live : buckets.filter((b) => b.a.length);
+      let r = rnd() * pool.reduce((s, b) => s + (b.w || 1), 0), pick = pool[0];
+      for (const b of pool) { r -= b.w || 1; if (r <= 0) { pick = b; break; } }
+      mixed.push(pick.a.shift());
+    }
+    list = mixed;
+  }
   let per = Math.max(1, parseInt((cfg.per_page || {})[kind], 10) || 5);
   if (kind === "content" && list.length > 60 && per < 12) per = 24;   // a long card library needs bigger pages
   const totalPages = Math.max(1, Math.ceil(list.length / per));
