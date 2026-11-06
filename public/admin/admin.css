@@ -131,3 +131,10 @@ body.admin header.site .wrap{ flex-wrap:wrap; row-gap:.4rem; }
 body.admin header.site{ position:relative; z-index:90; }
 .bell-panel{ z-index:95; background:var(--panel,#0e1613); }
 html[data-theme="light"] .bell-panel{ background:#fff; }
+
+/* grouped admin menu: second row lists the pages inside the open group */
+.adm-sub{ display:flex; justify-content:flex-start; gap:.2rem; flex-wrap:wrap; margin-top:.35rem; padding-top:.4rem; border-top:1px dashed var(--panel-border); }
+.adm-sub a{ padding:.3rem .7rem; color:var(--ink-dim); text-decoration:none; font-size:.88rem; border-bottom:2px solid transparent; }
+.adm-sub a:hover{ color:var(--ink); }
+.adm-sub a.on{ color:var(--crt-green); border-bottom-color:var(--crt-green); }
+@media (max-width:760px){ .adm-sub{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; } .adm-sub a{ flex:0 0 auto; white-space:nowrap; } }

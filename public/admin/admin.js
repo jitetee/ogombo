@@ -5,7 +5,16 @@
 // ============================================================
 (function () {
   const CFG = window.EO_FIREBASE_CONFIG, DB = CFG.databaseURL;
-  const PAGES = [["index", "Dashboard"], ["content", "Content"], ["content-generator", "Studio"], ["materials", "Materials"], ["ads", "Ads"], ["inbox", "Inbox"], ["links", "Links"], ["videos", "Videos"], ["support-wall", "Support wall"], ["video", "Video"], ["whiteboard", "Whiteboard"], ["marketing", "Email"], ["merge", "Import"], ["data", "Data & settings"]];
+  // Admin menu: 6 groups instead of 14 flat tabs. Every page is still here, just grouped under clearer names.
+  const GROUPS = [
+    ["Dashboard", [["index", "Dashboard"]]],
+    ["Publish", [["content", "Content cards"], ["content-generator", "Content studio"], ["materials", "Materials & orders"], ["videos", "Videos page"]]],
+    ["Create", [["whiteboard", "Whiteboard videos"], ["video", "Video studio"]]],
+    ["People", [["inbox", "Inbox & comments"], ["support-wall", "Support wall"], ["marketing", "Email tool"]]],
+    ["Grow", [["ads", "Ads & sponsors"], ["links", "Short links & QR"]]],
+    ["Site", [["data", "Settings & data"], ["merge", "Import & merge"]]],
+  ];
+  const PAGES = GROUPS.reduce((a, g) => a.concat(g[1]), []);
   const LS = "eo_admin_session";
   let idToken = null, idExp = 0, session = null;
 
@@ -203,8 +212,11 @@
 
   A.guard = async (pageKey) => {
     document.body.classList.add("admin");
-    const nav = PAGES.map(([k, l]) => `<a href="/admin/${k === "index" ? "" : k}" class="${k === pageKey ? "on" : ""}">${l}</a>`).join("");
-    document.body.insertAdjacentHTML("afterbegin", `<header class="site"><div class="wrap"><a class="logo" href="/admin/">admin</a><nav class="adm-nav">${nav}</nav><div class="adm-user"><a href="/" target="_blank" rel="noopener" style="color:var(--ink-dim)">view site ↗</a><span id="adm-who"></span><button class="btn sm" id="adm-out" type="button" hidden>Sign out</button></div></div></header>`);
+    const href = (k) => `/admin/${k === "index" ? "" : k}`;
+    const grp = GROUPS.find((g) => g[1].some((p) => p[0] === pageKey)) || GROUPS[0];
+    const nav = GROUPS.map((g) => `<a href="${href(g[1][0][0])}" class="${g === grp ? "on" : ""}">${g[0]}</a>`).join("");
+    const sub = grp[1].length > 1 ? `<nav class="adm-sub wrap">${grp[1].map(([k, l]) => `<a href="${href(k)}" class="${k === pageKey ? "on" : ""}">${l}</a>`).join("")}</nav>` : "";
+    document.body.insertAdjacentHTML("afterbegin", `<header class="site"><div class="wrap"><a class="logo" href="/admin/">admin</a><nav class="adm-nav">${nav}</nav><div class="adm-user"><a href="/" target="_blank" rel="noopener" style="color:var(--ink-dim)">view site ↗</a><span id="adm-who"></span><button class="btn sm" id="adm-out" type="button" hidden>Sign out</button></div></div>${sub}</header>`);
     const main = $("main");
     const saved = (() => { try { return JSON.parse(localStorage.getItem(LS)); } catch { return null; } })();
     const gate = (msg) => new Promise((resolve) => {
