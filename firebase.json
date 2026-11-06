@@ -1,0 +1,3 @@
+{
+  "database": { "rules": "public/database.rules.json" }
+}

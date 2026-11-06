@@ -27,3 +27,26 @@ jobs:
           channelId: live
           projectId: ezra-ogombo
           entryPoint: public
+
+  # Publishes public/database.rules.json to the Realtime Database whenever it changes.
+  # If the service account lacks permission this job fails on its own and the site deploy above is not affected.
+  deploy_rules:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Did the rules change?
+        id: changed
+        run: |
+          if git diff --name-only HEAD~1 HEAD | grep -q '^public/database.rules.json$'; then echo "go=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Deploy database rules
+        if: steps.changed.outputs.go == '1'
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_EZRA_OGOMBO }}
+        run: |
+          echo "$SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx -y firebase-tools@13 deploy --only database --project ezra-ogombo --non-interactive
+          rm -f "$RUNNER_TEMP/sa.json"
