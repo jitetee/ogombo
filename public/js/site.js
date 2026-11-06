@@ -117,12 +117,17 @@
       return `<a href="${U.esc(n.url)}"${cur}>${U.esc(n.label)}</a>`;
     };
     let html = GROUPS.map(([title, urls]) => {
-      const links = urls.map((u) => { const n = by[u] || (EXTRA[u] ? { label: EXTRA[u], url: u } : null); if (!n) return ""; used.add(u); return link(n); }).join("");
-      return links ? `<div class="nav-group">${title ? `<span class="nav-h">${title}</span>` : ""}${links}</div>` : "";
+      const present = urls.map((u) => by[u] || (EXTRA[u] ? { label: EXTRA[u], url: u } : null)).filter(Boolean);
+      present.forEach((n) => used.add(pathNorm(n.url)));
+      if (!present.length) return "";
+      if (!title) return `<div class="nav-group nav-solo">${present.map(link).join("")}</div>`;
+      const open = present.some((n) => { const t = pathNorm(n.url); return here === t || here.startsWith(t + "/"); });
+      return `<div class="nav-group${open ? " open" : ""}"><button type="button" class="nav-h" aria-expanded="${open}">${title}<span class="nav-car" aria-hidden="true"></span></button><div class="nav-sub"${open ? "" : " hidden"}>${present.map(link).join("")}</div></div>`;
     }).join("");
     const rest = items.filter((n) => !used.has(pathNorm(n.url)));
-    if (rest.length) html += `<div class="nav-group"><span class="nav-h">More</span>${rest.map(link).join("")}</div>`;
+    if (rest.length) html += `<div class="nav-group"><button type="button" class="nav-h" aria-expanded="false">More<span class="nav-car" aria-hidden="true"></span></button><div class="nav-sub" hidden>${rest.map(link).join("")}</div></div>`;
     nav.innerHTML = html;
+    if (!nav.dataset.acc) { nav.dataset.acc = "1"; nav.addEventListener("click", (e) => { const b = e.target.closest(".nav-h"); if (!b) return; const g = b.parentElement, sub = g.querySelector(".nav-sub"), o = sub.hidden; sub.hidden = !o; g.classList.toggle("open", o); b.setAttribute("aria-expanded", String(o)); }); }
   }
 
   function socialsHtml(cfg, opts = {}) {
