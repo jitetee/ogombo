@@ -398,3 +398,12 @@ i[data-i]{display:inline-flex;vertical-align:-0.2em;font-style:normal;margin-rig
 .vid.short iframe{ aspect-ratio:9/16; }
 .vid-chan iframe{ width:100%; aspect-ratio:16/9; border:1px solid var(--panel-border); margin-bottom:1rem; }
 .vid-chan.short iframe{ max-width:360px; aspect-ratio:9/16; }
+
+/* grouped visitor menu */
+.menu-panel{ max-height:calc(100vh - 5rem); overflow-y:auto; }
+.menu-panel nav.site-nav{ gap:.2rem; }
+.nav-group{ display:flex; flex-direction:column; padding:.25rem 0 .35rem; border-bottom:1px solid var(--panel-border); }
+.nav-group:last-child{ border-bottom:0; }
+.nav-h{ font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-dim); padding:.35rem .7rem .15rem; }
+.menu-panel nav.site-nav .nav-group a{ border-bottom:0; padding:.5rem .7rem; }
+.menu-panel nav.site-nav a[aria-current="page"]{ color:var(--crt-green); }

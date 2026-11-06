@@ -101,11 +101,28 @@
     const have = (u) => cfg.nav.some((n) => n && pathNorm(n.url || "") === u);
     if (!have("/videos")) cfg.nav = cfg.nav.concat([{ label: "videos", url: "/videos", order: 3.5, visible: true }]);
     const items = cfg.nav.filter((n) => n && n.label && n.url && n.visible !== false).sort((a, b) => (a.order || 0) - (b.order || 0));
-    nav.innerHTML = items.map((n) => {
-      const target = pathNorm(n.url);
-      const cur = here === target || (target !== "/" && here.startsWith(target + "/")) ? ' aria-current="page"' : "";
+    // Grouped menu: the labels and order still come from the database; pages the menu never listed (CV, media kit...) are added.
+    const GROUPS = [
+      ["", ["/"]],
+      ["Learn", ["/materials", "/content", "/videos"]],
+      ["Read", ["/blog", "/writing"]],
+      ["About me", ["/about", "/cv", "/contact"]],
+      ["Work with me", ["/media-kit", "/advertise"]],
+      ["Stay in touch", ["/subscribe", "/search"]],
+    ];
+    const EXTRA = { "/cv": "cv", "/media-kit": "media kit", "/advertise": "advertise", "/subscribe": "subscribe", "/search": "search" };
+    const by = {}; items.forEach((n) => { by[pathNorm(n.url)] = n; });
+    const used = new Set(), link = (n) => {
+      const target = pathNorm(n.url), cur = here === target || (target !== "/" && here.startsWith(target + "/")) ? ' aria-current="page"' : "";
       return `<a href="${U.esc(n.url)}"${cur}>${U.esc(n.label)}</a>`;
+    };
+    let html = GROUPS.map(([title, urls]) => {
+      const links = urls.map((u) => { const n = by[u] || (EXTRA[u] ? { label: EXTRA[u], url: u } : null); if (!n) return ""; used.add(u); return link(n); }).join("");
+      return links ? `<div class="nav-group">${title ? `<span class="nav-h">${title}</span>` : ""}${links}</div>` : "";
     }).join("");
+    const rest = items.filter((n) => !used.has(pathNorm(n.url)));
+    if (rest.length) html += `<div class="nav-group"><span class="nav-h">More</span>${rest.map(link).join("")}</div>`;
+    nav.innerHTML = html;
   }
 
   function socialsHtml(cfg, opts = {}) {
