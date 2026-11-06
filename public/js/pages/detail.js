@@ -67,6 +67,29 @@
   if (thumb && f.image) { thumb.src = f.image; thumb.alt = f.title; thumb.style.display = ""; }
   else if (thumb) thumb.style.display = "none";
   $("post-content").innerHTML = f.body;
+  if (kind === "book") {
+    // Book extras (all optional, set in Admin -> Content -> Books): progress, chapters, a sample to read, and a download.
+    const bits = [], ico = (n) => (window.EO_ICON ? window.EO_ICON(n, 16) + " " : "");
+    const pr = Math.max(0, Math.min(100, Number(item.progress) || 0));
+    if (pr) bits.push(`<p class="mono" style="margin:1rem 0 .3rem">Draft progress: ${pr}%</p><div style="height:8px;border:1px solid var(--panel-border);border-radius:4px;overflow:hidden"><div style="width:${pr}%;height:100%;background:var(--crt-green)"></div></div>`);
+    const ch = Array.isArray(item.chapters) ? item.chapters : Object.values(item.chapters || {});
+    if (ch.length) bits.push(`<h2>Chapters</h2><ol>${ch.map((c) => `<li>${E(typeof c === "string" ? c : c.title || "")}</li>`).join("")}</ol>`);
+    const sampleHtml = (item.preview_text ? String(item.preview_text).split(/\n{2,}/).map((p) => `<p>${E(p).replace(/\n/g, "<br>")}</p>`).join("") : "");
+    const frame = item.preview_url && window.EO_DRIVE ? window.EO_DRIVE.preview(item.preview_url) : null;
+    const isImg = item.preview_url && /^(\/|https?:\/\/[^ ]+\.(png|jpe?g|webp|gif)(\?|$))/i.test(item.preview_url) && !/drive\.google/.test(item.preview_url);
+    const btns = [];
+    if (sampleHtml || frame || isImg) btns.push(`<button class="btn primary" id="bk-pv" type="button">${ico("eye")}Read a sample</button>`);
+    if (item.drive_url && window.EO_DRIVE) btns.push(`<a class="btn" href="${E(window.EO_DRIVE.download(item.drive_url))}" target="_blank" rel="noopener">Download</a>`);
+    else btns.push(`<a class="btn" href="/subscribe">${ico("bell")}Tell me when it's out</a>`);
+    bits.push(`<div class="row-links" style="margin:1.2rem 0">${btns.join("")}</div><div id="bk-sample"></div>`);
+    $("post-content").insertAdjacentHTML("beforeend", bits.join(""));
+    const pv = $("bk-pv");
+    if (pv) pv.addEventListener("click", () => {
+      $("bk-sample").innerHTML = (sampleHtml ? `<div class="crt-window"><div class="titlebar"><span class="label">sample</span></div><div class="body">${sampleHtml}</div></div>` : "")
+        + (isImg ? `<img src="${E(item.preview_url)}" alt="Sample of ${E(f.title)}" style="max-width:100%;border:1px solid var(--panel-border);border-radius:4px;margin-top:1rem">` : frame ? `<iframe src="${E(frame)}" title="Sample" style="width:100%;height:70vh;border:1px solid var(--panel-border);border-radius:4px;background:#fff;margin-top:1rem" loading="lazy"></iframe>` : "");
+      pv.remove();
+    });
+  }
   window.EO_PAGE_TAGS = (f.tags || []).map((t) => String(t).toLowerCase().trim());   // for ad targeting
   if (window.EO_ADS && (kind === "blog" || kind === "content")) window.EO_ADS.placeInArticle($("post-content"));
   if ($("post-tags")) $("post-tags").innerHTML = f.tags.map((t) => `<a class="tag" href="/blog?tag=${encodeURIComponent(t)}">${E(t)}</a>`).join("");

@@ -1,0 +1,431 @@
+{
+ "_patch": {
+  "id": "2026-11-06-32-workplace-study-cards",
+  "name": "32 workplace study cards for theatre technology",
+  "date": "2026-11-06",
+  "notes": "32 new content cards on workplace safety, professional practice, communication and waste, written as study notes from the TVET CDACC Basic Competencies Level 6 guide. Images are in assets/content. Numbered to sit at the front of the recent group. Existing cards are untouched (merge).",
+  "modes": {
+   "content_highlights": "merge"
+  },
+  "changelog": [
+   {
+    "path": "content_highlights/hazard-risk-and-risk-control-in-theatre",
+    "text": "New: Hazard, risk and risk control"
+   },
+   {
+    "path": "content_highlights/six-types-of-hazard-in-the-operating-theatre",
+    "text": "New: Six types of workplace hazard"
+   },
+   {
+    "path": "content_highlights/signs-that-a-workplace-has-a-hazard-problem",
+    "text": "New: Warning signs of a hazard problem"
+   },
+   {
+    "path": "content_highlights/how-workplace-hazards-are-checked-and-reported",
+    "text": "New: Checking the workplace for hazards"
+   },
+   {
+    "path": "content_highlights/hierarchy-of-hazard-controls-with-theatre-examples",
+    "text": "New: Six ways to control a hazard"
+   },
+   {
+    "path": "content_highlights/personal-protective-equipment-ppe-in-theatre",
+    "text": "New: PPE: the last line of protection"
+   },
+   {
+    "path": "content_highlights/what-to-do-in-a-workplace-emergency",
+    "text": "New: Responding to a workplace emergency"
+   },
+   {
+    "path": "content_highlights/emergencies-and-drills-every-theatre-worker-should-know",
+    "text": "New: Emergencies and drills"
+   },
+   {
+    "path": "content_highlights/your-three-rights-at-work-know-take-part-refuse",
+    "text": "New: Your three rights at work"
+   },
+   {
+    "path": "content_highlights/duties-of-employers-and-workers-for-safety",
+    "text": "New: Who is responsible for safety"
+   },
+   {
+    "path": "content_highlights/osh-records-accident-near-miss-and-notifiable-disease",
+    "text": "New: Safety records that must be kept"
+   },
+   {
+    "path": "content_highlights/osh-programmes-for-health-workers",
+    "text": "New: Occupational health programmes"
+   },
+   {
+    "path": "content_highlights/managing-stress-in-the-theatre-team",
+    "text": "New: Managing stress at work"
+   },
+   {
+    "path": "content_highlights/punctuality-and-time-consciousness-in-theatre",
+    "text": "New: Punctuality and time"
+   },
+   {
+    "path": "content_highlights/how-to-set-work-priorities-in-theatre",
+    "text": "New: Setting work priorities"
+   },
+   {
+    "path": "content_highlights/safety-consciousness-in-the-theatre",
+    "text": "New: Safety consciousness"
+   },
+   {
+    "path": "content_highlights/code-of-conduct-and-professional-integrity",
+    "text": "New: Code of conduct and integrity"
+   },
+   {
+    "path": "content_highlights/principles-of-ethics-in-healthcare-work",
+    "text": "New: Principles of ethics"
+   },
+   {
+    "path": "content_highlights/how-to-set-expectations-for-a-theatre-team",
+    "text": "New: Team expectations"
+   },
+   {
+    "path": "content_highlights/delegating-duties-to-team-members",
+    "text": "New: Delegating tasks well"
+   },
+   {
+    "path": "content_highlights/the-communication-cycle-in-theatre",
+    "text": "New: The communication cycle"
+   },
+   {
+    "path": "content_highlights/barriers-to-effective-communication",
+    "text": "New: Barriers to communication"
+   },
+   {
+    "path": "content_highlights/qualities-of-effective-communication",
+    "text": "New: Effective communication"
+   },
+   {
+    "path": "content_highlights/resolving-conflict-at-work-six-steps",
+    "text": "New: Resolving conflict at work"
+   },
+   {
+    "path": "content_highlights/communication-strategies-for-a-job-interview",
+    "text": "New: Job interview strategies"
+   },
+   {
+    "path": "content_highlights/types-of-biomedical-waste",
+    "text": "New: Biomedical waste classes"
+   },
+   {
+    "path": "content_highlights/steps-in-managing-solid-waste",
+    "text": "New: Managing solid waste"
+   },
+   {
+    "path": "content_highlights/waste-treatment-methods",
+    "text": "New: Waste treatment methods"
+   },
+   {
+    "path": "content_highlights/controlling-noise-in-the-workplace",
+    "text": "New: Controlling noise"
+   },
+   {
+    "path": "content_highlights/controlling-air-pollution-at-work",
+    "text": "New: Protecting workers from air pollution"
+   },
+   {
+    "path": "content_highlights/the-3rs-reduce-reuse-recycle-in-a-health-facility",
+    "text": "New: Cutting waste"
+   },
+   {
+    "path": "content_highlights/protecting-data-and-patient-information",
+    "text": "New: Protecting data"
+   }
+  ]
+ },
+ "content_highlights": {
+  "hazard-risk-and-risk-control-in-theatre": {
+   "slug": "hazard-risk-and-risk-control-in-theatre",
+   "title": "Hazard, risk and risk control",
+   "image": "/assets/content/hazard-risk-and-risk-control-in-theatre.jpg",
+   "caption": "Five core terms of occupational safety and health.",
+   "body": "<p><strong>In short:</strong> Five core terms of occupational safety and health.</p>\n<h2>Hazard, risk and risk control</h2>\n<ol><li><strong>Hazard.</strong> Anything that could cause harm: a thing, a condition or a behaviour. A wet floor or a sharp blade.</li><li><strong>Hazard identification.</strong> Walking through each work area and task to spot the hazards in the job.</li><li><strong>Risk.</strong> The chance that harm will actually happen when someone meets the hazard.</li><li><strong>Risk control.</strong> Acting to remove or reduce the risk as far as is reasonably practicable.</li><li><strong>Monitoring and review.</strong> Checking again that the controls still work and changing them if they do not.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Theatre is full of hazards: sharps, diathermy, cleaning chemicals, lifting and blood or body fluids. Knowing the words helps you report problems clearly.</p>\n<h2>Remember</h2>\n<p>A hazard is the danger. Risk is the chance it hurts someone.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Hazard, risk and risk control&quot;.</summary><p>Hazard: Anything that could cause harm: a thing, a condition or a behaviour. A wet floor or a sharp blade; Hazard identification: Walking through each work area and task to spot the hazards in the job; Risk: The chance that harm will actually happen when someone meets the hazard; Risk control: Acting to remove or reduce the risk as far as is reasonably practicable; Monitoring and review: Checking again that the controls still work and changing them if they do not.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -91
+  },
+  "six-types-of-hazard-in-the-operating-theatre": {
+   "slug": "six-types-of-hazard-in-the-operating-theatre",
+   "title": "Six types of workplace hazard",
+   "image": "/assets/content/six-types-of-hazard-in-the-operating-theatre.jpg",
+   "caption": "The guide groups hazards into six types.",
+   "body": "<p><strong>In short:</strong> The guide groups hazards into six types.</p>\n<h2>Six types of workplace hazard</h2>\n<ol><li><strong>Safety hazards.</strong> Spills, clutter, poor storage, electrical faults, gas leaks, falling objects.</li><li><strong>Unsafe behaviour.</strong> Smoking in banned areas, alcohol or drug use at work, rushing and shortcuts.</li><li><strong>Physical hazards.</strong> Noise, heat, poor lighting, vibration, pressure and radiation.</li><li><strong>Ergonomic and stress hazards.</strong> Heavy lifting, long standing, fatigue, pressure and long hours.</li><li><strong>Chemical hazards.</strong> Dust, fumes, gases and vapours, such as disinfectants and anaesthetic gases.</li><li><strong>Biological hazards.</strong> Bacteria, viruses, fungi and other organisms, including blood and body fluids.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>In theatre these show up as wet floors, noisy equipment, long cases, cleaning chemicals and infected material.</p>\n<h2>Remember</h2>\n<p>Check each hazard type every time you set up a theatre.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Six types of workplace hazard&quot;.</summary><p>Safety hazards: Spills, clutter, poor storage, electrical faults, gas leaks, falling objects; Unsafe behaviour: Smoking in banned areas, alcohol or drug use at work, rushing and shortcuts; Physical hazards: Noise, heat, poor lighting, vibration, pressure and radiation; Ergonomic and stress hazards: Heavy lifting, long standing, fatigue, pressure and long hours; Chemical hazards: Dust, fumes, gases and vapours, such as disinfectants and anaesthetic gases; Biological hazards: Bacteria, viruses, fungi and other organisms, including blood and body fluids.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -90
+  },
+  "signs-that-a-workplace-has-a-hazard-problem": {
+   "slug": "signs-that-a-workplace-has-a-hazard-problem",
+   "title": "Warning signs of a hazard problem",
+   "image": "/assets/content/signs-that-a-workplace-has-a-hazard-problem.jpg",
+   "caption": "Four indicators that hazards are present.",
+   "body": "<p><strong>In short:</strong> Four indicators that hazards are present.</p>\n<h2>Warning signs of a hazard problem</h2>\n<ol><li><strong>More accidents and injuries.</strong> A rising number of incidents is the clearest sign something is wrong.</li><li><strong>More sickness.</strong> Staff report illness, symptoms or health complaints linked to the work.</li><li><strong>Repeated worker complaints.</strong> The same safety or health concerns keep being raised.</li><li><strong>High absenteeism.</strong> Staff stay away for reasons connected to the work.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Reporting early patterns, such as repeated needle-stick injuries or back pain in the team, lets the hospital act before someone is seriously hurt.</p>\n<h2>Remember</h2>\n<p>Listen when colleagues complain. It is often the first warning.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Warning signs of a hazard problem&quot;.</summary><p>More accidents and injuries: A rising number of incidents is the clearest sign something is wrong; More sickness: Staff report illness, symptoms or health complaints linked to the work; Repeated worker complaints: The same safety or health concerns keep being raised; High absenteeism: Staff stay away for reasons connected to the work.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -89
+  },
+  "how-workplace-hazards-are-checked-and-reported": {
+   "slug": "how-workplace-hazards-are-checked-and-reported",
+   "title": "Checking the workplace for hazards",
+   "image": "/assets/content/how-workplace-hazards-are-checked-and-reported.jpg",
+   "caption": "Audits and worker feedback show where the hazards are.",
+   "body": "<p><strong>In short:</strong> Audits and worker feedback show where the hazards are.</p>\n<h2>Checking the workplace for hazards</h2>\n<ol><li><strong>Health audit.</strong> Health professionals check how worker care measures up against set standards.</li><li><strong>Safety audit.</strong> A structured review of how well the safety and health system works.</li><li><strong>Questionnaires.</strong> Ask staff in writing about hazards and worries.</li><li><strong>Oral interviews.</strong> Talk to workers about what they see and experience.</li><li><strong>Suggestion box.</strong> Lets staff raise concerns without being identified.</li><li><strong>Act on the results.</strong> Analyse what is collected and take corrective action.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Theatre staff know best where the risks are. Their reports feed the safety audit.</p>\n<h2>Remember</h2>\n<p>Workers see hazards first. Ask them, then act.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Checking the workplace for hazards&quot;.</summary><p>Health audit: Health professionals check how worker care measures up against set standards; Safety audit: A structured review of how well the safety and health system works; Questionnaires: Ask staff in writing about hazards and worries; Oral interviews: Talk to workers about what they see and experience; Suggestion box: Lets staff raise concerns without being identified; Act on the results: Analyse what is collected and take corrective action.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -88
+  },
+  "hierarchy-of-hazard-controls-with-theatre-examples": {
+   "slug": "hierarchy-of-hazard-controls-with-theatre-examples",
+   "title": "Six ways to control a hazard",
+   "image": "/assets/content/hierarchy-of-hazard-controls-with-theatre-examples.jpg",
+   "caption": "The six control measures, strongest first.",
+   "body": "<p><strong>In short:</strong> The six control measures, strongest first.</p>\n<h2>Six ways to control a hazard</h2>\n<ol><li><strong>Elimination.</strong> Remove the hazard completely: clear trip hazards, dispose of unwanted chemicals.</li><li><strong>Substitution.</strong> Replace it with something safer, such as a safer chemical or a quieter machine.</li><li><strong>Isolation.</strong> Separate people from it with distance or barriers, such as a fume cabinet.</li><li><strong>Engineering controls.</strong> Use a physical fix: machine guards, good ventilation, fair work rosters.</li><li><strong>Administrative controls.</strong> Safe procedures, training, warning signs, shorter exposure, good housekeeping.</li><li><strong>Protective equipment (PPE).</strong> Gloves, masks, eyewear, aprons. The last line of protection.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>PPE protects only if it is worn correctly, so remove or reduce the hazard first wherever you can.</p>\n<h2>Remember</h2>\n<p>Try to remove the hazard first. PPE is the last defence.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Six ways to control a hazard&quot;.</summary><p>Elimination: Remove the hazard completely: clear trip hazards, dispose of unwanted chemicals; Substitution: Replace it with something safer, such as a safer chemical or a quieter machine; Isolation: Separate people from it with distance or barriers, such as a fume cabinet; Engineering controls: Use a physical fix: machine guards, good ventilation, fair work rosters; Administrative controls: Safe procedures, training, warning signs, shorter exposure, good housekeeping; Protective equipment (PPE): Gloves, masks, eyewear, aprons. The last line of protection.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -87
+  },
+  "personal-protective-equipment-ppe-in-theatre": {
+   "slug": "personal-protective-equipment-ppe-in-theatre",
+   "title": "PPE: the last line of protection",
+   "image": "/assets/content/personal-protective-equipment-ppe-in-theatre.jpg",
+   "caption": "PPE items listed in the guide, and how they fit into theatre work.",
+   "body": "<p><strong>In short:</strong> PPE items listed in the guide, and how they fit into theatre work.</p>\n<h2>PPE: the last line of protection</h2>\n<ol><li><strong>Gloves.</strong> Protect hands from chemicals and body fluids.</li><li><strong>Face mask.</strong> Protects the nose and mouth from splashes and airborne particles.</li><li><strong>Protective eyewear.</strong> Shields the eyes from splashes and flying particles.</li><li><strong>Apron.</strong> Keeps fluids and chemicals off clothing and skin.</li><li><strong>Ear plugs.</strong> Protect hearing around loud machinery.</li><li><strong>Fit and care.</strong> Train staff to wear it correctly. Keep it clean and in good repair.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Choose PPE to match the hazard and the job. Follow your hospital policy for each procedure.</p>\n<h2>Remember</h2>\n<p>PPE only protects when you wear it properly every time.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;PPE: the last line of protection&quot;.</summary><p>Gloves: Protect hands from chemicals and body fluids; Face mask: Protects the nose and mouth from splashes and airborne particles; Protective eyewear: Shields the eyes from splashes and flying particles; Apron: Keeps fluids and chemicals off clothing and skin; Ear plugs: Protect hearing around loud machinery; Fit and care: Train staff to wear it correctly. Keep it clean and in good repair.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -86
+  },
+  "what-to-do-in-a-workplace-emergency": {
+   "slug": "what-to-do-in-a-workplace-emergency",
+   "title": "Responding to a workplace emergency",
+   "image": "/assets/content/what-to-do-in-a-workplace-emergency.jpg",
+   "caption": "Four contingency measures from the guide.",
+   "body": "<p><strong>In short:</strong> Four contingency measures from the guide.</p>\n<h2>Responding to a workplace emergency</h2>\n<ol><li><strong>Evacuation.</strong> Move people away from the scene so it does not get worse, and on to medical care.</li><li><strong>Isolation.</strong> Separate those affected so others are not exposed and they get proper attention.</li><li><strong>Decontamination.</strong> Remove the contamination after chemical exposure where it can be controlled.</li><li><strong>Emergency personnel.</strong> Call an expert or the emergency team as early as you can.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Fire, a gas leak or a chemical spill in theatre needs a calm, rehearsed response.</p>\n<h2>Remember</h2>\n<p>Know your exits, alarms and who to call before an emergency.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Responding to a workplace emergency&quot;.</summary><p>Evacuation: Move people away from the scene so it does not get worse, and on to medical care; Isolation: Separate those affected so others are not exposed and they get proper attention; Decontamination: Remove the contamination after chemical exposure where it can be controlled; Emergency personnel: Call an expert or the emergency team as early as you can.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -85
+  },
+  "emergencies-and-drills-every-theatre-worker-should-know": {
+   "slug": "emergencies-and-drills-every-theatre-worker-should-know",
+   "title": "Emergencies and drills",
+   "image": "/assets/content/emergencies-and-drills-every-theatre-worker-should-know.jpg",
+   "caption": "The incidents and emergency procedures listed in the guide.",
+   "body": "<p><strong>In short:</strong> The incidents and emergency procedures listed in the guide.</p>\n<h2>Emergencies and drills</h2>\n<ol><li><strong>Fire.</strong> Know where the extinguishers are and practise the fire drill.</li><li><strong>Leaks and toxic emissions.</strong> Gas, chemical or fumes: raise the alarm and isolate.</li><li><strong>Equipment accidents.</strong> Stop the machine, make it safe and report it.</li><li><strong>Explosion.</strong> Evacuate and call emergency help.</li><li><strong>Injury to staff.</strong> Give first aid or basic life support and call for help.</li><li><strong>Structural failure.</strong> Ceilings, floors or supports: clear the area.</li><li><strong>Be prepared.</strong> Fire drills, first aid, extinguishers, basic life support, disaster planning.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Regular drills mean everyone in theatre knows what to do.</p>\n<h2>Remember</h2>\n<p>Practise drills. Nobody thinks well in their first emergency.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Emergencies and drills&quot;.</summary><p>Fire: Know where the extinguishers are and practise the fire drill; Leaks and toxic emissions: Gas, chemical or fumes: raise the alarm and isolate; Equipment accidents: Stop the machine, make it safe and report it; Explosion: Evacuate and call emergency help; Injury to staff: Give first aid or basic life support and call for help; Structural failure: Ceilings, floors or supports: clear the area; Be prepared: Fire drills, first aid, extinguishers, basic life support, disaster planning.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -84
+  },
+  "your-three-rights-at-work-know-take-part-refuse": {
+   "slug": "your-three-rights-at-work-know-take-part-refuse",
+   "title": "Your three rights at work",
+   "image": "/assets/content/your-three-rights-at-work-know-take-part-refuse.jpg",
+   "caption": "Three worker rights in occupational safety and health.",
+   "body": "<p><strong>In short:</strong> Three worker rights in occupational safety and health.</p>\n<h2>Your three rights at work</h2>\n<ol><li><strong>The right to know.</strong> Your employer must tell you the hazards of your job and how they are controlled, and train you.</li><li><strong>The right to take part.</strong> You can be involved in occupational health and safety, for example in a committee.</li><li><strong>The right to refuse.</strong> You can refuse work you honestly believe is unusually dangerous. You may not be punished for using these rights.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>These rights protect theatre staff dealing with chemicals, radiation, lifting and infection risks.</p>\n<h2>Remember</h2>\n<p>You can refuse unusually dangerous work. Say so and report it.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Your three rights at work&quot;.</summary><p>The right to know: Your employer must tell you the hazards of your job and how they are controlled, and train you; The right to take part: You can be involved in occupational health and safety, for example in a committee; The right to refuse: You can refuse work you honestly believe is unusually dangerous. You may not be punished for using these rights.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes. The guide describes these rights generally. Check the Occupational Safety and Health Act 2007 for how they apply in Kenya.</small></p>",
+   "status": "published",
+   "order": -83
+  },
+  "duties-of-employers-and-workers-for-safety": {
+   "slug": "duties-of-employers-and-workers-for-safety",
+   "title": "Who is responsible for safety",
+   "image": "/assets/content/duties-of-employers-and-workers-for-safety.jpg",
+   "caption": "Employer and worker duties under the guide.",
+   "body": "<p><strong>In short:</strong> Employer and worker duties under the guide.</p>\n<h2>Who is responsible for safety</h2>\n<ol><li><strong>Employer.</strong> Provide safe and healthy working conditions, including protection from violence, discrimination and harassment.</li><li><strong>Worker.</strong> Protect your own health and safety and that of your colleagues.</li><li><strong>Co-operate.</strong> Work with your supervisor and anyone else who has safety duties.</li><li><strong>Respect others.</strong> Never start or join in harassing another worker.</li><li><strong>Training.</strong> Employers must train workers, especially new staff, who face higher injury rates.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>New staff in theatre need an orientation and supervision. They get hurt more often than experienced staff.</p>\n<h2>Remember</h2>\n<p>Safety is a shared duty. Everyone has a part.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Who is responsible for safety&quot;.</summary><p>Employer: Provide safe and healthy working conditions, including protection from violence, discrimination and harassment; Worker: Protect your own health and safety and that of your colleagues; Co-operate: Work with your supervisor and anyone else who has safety duties; Respect others: Never start or join in harassing another worker; Training: Employers must train workers, especially new staff, who face higher injury rates.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -82
+  },
+  "osh-records-accident-near-miss-and-notifiable-disease": {
+   "slug": "osh-records-accident-near-miss-and-notifiable-disease",
+   "title": "Safety records that must be kept",
+   "image": "/assets/content/osh-records-accident-near-miss-and-notifiable-disease.jpg",
+   "caption": "Records that support workplace safety.",
+   "body": "<p><strong>In short:</strong> Records that support workplace safety.</p>\n<h2>Safety records that must be kept</h2>\n<ol><li><strong>Accident reports.</strong> Investigate each accident, find the underlying cause and review the report.</li><li><strong>Dangerous occurrences.</strong> Recorded in a register in the format set by the OSH regulations.</li><li><strong>Near misses.</strong> Report them too. The OSH committee keeps a register and investigates.</li><li><strong>Notifiable diseases.</strong> The OSH committee keeps a register of reported occupational disease.</li><li><strong>Training and health records.</strong> Keep records of OSH training, medical records and sick-leave notes.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>A needle-stick or a spill that caused no harm this time still deserves a report.</p>\n<h2>Remember</h2>\n<p>Report near misses. They prevent the next injury.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Safety records that must be kept&quot;.</summary><p>Accident reports: Investigate each accident, find the underlying cause and review the report; Dangerous occurrences: Recorded in a register in the format set by the OSH regulations; Near misses: Report them too. The OSH committee keeps a register and investigates; Notifiable diseases: The OSH committee keeps a register of reported occupational disease; Training and health records: Keep records of OSH training, medical records and sick-leave notes.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -81
+  },
+  "osh-programmes-for-health-workers": {
+   "slug": "osh-programmes-for-health-workers",
+   "title": "Occupational health programmes",
+   "image": "/assets/content/osh-programmes-for-health-workers.jpg",
+   "caption": "Programmes health facilities use to keep staff safe.",
+   "body": "<p><strong>In short:</strong> Programmes health facilities use to keep staff safe.</p>\n<h2>Occupational health programmes</h2>\n<ol><li><strong>Medical surveillance.</strong> Planned, regular check-ups, including clinical examination and monitoring of biological effects.</li><li><strong>Periodic health surveillance.</strong> Regular examinations that identify groups of staff who are more vulnerable.</li><li><strong>Managing exposure.</strong> Keeping track of how much of a workplace agent has reached each worker.</li><li><strong>Induction.</strong> Every new member of staff gets orientation on safety.</li><li><strong>Audits and PPE supply.</strong> Run risk assessments and make sure good PPE is bought and available.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Theatre staff are exposed to infection, chemicals and radiation, so regular surveillance matters.</p>\n<h2>Remember</h2>\n<p>Health checks protect you before a problem becomes serious.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Occupational health programmes&quot;.</summary><p>Medical surveillance: Planned, regular check-ups, including clinical examination and monitoring of biological effects; Periodic health surveillance: Regular examinations that identify groups of staff who are more vulnerable; Managing exposure: Keeping track of how much of a workplace agent has reached each worker; Induction: Every new member of staff gets orientation on safety; Audits and PPE supply: Run risk assessments and make sure good PPE is bought and available.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -80
+  },
+  "managing-stress-in-the-theatre-team": {
+   "slug": "managing-stress-in-the-theatre-team",
+   "title": "Managing stress at work",
+   "image": "/assets/content/managing-stress-in-the-theatre-team.jpg",
+   "caption": "Stress and how to manage it.",
+   "body": "<p><strong>In short:</strong> Stress and how to manage it.</p>\n<h2>Managing stress at work</h2>\n<ol><li><strong>Set priorities.</strong> Deal with what is urgent first, using your time wisely.</li><li><strong>Check expectations.</strong> Set goals you can reach. Mistakes can teach you.</li><li><strong>Accept change.</strong> Be adaptable and build a support network of friends and family.</li><li><strong>Live healthily.</strong> Eat well, rest, exercise, pray or meditate.</li><li><strong>Workplace support.</strong> Ask for programmes that help staff cope with work stress.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Long lists, emergencies and long hours are part of theatre life. Managing stress protects safety and patients.</p>\n<h2>Remember</h2>\n<p>Stress builds when demands outweigh your resources. Ask for help early.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Managing stress at work&quot;.</summary><p>Set priorities: Deal with what is urgent first, using your time wisely; Check expectations: Set goals you can reach. Mistakes can teach you; Accept change: Be adaptable and build a support network of friends and family; Live healthily: Eat well, rest, exercise, pray or meditate; Workplace support: Ask for programmes that help staff cope with work stress.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -79
+  },
+  "punctuality-and-time-consciousness-in-theatre": {
+   "slug": "punctuality-and-time-consciousness-in-theatre",
+   "title": "Punctuality and time",
+   "image": "/assets/content/punctuality-and-time-consciousness-in-theatre.jpg",
+   "caption": "Why time consciousness matters.",
+   "body": "<p><strong>In short:</strong> Why time consciousness matters.</p>\n<h2>Punctuality and time</h2>\n<ol><li><strong>Be on time.</strong> Punctuality shows professionalism. Lateness wastes the team&#x27;s time.</li><li><strong>Know your time wasters.</strong> Notice what steals your time and deal with it.</li><li><strong>Plan the day.</strong> List what has to be done and make sure it is finished on time.</li><li><strong>Benefits.</strong> Better decisions, less anxiety, better performance and better relationships.</li><li><strong>Leisure matters.</strong> Rest reduces stress and boredom and improves quality of life.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>A late start delays every case after it.</p>\n<h2>Remember</h2>\n<p>Theatre lists wait for no one. Be ready before the case.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Punctuality and time&quot;.</summary><p>Be on time: Punctuality shows professionalism. Lateness wastes the team&#x27;s time; Know your time wasters: Notice what steals your time and deal with it; Plan the day: List what has to be done and make sure it is finished on time; Benefits: Better decisions, less anxiety, better performance and better relationships; Leisure matters: Rest reduces stress and boredom and improves quality of life.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -78
+  },
+  "how-to-set-work-priorities-in-theatre": {
+   "slug": "how-to-set-work-priorities-in-theatre",
+   "title": "Setting work priorities",
+   "image": "/assets/content/how-to-set-work-priorities-in-theatre.jpg",
+   "caption": "Five steps for choosing what to do first.",
+   "body": "<p><strong>In short:</strong> Five steps for choosing what to do first.</p>\n<h2>Setting work priorities</h2>\n<ol><li><strong>List all the tasks.</strong> Write down everything that needs doing.</li><li><strong>Urgent or important?.</strong> Sort tasks by how urgent and how important they are.</li><li><strong>Weigh the value.</strong> Consider the impact on patients and colleagues.</li><li><strong>Stay flexible.</strong> Priorities can change suddenly, such as an emergency case.</li><li><strong>Know when to cut.</strong> You cannot do everything. Drop what will not get done today.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Theatre changes quickly. An emergency can reshuffle the whole list.</p>\n<h2>Remember</h2>\n<p>Do the urgent and important tasks first.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Setting work priorities&quot;.</summary><p>List all the tasks: Write down everything that needs doing; Urgent or important?: Sort tasks by how urgent and how important they are; Weigh the value: Consider the impact on patients and colleagues; Stay flexible: Priorities can change suddenly, such as an emergency case; Know when to cut: You cannot do everything. Drop what will not get done today.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -77
+  },
+  "safety-consciousness-in-the-theatre": {
+   "slug": "safety-consciousness-in-the-theatre",
+   "title": "Safety consciousness",
+   "image": "/assets/content/safety-consciousness-in-the-theatre.jpg",
+   "caption": "What safety consciousness means.",
+   "body": "<p><strong>In short:</strong> What safety consciousness means.</p>\n<h2>Safety consciousness</h2>\n<ol><li><strong>What it is.</strong> Being aware and alert to hazards all the time.</li><li><strong>Why it matters.</strong> Most injuries happen when people stop paying attention to danger.</li><li><strong>Regular reminders.</strong> Staff need frequent safety reminders at meetings and during work.</li><li><strong>Take responsibility.</strong> Act on what you see and take precautions.</li><li><strong>Healthy workplace.</strong> Employers should build safe working into daily routine.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Counting, checking and speaking up are all part of a safety-conscious team.</p>\n<h2>Remember</h2>\n<p>Stay alert. Most accidents follow lost attention.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Safety consciousness&quot;.</summary><p>What it is: Being aware and alert to hazards all the time; Why it matters: Most injuries happen when people stop paying attention to danger; Regular reminders: Staff need frequent safety reminders at meetings and during work; Take responsibility: Act on what you see and take precautions; Healthy workplace: Employers should build safe working into daily routine.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -76
+  },
+  "code-of-conduct-and-professional-integrity": {
+   "slug": "code-of-conduct-and-professional-integrity",
+   "title": "Code of conduct and integrity",
+   "image": "/assets/content/code-of-conduct-and-professional-integrity.jpg",
+   "caption": "Conduct and integrity expected at work.",
+   "body": "<p><strong>In short:</strong> Conduct and integrity expected at work.</p>\n<h2>Code of conduct and integrity</h2>\n<ol><li><strong>Know the code.</strong> Every employee must know the code of conduct and follow it.</li><li><strong>Report breaches.</strong> You also have a duty to report violations of the code.</li><li><strong>Consequences.</strong> Breaking the code can mean disciplinary action, dismissal or prosecution.</li><li><strong>Integrity.</strong> Being honest, consistent and holding to your values in every situation.</li><li><strong>Be accountable.</strong> You answer for your work and your behaviour.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Patients trust theatre staff with their lives. Honesty and accountability protect that trust.</p>\n<h2>Remember</h2>\n<p>Integrity means doing the right thing even when no one is watching.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Code of conduct and integrity&quot;.</summary><p>Know the code: Every employee must know the code of conduct and follow it; Report breaches: You also have a duty to report violations of the code; Consequences: Breaking the code can mean disciplinary action, dismissal or prosecution; Integrity: Being honest, consistent and holding to your values in every situation; Be accountable: You answer for your work and your behaviour.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -75
+  },
+  "principles-of-ethics-in-healthcare-work": {
+   "slug": "principles-of-ethics-in-healthcare-work",
+   "title": "Principles of ethics",
+   "image": "/assets/content/principles-of-ethics-in-healthcare-work.jpg",
+   "caption": "Five ethical principles from the guide.",
+   "body": "<p><strong>In short:</strong> Five ethical principles from the guide.</p>\n<h2>Principles of ethics</h2>\n<ol><li><strong>Truthfulness.</strong> Do not hide facts or lie to people who need to know.</li><li><strong>Confidentiality.</strong> Keep information private unless you have permission to share it.</li><li><strong>Autonomy.</strong> Respect a person&#x27;s right to decide for themselves.</li><li><strong>Doing good.</strong> Everything you do should benefit the client.</li><li><strong>Justice.</strong> Treat everyone fairly and without bias.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>They apply to every patient who comes through theatre.</p>\n<h2>Remember</h2>\n<p>Patient information stays private. Discuss it only with those who need it.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Principles of ethics&quot;.</summary><p>Truthfulness: Do not hide facts or lie to people who need to know; Confidentiality: Keep information private unless you have permission to share it; Autonomy: Respect a person&#x27;s right to decide for themselves; Doing good: Everything you do should benefit the client; Justice: Treat everyone fairly and without bias.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -74
+  },
+  "how-to-set-expectations-for-a-theatre-team": {
+   "slug": "how-to-set-expectations-for-a-theatre-team",
+   "title": "Team expectations",
+   "image": "/assets/content/how-to-set-expectations-for-a-theatre-team.jpg",
+   "caption": "Six shared team expectations.",
+   "body": "<p><strong>In short:</strong> Six shared team expectations.</p>\n<h2>Team expectations</h2>\n<ol><li><strong>Respect and courtesy.</strong> Treat teammates with respect.</li><li><strong>Be flexible.</strong> Accept changes in tasks and assignments.</li><li><strong>Ask for help.</strong> Speak up when you need support.</li><li><strong>Work safely together.</strong> Safety is a shared responsibility.</li><li><strong>Be reliable.</strong> Stay motivated and dependable.</li><li><strong>Share ideas.</strong> Offer ideas that improve the team&#x27;s work.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Surgeons, anaesthetists, nurses and technologists must work as one team.</p>\n<h2>Remember</h2>\n<p>A good team holds each other accountable, kindly.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Team expectations&quot;.</summary><p>Respect and courtesy: Treat teammates with respect; Be flexible: Accept changes in tasks and assignments; Ask for help: Speak up when you need support; Work safely together: Safety is a shared responsibility; Be reliable: Stay motivated and dependable; Share ideas: Offer ideas that improve the team&#x27;s work.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -73
+  },
+  "delegating-duties-to-team-members": {
+   "slug": "delegating-duties-to-team-members",
+   "title": "Delegating tasks well",
+   "image": "/assets/content/delegating-duties-to-team-members.jpg",
+   "caption": "Guidelines for assigning duties.",
+   "body": "<p><strong>In short:</strong> Guidelines for assigning duties.</p>\n<h2>Delegating tasks well</h2>\n<ol><li><strong>Choose what to delegate.</strong> Not every task can be handed over.</li><li><strong>Set clear objectives.</strong> Make sure the person knows exactly what must be achieved.</li><li><strong>Give a timeline.</strong> Deadlines keep everyone accountable.</li><li><strong>Show respect.</strong> Make clear the person is relied on and appreciated.</li><li><strong>Match strengths.</strong> Give tasks to those who do them best.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Clear roles for scrub, circulating and anaesthetic teams prevent confusion.</p>\n<h2>Remember</h2>\n<p>Clear roles raise morale, efficiency and productivity.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Delegating tasks well&quot;.</summary><p>Choose what to delegate: Not every task can be handed over; Set clear objectives: Make sure the person knows exactly what must be achieved; Give a timeline: Deadlines keep everyone accountable; Show respect: Make clear the person is relied on and appreciated; Match strengths: Give tasks to those who do them best.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -72
+  },
+  "the-communication-cycle-in-theatre": {
+   "slug": "the-communication-cycle-in-theatre",
+   "title": "The communication cycle",
+   "image": "/assets/content/the-communication-cycle-in-theatre.jpg",
+   "caption": "The parts of the communication cycle.",
+   "body": "<p><strong>In short:</strong> The parts of the communication cycle.</p>\n<h2>The communication cycle</h2>\n<ol><li><strong>Sender.</strong> Starts the communication.</li><li><strong>Message.</strong> The information to be passed on.</li><li><strong>Encoding.</strong> Putting the message into words, writing or signals.</li><li><strong>Medium.</strong> How it travels: speech, writing, signals.</li><li><strong>Decoding and receiver.</strong> The receiver interprets what was sent.</li><li><strong>Feedback.</strong> The receiver responds to confirm understanding. Noise can disturb the cycle.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Closed-loop communication keeps instrument and swab requests accurate.</p>\n<h2>Remember</h2>\n<p>Repeat orders back. Feedback closes the loop.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;The communication cycle&quot;.</summary><p>Sender: Starts the communication; Message: The information to be passed on; Encoding: Putting the message into words, writing or signals; Medium: How it travels: speech, writing, signals; Decoding and receiver: The receiver interprets what was sent; Feedback: The receiver responds to confirm understanding. Noise can disturb the cycle.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -71
+  },
+  "barriers-to-effective-communication": {
+   "slug": "barriers-to-effective-communication",
+   "title": "Barriers to communication",
+   "image": "/assets/content/barriers-to-effective-communication.jpg",
+   "caption": "Nine communication barriers.",
+   "body": "<p><strong>In short:</strong> Nine communication barriers.</p>\n<h2>Barriers to communication</h2>\n<ol><li><strong>Physical.</strong> Noise, distance or poor equipment.</li><li><strong>Personal.</strong> Attitudes, emotions and habits.</li><li><strong>Language.</strong> Words, jargon or accents that are not understood.</li><li><strong>Status.</strong> Rank makes people hesitate to speak.</li><li><strong>Organisational structure.</strong> Information does not flow properly.</li><li><strong>Inadequate attention.</strong> Not really listening.</li><li><strong>Premature evaluation.</strong> Judging before hearing it all.</li><li><strong>Emotional evaluation.</strong> Reacting from feeling.</li><li><strong>Resistance to change.</strong> Refusing new methods.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Noise and hierarchy in theatre can block key messages.</p>\n<h2>Remember</h2>\n<p>Speak up whatever the rank. Clear words protect patients.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Barriers to communication&quot;.</summary><p>Physical: Noise, distance or poor equipment; Personal: Attitudes, emotions and habits; Language: Words, jargon or accents that are not understood; Status: Rank makes people hesitate to speak; Organisational structure: Information does not flow properly; Inadequate attention: Not really listening; Premature evaluation: Judging before hearing it all; Emotional evaluation: Reacting from feeling; Resistance to change: Refusing new methods.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -70
+  },
+  "qualities-of-effective-communication": {
+   "slug": "qualities-of-effective-communication",
+   "title": "Effective communication",
+   "image": "/assets/content/qualities-of-effective-communication.jpg",
+   "caption": "Qualities of effective communication.",
+   "body": "<p><strong>In short:</strong> Qualities of effective communication.</p>\n<h2>Effective communication</h2>\n<ol><li><strong>Clear.</strong> Easy to understand.</li><li><strong>Coherent.</strong> Ideas follow logically.</li><li><strong>Courteous.</strong> Polite and respectful.</li><li><strong>Complete.</strong> Contains everything the receiver needs.</li><li><strong>Focused.</strong> Stays on the point.</li><li><strong>Sensitive to emotions.</strong> Considers how people feel.</li><li><strong>Listened to keenly.</strong> The receiver pays full attention.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Short, complete messages prevent mistakes in theatre.</p>\n<h2>Remember</h2>\n<p>Clear, complete and courteous. Always.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Effective communication&quot;.</summary><p>Clear: Easy to understand; Coherent: Ideas follow logically; Courteous: Polite and respectful; Complete: Contains everything the receiver needs; Focused: Stays on the point; Sensitive to emotions: Considers how people feel; Listened to keenly: The receiver pays full attention.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -69
+  },
+  "resolving-conflict-at-work-six-steps": {
+   "slug": "resolving-conflict-at-work-six-steps",
+   "title": "Resolving conflict at work",
+   "image": "/assets/content/resolving-conflict-at-work-six-steps.jpg",
+   "caption": "A six-step approach to workplace conflict.",
+   "body": "<p><strong>In short:</strong> A six-step approach to workplace conflict.</p>\n<h2>Resolving conflict at work</h2>\n<ol><li><strong>Face it.</strong> Do not pretend it has not happened.</li><li><strong>Talk together.</strong> Find a time and place without interruptions.</li><li><strong>Listen carefully.</strong> Give full attention and ask for clarification.</li><li><strong>Find agreement.</strong> Look for common ground and rebuild trust.</li><li><strong>Give guidance.</strong> Agree the next steps.</li><li><strong>Forgive quickly.</strong> Let go of grudges.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Unresolved tension in the team puts patients at risk.</p>\n<h2>Remember</h2>\n<p>Address conflict quickly, privately and respectfully.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Resolving conflict at work&quot;.</summary><p>Face it: Do not pretend it has not happened; Talk together: Find a time and place without interruptions; Listen carefully: Give full attention and ask for clarification; Find agreement: Look for common ground and rebuild trust; Give guidance: Agree the next steps; Forgive quickly: Let go of grudges.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -68
+  },
+  "communication-strategies-for-a-job-interview": {
+   "slug": "communication-strategies-for-a-job-interview",
+   "title": "Job interview strategies",
+   "image": "/assets/content/communication-strategies-for-a-job-interview.jpg",
+   "caption": "Strategies from the guide for interviews.",
+   "body": "<p><strong>In short:</strong> Strategies from the guide for interviews.</p>\n<h2>Job interview strategies</h2>\n<ol><li><strong>Build rapport.</strong> Smile, make eye contact, greet sincerely, use the interviewer&#x27;s name.</li><li><strong>Listen more than you talk.</strong> Show real interest in the organisation and the job.</li><li><strong>Research.</strong> Learn about the employer and the industry beforehand.</li><li><strong>Prepare answers.</strong> Prepare for common questions and why you want the job.</li><li><strong>Prepare questions.</strong> Be ready for &quot;Any questions?&quot;</li><li><strong>Mind body language.</strong> Posture, gestures and tone of voice all communicate.</li><li><strong>Close well.</strong> End on a positive note.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Useful when applying for theatre posts or attachments.</p>\n<h2>Remember</h2>\n<p>First impressions count. Prepare well.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Job interview strategies&quot;.</summary><p>Build rapport: Smile, make eye contact, greet sincerely, use the interviewer&#x27;s name; Listen more than you talk: Show real interest in the organisation and the job; Research: Learn about the employer and the industry beforehand; Prepare answers: Prepare for common questions and why you want the job; Prepare questions: Be ready for &quot;Any questions?&quot;; Mind body language: Posture, gestures and tone of voice all communicate; Close well: End on a positive note.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -67
+  },
+  "types-of-biomedical-waste": {
+   "slug": "types-of-biomedical-waste",
+   "title": "Biomedical waste classes",
+   "image": "/assets/content/types-of-biomedical-waste.jpg",
+   "caption": "Biomedical waste is waste from health facilities and research.",
+   "body": "<p><strong>In short:</strong> Biomedical waste is waste from health facilities and research.</p>\n<h2>Biomedical waste classes</h2>\n<ol><li><strong>Infectious waste.</strong> Waste that may carry infection.</li><li><strong>Sharps.</strong> Needles, blades and other items that can cut or puncture.</li><li><strong>Pharmaceutical waste.</strong> Expired or unused medicines.</li><li><strong>Chemical waste.</strong> Disinfectants, solvents and other chemicals.</li><li><strong>Pathological waste.</strong> Tissues and body parts.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Theatre generates every class on this card. Correct segregation protects staff and the community.</p>\n<h2>Remember</h2>\n<p>Segregate waste at the point of generation.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Biomedical waste classes&quot;.</summary><p>Infectious waste: Waste that may carry infection; Sharps: Needles, blades and other items that can cut or puncture; Pharmaceutical waste: Expired or unused medicines; Chemical waste: Disinfectants, solvents and other chemicals; Pathological waste: Tissues and body parts.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -66
+  },
+  "steps-in-managing-solid-waste": {
+   "slug": "steps-in-managing-solid-waste",
+   "title": "Managing solid waste",
+   "image": "/assets/content/steps-in-managing-solid-waste.jpg",
+   "caption": "The waste management chain.",
+   "body": "<p><strong>In short:</strong> The waste management chain.</p>\n<h2>Managing solid waste</h2>\n<ol><li><strong>Generation.</strong> Reduce, reuse and segregate at the source using coded bags and bins.</li><li><strong>Collection.</strong> Collect often to stop waste scattering.</li><li><strong>Transportation.</strong> Closed vehicles licensed by NEMA.</li><li><strong>Treatment.</strong> Recycling, composting or thermal treatment.</li><li><strong>Disposal.</strong> Sanitary landfill, covered and managed.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Correct segregation in theatre makes the rest of the chain safer.</p>\n<h2>Remember</h2>\n<p>Colour-coded bins only work if everyone uses them correctly.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Managing solid waste&quot;.</summary><p>Generation: Reduce, reuse and segregate at the source using coded bags and bins; Collection: Collect often to stop waste scattering; Transportation: Closed vehicles licensed by NEMA; Treatment: Recycling, composting or thermal treatment; Disposal: Sanitary landfill, covered and managed.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -65
+  },
+  "waste-treatment-methods": {
+   "slug": "waste-treatment-methods",
+   "title": "Waste treatment methods",
+   "image": "/assets/content/waste-treatment-methods.jpg",
+   "caption": "Treatment and disposal options.",
+   "body": "<p><strong>In short:</strong> Treatment and disposal options.</p>\n<h2>Waste treatment methods</h2>\n<ol><li><strong>Recycling.</strong> Turning waste into new products, saving raw materials and reducing pollution.</li><li><strong>Composting.</strong> Controlled decomposition of biodegradable waste into fertiliser.</li><li><strong>Thermal treatment.</strong> Burning at controlled temperatures to cut volume and neutralise hazardous parts.</li><li><strong>Sanitary landfill.</strong> Buried waste with systems to collect leachate and gas.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Infectious waste usually needs treatment before disposal. Follow your hospital policy.</p>\n<h2>Remember</h2>\n<p>Not all waste can be recycled. Segregate correctly.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Waste treatment methods&quot;.</summary><p>Recycling: Turning waste into new products, saving raw materials and reducing pollution; Composting: Controlled decomposition of biodegradable waste into fertiliser; Thermal treatment: Burning at controlled temperatures to cut volume and neutralise hazardous parts; Sanitary landfill: Buried waste with systems to collect leachate and gas.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -64
+  },
+  "controlling-noise-in-the-workplace": {
+   "slug": "controlling-noise-in-the-workplace",
+   "title": "Controlling noise",
+   "image": "/assets/content/controlling-noise-in-the-workplace.jpg",
+   "caption": "Four ways to reduce noise.",
+   "body": "<p><strong>In short:</strong> Four ways to reduce noise.</p>\n<h2>Controlling noise</h2>\n<ol><li><strong>Source control.</strong> Reduce noise at its source or limit hours of operation.</li><li><strong>Path control.</strong> Enclose or insulate to block the sound travelling.</li><li><strong>Receiver control.</strong> Change schedules or provide earplugs.</li><li><strong>Maintenance.</strong> Well-maintained machines run more quietly.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Theatre equipment such as suction, drills and alarms adds up. Maintenance and PPE help.</p>\n<h2>Remember</h2>\n<p>Noise is measured in decibels. Protect your hearing.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Controlling noise&quot;.</summary><p>Source control: Reduce noise at its source or limit hours of operation; Path control: Enclose or insulate to block the sound travelling; Receiver control: Change schedules or provide earplugs; Maintenance: Well-maintained machines run more quietly.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -63
+  },
+  "controlling-air-pollution-at-work": {
+   "slug": "controlling-air-pollution-at-work",
+   "title": "Protecting workers from air pollution",
+   "image": "/assets/content/controlling-air-pollution-at-work.jpg",
+   "caption": "Worker protection from air pollution.",
+   "body": "<p><strong>In short:</strong> Worker protection from air pollution.</p>\n<h2>Protecting workers from air pollution</h2>\n<ol><li><strong>Inform workers.</strong> Tell staff about the hazards in their work area.</li><li><strong>Train them.</strong> Teach safety precautions for hazardous substances.</li><li><strong>Measure.</strong> Pollutants should be measured by an approved laboratory.</li><li><strong>Keep records.</strong> Record measurements and report to the authority.</li><li><strong>Reduce exposure.</strong> Take steps to lower exposure.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Anaesthetic gases and disinfectant vapours are examples.</p>\n<h2>Remember</h2>\n<p>If you cannot see the hazard, measure it.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Protecting workers from air pollution&quot;.</summary><p>Inform workers: Tell staff about the hazards in their work area; Train them: Teach safety precautions for hazardous substances; Measure: Pollutants should be measured by an approved laboratory; Keep records: Record measurements and report to the authority; Reduce exposure: Take steps to lower exposure.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -62
+  },
+  "the-3rs-reduce-reuse-recycle-in-a-health-facility": {
+   "slug": "the-3rs-reduce-reuse-recycle-in-a-health-facility",
+   "title": "Cutting waste",
+   "image": "/assets/content/the-3rs-reduce-reuse-recycle-in-a-health-facility.jpg",
+   "caption": "Ideas from the guide on reducing waste and circular economy.",
+   "body": "<p><strong>In short:</strong> Ideas from the guide on reducing waste and circular economy.</p>\n<h2>Cutting waste</h2>\n<ol><li><strong>Reduce.</strong> Use less to begin with.</li><li><strong>Reuse.</strong> Use items again where it is safe to do so.</li><li><strong>Repair.</strong> Fix equipment instead of throwing it away.</li><li><strong>Recycle.</strong> Turn waste into new products.</li><li><strong>Return.</strong> Send products back to the supplier where possible.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Reuse only what policy allows. Single-use items and infection control rules come first.</p>\n<h2>Remember</h2>\n<p>The best waste is the waste you never create.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Cutting waste&quot;.</summary><p>Reduce: Use less to begin with; Reuse: Use items again where it is safe to do so; Repair: Fix equipment instead of throwing it away; Recycle: Turn waste into new products; Return: Send products back to the supplier where possible.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -61
+  },
+  "protecting-data-and-patient-information": {
+   "slug": "protecting-data-and-patient-information",
+   "title": "Protecting data",
+   "image": "/assets/content/protecting-data-and-patient-information.jpg",
+   "caption": "Basics of data security and privacy.",
+   "body": "<p><strong>In short:</strong> Basics of data security and privacy.</p>\n<h2>Protecting data</h2>\n<ol><li><strong>Data security.</strong> Keep data available only to those who need it.</li><li><strong>Data privacy.</strong> Decide what can be shared with third parties.</li><li><strong>Collect only what you need.</strong> Keep it safe and destroy it when no longer needed.</li><li><strong>Know the threats.</strong> Accidents, equipment failure, theft and deliberate attacks.</li><li><strong>Weakest link.</strong> Attackers go around security to the weakest point, often people.</li></ol>\n<h2>Why it matters in theatre</h2>\n<p>Theatre registers and patient records contain sensitive information.</p>\n<h2>Remember</h2>\n<p>Patient information is confidential.</p>\n<h2>Check yourself</h2>\n<details class=\"selftest\"><summary>Recall the points on &quot;Protecting data&quot;.</summary><p>Data security: Keep data available only to those who need it; Data privacy: Decide what can be shared with third parties; Collect only what you need: Keep it safe and destroy it when no longer needed; Know the threats: Accidents, equipment failure, theft and deliberate attacks; Weakest link: Attackers go around security to the weakest point, often people.</p></details>\n<p><em>Study aid only. Practice varies, so follow your hospital's protocol and your supervisor's instructions.</em></p>\n<p><small>Based on TVET CDACC, Learning Guide for Basic Competencies Level 6 (2019), rewritten as short study notes.</small></p>",
+   "status": "published",
+   "order": -60
+  }
+ }
+}

@@ -1,0 +1,173 @@
+{
+ "_patch": {
+  "id": "2026-11-06-materials-inside-and-tests",
+  "name": "Materials: What's inside lists, hide test items",
+  "date": "2026-11-06",
+  "notes": "Adds a What's inside list to 11 materials, using only what their descriptions already say. Hides the 4 test-paid items from the public site by setting them to draft. Nothing else changes (merge).",
+  "modes": {
+   "materials": "merge"
+  },
+  "changelog": [
+   {
+    "path": "materials/anatomy-orientation/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/emergency-preparedness-full/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/first-aid-primary-survey/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/nosocomial-infection-full/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/nosocomial-infection-prevention/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/perioperative-patient-care-full/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/surgical-safety-checklist-unit/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/surgical-safety-checklist/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/theatre-instruments-classification/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/theatre-safety-precautions/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/sterile-technique-basics/includes",
+    "text": "Adds a What's inside list (taken from the existing description)"
+   },
+   {
+    "path": "materials/test-paid-notes/status",
+    "text": "Hides the test item from visitors (set back to published to test orders)"
+   },
+   {
+    "path": "materials/test-paid-past-paper/status",
+    "text": "Hides the test item from visitors (set back to published to test orders)"
+   },
+   {
+    "path": "materials/test-paid-study-unit/status",
+    "text": "Hides the test item from visitors (set back to published to test orders)"
+   },
+   {
+    "path": "materials/test-paid-template/status",
+    "text": "Hides the test item from visitors (set back to published to test orders)"
+   }
+  ]
+ },
+ "materials": {
+  "anatomy-orientation": {
+   "includes": [
+    "Anatomical position",
+    "Directional terms",
+    "Body planes and cavities",
+    "Levels of organization"
+   ]
+  },
+  "emergency-preparedness-full": {
+   "includes": [
+    "Anaphylaxis",
+    "Malignant hyperthermia",
+    "Massive haemorrhage",
+    "Fire in theatre",
+    "Recognition and response for each"
+   ]
+  },
+  "first-aid-primary-survey": {
+   "includes": [
+    "The DRSABCD framework",
+    "Recovery position",
+    "Common first aid priorities"
+   ]
+  },
+  "nosocomial-infection-full": {
+   "includes": [
+    "The chain of infection",
+    "Standard and transmission-based precautions",
+    "Sterilization methods",
+    "Risk factors for surgical site infection"
+   ]
+  },
+  "nosocomial-infection-prevention": {
+   "includes": [
+    "Principles of asepsis",
+    "Pre-op setup",
+    "Scrub, gown and glove sequence",
+    "Post-procedure basics"
+   ]
+  },
+  "perioperative-patient-care-full": {
+   "includes": [
+    "Pre-op care",
+    "Intra-op care",
+    "Post-op care",
+    "Common post-operative complications to watch for"
+   ]
+  },
+  "surgical-safety-checklist-unit": {
+   "includes": [
+    "Sign In",
+    "Time Out",
+    "Sign Out",
+    "The WHO three-phase checklist"
+   ]
+  },
+  "surgical-safety-checklist": {
+   "includes": [
+    "Sign In",
+    "Time Out",
+    "Sign Out",
+    "One-page study reference"
+   ]
+  },
+  "theatre-instruments-classification": {
+   "includes": [
+    "Broad instrument categories",
+    "Basic care principles",
+    "Instrument counting"
+   ]
+  },
+  "theatre-safety-precautions": {
+   "includes": [
+    "Fire safety",
+    "Electrical safety",
+    "Radiation safety",
+    "General theatre discipline"
+   ]
+  },
+  "sterile-technique-basics": {
+   "includes": [
+    "Principles of asepsis",
+    "Theatre setup",
+    "Scrub, gown and glove sequence"
+   ]
+  },
+  "test-paid-notes": {
+   "status": "draft"
+  },
+  "test-paid-past-paper": {
+   "status": "draft"
+  },
+  "test-paid-study-unit": {
+   "status": "draft"
+  },
+  "test-paid-template": {
+   "status": "draft"
+  }
+ }
+}

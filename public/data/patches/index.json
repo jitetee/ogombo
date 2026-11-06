@@ -1,6 +1,27 @@
 {
  "patches": [
   {
+   "id": "2026-11-06-materials-inside-and-tests",
+   "file": "2026-11-06-materials-inside-and-tests.json",
+   "name": "Materials: What's inside lists, hide test items",
+   "date": "2026-11-06",
+   "notes": "Adds a What's inside list to 11 materials, using only what their descriptions already say. Hides the 4 test-paid items from the public site by setting them to draft. Nothing else changes (merge)."
+  },
+  {
+   "id": "2026-11-06-faq-videos-cards-books",
+   "file": "2026-11-06-faq-videos-cards-books.json",
+   "name": "Chatbot answers for videos, cards, media kit, books and CV",
+   "date": "2026-11-06",
+   "notes": "Adds 5 chatbot FAQ entries so the bot can point to the new menu groups. Existing answers are untouched (merge)."
+  },
+  {
+   "id": "2026-11-06-32-workplace-study-cards",
+   "file": "2026-11-06-32-workplace-study-cards.json",
+   "name": "32 workplace study cards for theatre technology",
+   "date": "2026-11-06",
+   "notes": "32 new content cards on workplace safety, professional practice, communication and waste, written as study notes from the TVET CDACC Basic Competencies Level 6 guide. Images are in assets/content. Numbered to sit at the front of the recent group. Existing cards are untouched (merge)."
+  },
+  {
    "id": "2026-11-06-52-instrument-cards",
    "file": "2026-11-06-52-instrument-cards.json",
    "name": "52 theatre instrument and equipment cards",

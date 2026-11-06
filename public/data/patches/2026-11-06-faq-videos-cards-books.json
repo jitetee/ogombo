@@ -1,0 +1,100 @@
+{
+ "_patch": {
+  "id": "2026-11-06-faq-videos-cards-books",
+  "name": "Chatbot answers for videos, cards, media kit, books and CV",
+  "date": "2026-11-06",
+  "notes": "Adds 5 chatbot FAQ entries so the bot can point to the new menu groups. Existing answers are untouched (merge).",
+  "modes": {
+   "chatbot_faq": "merge"
+  },
+  "changelog": [
+   {
+    "path": "chatbot_faq/faq_videos",
+    "text": "New: faq_videos"
+   },
+   {
+    "path": "chatbot_faq/faq_cards",
+    "text": "New: faq_cards"
+   },
+   {
+    "path": "chatbot_faq/faq_mediakit",
+    "text": "New: faq_mediakit"
+   },
+   {
+    "path": "chatbot_faq/faq_books",
+    "text": "New: faq_books"
+   },
+   {
+    "path": "chatbot_faq/faq_cv",
+    "text": "New: faq_cv"
+   }
+  ]
+ },
+ "chatbot_faq": {
+  "faq_videos": {
+   "keywords": [
+    "video",
+    "videos",
+    "youtube",
+    "watch",
+    "shorts",
+    "lesson",
+    "playlist"
+   ],
+   "answer": "Watch the lessons and shorts on the Videos page (menu → Learn → videos). Tap a video to play it there, or subscribe on YouTube so you don't miss new ones."
+  },
+  "faq_cards": {
+   "keywords": [
+    "cards",
+    "card",
+    "revision",
+    "flashcard",
+    "mnemonic",
+    "instrument",
+    "instruments"
+   ],
+   "answer": "The Content page (menu → Learn → content) has over 1,600 free revision cards, including instruments and equipment. The order changes each visit, so refresh to see different ones."
+  },
+  "faq_mediakit": {
+   "keywords": [
+    "media",
+    "kit",
+    "sponsor",
+    "sponsorship",
+    "partner",
+    "partnership",
+    "brand",
+    "collaborate",
+    "collab",
+    "advert",
+    "advertise"
+   ],
+   "answer": "Brands and sponsors can see audience, screenshots and packages in the media kit (menu → Work with me → media kit), or open Advertise for website packages."
+  },
+  "faq_books": {
+   "keywords": [
+    "book",
+    "books",
+    "writing",
+    "draft",
+    "sample",
+    "chapter",
+    "memoir",
+    "companion"
+   ],
+   "answer": "Ezra's books are still in progress. Open Writing (menu → Read → writing) to see each book. Some have a Read a sample button, and you can ask to be told when one is out."
+  },
+  "faq_cv": {
+   "keywords": [
+    "cv",
+    "resume",
+    "curriculum",
+    "vitae",
+    "hire",
+    "job",
+    "work"
+   ],
+   "answer": "Ezra's CV is under menu → About me → cv, and you can download it as a PDF from there. For work enquiries use Contact."
+  }
+ }
+}

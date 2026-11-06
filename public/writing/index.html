@@ -115,6 +115,7 @@
         <span class="status">${w.status.toUpperCase()}</span>
         <a class="title" href="/writing/books/${w.slug}"><h3>${w.title}</h3></a>
         <p>${w.summary}</p>
+        ${w.progress ? `<p class="mono" style="color:var(--ink-dim);margin:.2rem 0">Draft ${Number(w.progress) || 0}% done${(w.preview_text || w.preview_url) ? " · sample available" : ""}</p>` : ((w.preview_text || w.preview_url) ? `<p class="mono" style="color:var(--ink-dim);margin:.2rem 0">Sample available</p>` : "")}
         ${w.excerpt ? `<a href="/writing/books/${w.slug}" style="text-decoration:none;"><p class="mono" style="color:var(--amber); border-left:2px solid var(--panel-border); padding-left:0.7rem; margin-top:0.5rem;">${w.excerpt}</p></a>` : ""}
       `;
       list.appendChild(div);

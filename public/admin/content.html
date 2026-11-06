@@ -69,6 +69,10 @@
       { key: "title", label: "Title", type: "text", required: true }, { key: "slug", label: "URL slug", type: "text", required: true },
       { key: "status", label: "Status", type: "select", options: ["idea", "outlining", "in progress", "drafting", "editing", "published"] }, { key: "order", label: "Order", type: "number" },
       { key: "summary", label: "Summary", type: "textarea", required: true, wide: true }, { key: "excerpt", label: "Excerpt / quote", type: "textarea", wide: true },
+      { key: "progress", label: "Draft progress (0-100)", type: "number" },
+      { key: "preview_text", label: "Sample to read (plain text, blank line between paragraphs)", type: "textarea", wide: true },
+      { key: "preview_url", label: "Sample link (Google Doc, PDF or image)", type: "text", wide: true, help: "Shows a Read a sample button next to the text above." },
+      { key: "drive_url", label: "Full book download link (when ready)", type: "text", wide: true },
     ],
   };
   const PAGE_KEYS = ["home", "about", "cv", "contact", "privacy", "writing", "materials", "content", "blog", "search"];

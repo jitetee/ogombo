@@ -132,9 +132,18 @@ body.admin header.site{ position:relative; z-index:90; }
 .bell-panel{ z-index:95; background:var(--panel,#0e1613); }
 html[data-theme="light"] .bell-panel{ background:#fff; }
 
-/* grouped admin menu: second row lists the pages inside the open group */
-.adm-sub{ display:flex; justify-content:flex-start; gap:.2rem; flex-wrap:wrap; margin-top:.35rem; padding-top:.4rem; border-top:1px dashed var(--panel-border); }
-.adm-sub a{ padding:.3rem .7rem; color:var(--ink-dim); text-decoration:none; font-size:.88rem; border-bottom:2px solid transparent; }
-.adm-sub a:hover{ color:var(--ink); }
-.adm-sub a.on{ color:var(--crt-green); border-bottom-color:var(--crt-green); }
-@media (max-width:760px){ .adm-sub{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; } .adm-sub a{ flex:0 0 auto; white-space:nowrap; } }
+/* grouped admin menu: tap a heading to open a dropdown of its pages (same idea as the main site menu) */
+.adm-nav{ display:flex; flex-wrap:wrap; align-items:center; gap:.15rem; }
+.adm-top{ font:inherit; font-size:.95rem; color:var(--ink-dim); background:none; border:0; border-bottom:2px solid transparent; padding:.4rem .7rem; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:.35rem; }
+.adm-top:hover{ color:var(--ink); }
+.adm-top.on{ color:var(--crt-green); border-bottom-color:var(--crt-green); }
+.adm-grp{ position:relative; }
+.adm-car{ width:.45rem; height:.45rem; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg) translateY(-2px); transition:transform .2s; }
+.adm-grp.open .adm-car{ transform:rotate(-135deg) translateY(-2px); }
+.adm-drop{ position:absolute; top:100%; left:0; min-width:13rem; z-index:100; display:flex; flex-direction:column; background:var(--panel,#0e1613); border:1px solid var(--panel-border); border-radius:6px; padding:.3rem; margin-top:.25rem; box-shadow:0 10px 24px rgba(0,0,0,.35); }
+.adm-drop[hidden]{ display:none; }
+html[data-theme="light"] .adm-drop{ background:#fff; }
+.adm-drop a{ border:0 !important; padding:.5rem .7rem; color:var(--ink-dim); text-decoration:none; font-size:.92rem; border-radius:4px; white-space:nowrap; }
+.adm-drop a:hover{ color:var(--ink); background:rgba(127,127,127,.12); }
+.adm-drop a[aria-current="page"]{ color:var(--crt-green); }
+@media (max-width:760px){ .adm-nav{ flex-wrap:wrap !important; overflow:visible !important; flex:0 0 100%; } .adm-grp{ position:static; } .adm-drop{ left:.5rem; right:.5rem; } body.admin header.site .wrap{ position:relative; } .adm-nav a, .adm-top{ white-space:nowrap; } }

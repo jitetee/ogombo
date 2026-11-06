@@ -214,9 +214,23 @@
     document.body.classList.add("admin");
     const href = (k) => `/admin/${k === "index" ? "" : k}`;
     const grp = GROUPS.find((g) => g[1].some((p) => p[0] === pageKey)) || GROUPS[0];
-    const nav = GROUPS.map((g) => `<a href="${href(g[1][0][0])}" class="${g === grp ? "on" : ""}">${g[0]}</a>`).join("");
-    const sub = grp[1].length > 1 ? `<nav class="adm-sub wrap">${grp[1].map(([k, l]) => `<a href="${href(k)}" class="${k === pageKey ? "on" : ""}">${l}</a>`).join("")}</nav>` : "";
-    document.body.insertAdjacentHTML("afterbegin", `<header class="site"><div class="wrap"><a class="logo" href="/admin/">admin</a><nav class="adm-nav">${nav}</nav><div class="adm-user"><a href="/" target="_blank" rel="noopener" style="color:var(--ink-dim)">view site ↗</a><span id="adm-who"></span><button class="btn sm" id="adm-out" type="button" hidden>Sign out</button></div></div>${sub}</header>`);
+    const car = '<span class="adm-car" aria-hidden="true"></span>';
+    const nav = GROUPS.map((g) => {
+      const on = g === grp ? " on" : "";
+      if (g[1].length === 1) return `<a href="${href(g[1][0][0])}" class="adm-top${on}">${g[0]}</a>`;
+      const items = g[1].map(([k, l]) => `<a href="${href(k)}"${k === pageKey ? ' aria-current="page"' : ""}>${l}</a>`).join("");
+      return `<div class="adm-grp${on}"><button type="button" class="adm-top adm-h${on}" aria-expanded="false" aria-haspopup="true">${g[0]}${car}</button><div class="adm-drop" hidden>${items}</div></div>`;
+    }).join("");
+    document.body.insertAdjacentHTML("afterbegin", `<header class="site"><div class="wrap"><a class="logo" href="/admin/">admin</a><nav class="adm-nav">${nav}</nav><div class="adm-user"><a href="/" target="_blank" rel="noopener" style="color:var(--ink-dim)">view site ↗</a><span id="adm-who"></span><button class="btn sm" id="adm-out" type="button" hidden>Sign out</button></div></div></header>`);
+    // Dropdown menus: tap a heading to open its pages; tap again, tap outside or press Esc to close (same behaviour as the main site menu).
+    const closeDrops = (except) => document.querySelectorAll(".adm-grp").forEach((g) => { if (g === except) return; g.classList.remove("open"); g.querySelector(".adm-drop").hidden = true; g.querySelector(".adm-h").setAttribute("aria-expanded", "false"); });
+    document.querySelector(".adm-nav").addEventListener("click", (e) => {
+      const b = e.target.closest(".adm-h"); if (!b) return;
+      const g = b.parentElement, d = g.querySelector(".adm-drop"), open = d.hidden;
+      closeDrops(g); d.hidden = !open; g.classList.toggle("open", open); b.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", (e) => { if (!e.target.closest(".adm-grp")) closeDrops(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrops(); });
     const main = $("main");
     const saved = (() => { try { return JSON.parse(localStorage.getItem(LS)); } catch { return null; } })();
     const gate = (msg) => new Promise((resolve) => {
