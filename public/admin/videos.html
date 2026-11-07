@@ -34,8 +34,9 @@
   await A.guard("videos");
   const E = A.esc; let data = {};
   const idOf = (u) => { const m = String(u).match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/); return m ? m[1] : (/^[\w-]{11}$/.test(u.trim()) ? u.trim() : ""); };
+  const thumbs = {};
   const plOf = (u) => { const m = String(u).match(/[?&]list=([\w-]{10,})/); return m && /\/playlist/.test(u) ? m[1] : ""; };
-  const title = async (id, pl) => { try { const r = await fetch("https://noembed.com/embed?url=" + encodeURIComponent((pl ? "https://www.youtube.com/playlist?list=" : "https://www.youtube.com/watch?v=") + id)); const j = await r.json(); return j.title || ""; } catch { return ""; } };
+  const title = async (id, pl) => { try { const r = await fetch("https://noembed.com/embed?url=" + encodeURIComponent((pl ? "https://www.youtube.com/playlist?list=" : "https://www.youtube.com/watch?v=") + id)); const j = await r.json(); thumbs[id] = j.thumbnail_url || ""; return j.title || ""; } catch { return ""; } };
   async function load() { data = (await A.get("videos")) || {}; paint(); const s = (await A.get("site_settings/socials/youtube").catch(() => null)) || {}; const f = document.getElementById("cf"); f.ch.value = s.channel_id || ""; f.url.value = s.url || ""; }
   function paint() {
     const rows = Object.entries(data).sort((a, b) => (b[1].added || 0) - (a[1].added || 0)), box = document.getElementById("list");
@@ -46,7 +47,7 @@
   document.getElementById("list").addEventListener("click", async (e) => { const k = e.target.dataset.del; if (!k || !confirm("Remove this video from the page?")) return; await A.del("videos/" + k); delete data[k]; paint(); });
   document.getElementById("nf").addEventListener("submit", async (e) => {
     e.preventDefault(); const st = document.getElementById("ns"), lines = e.target.links.value.split("\n").map((x) => x.trim()).filter(Boolean); let n = 0; st.textContent = "Adding…";
-    for (const ln of lines) { const [u, t] = ln.split("|").map((x) => x.trim()), pid = plOf(u), id = pid || idOf(u); if (!id) continue; const ti = t || (await title(id, !!pid)) || (pid ? "Playlist" : ""); await A.set("videos/" + id, { id, title: ti, kind: pid ? "playlist" : /\/shorts\//.test(u) ? "short" : "long", added: Date.now() }); n++; }
+    for (const ln of lines) { const [u, t] = ln.split("|").map((x) => x.trim()), pid = plOf(u), id = pid || idOf(u); if (!id) continue; const ti = t || (await title(id, !!pid)) || (pid ? "Playlist" : ""); await A.set("videos/" + id, { id, title: ti, ...(pid && /^https:\/\/i\.ytimg\.com\//.test(thumbs[id] || "") ? { thumb: thumbs[id] } : {}), kind: pid ? "playlist" : /\/shorts\//.test(u) ? "short" : "long", added: Date.now() }); n++; }
     st.textContent = n ? `Added ${n} video(s).` : "No valid YouTube links found."; e.target.links.value = ""; load();
   });
   document.getElementById("cf").addEventListener("submit", async (e) => {

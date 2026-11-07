@@ -17,8 +17,8 @@
     const rows = list.filter((v) => kind === "all" || (kind === "short" ? v.kind === "short" : kind === "playlist" ? v.kind === "playlist" : v.kind !== "short" && v.kind !== "playlist"));
     if (!rows.length) { grid.innerHTML = `<p>${list.length ? "Nothing in this tab yet." : "Videos will appear here soon."}</p>`; return; }
     grid.innerHTML = rows.map((v) => {
-      const pl = v.kind === "playlist", img = pl ? "" : `<img src="https://i.ytimg.com/vi/${E(v.id)}/hqdefault.jpg" alt="" loading="lazy" onerror="this.remove()">`;
-      return `<article class="vid ${v.kind === "short" ? "short" : v.kind === "playlist" ? "playlist" : ""}"><button type="button" class="vid-play" data-id="${E(v.id)}" data-pl="${pl ? 1 : 0}" aria-label="Play ${E(v.title || "video")}">${img}<span class="vid-btn" aria-hidden="true">${play}</span></button><h3>${E(v.title || label(v))}</h3><p class="vid-meta">${label(v)}</p></article>`;
+      const pl = v.kind === "playlist", img = pl ? (v.thumb && /^https:\/\/i\.ytimg\.com\//.test(v.thumb) ? `<img src="${E(v.thumb)}" alt="" loading="lazy" onerror="this.remove()">` : "") : `<img src="https://i.ytimg.com/vi/${E(v.id)}/hqdefault.jpg" alt="" loading="lazy" onerror="this.remove()">`;
+      return `<article class="vid ${v.kind === "short" ? "short" : v.kind === "playlist" ? "playlist" : ""}"><button type="button" class="vid-play" data-id="${E(v.id)}" data-pl="${pl ? 1 : 0}" aria-label="Play ${E(v.title || "video")}">${img}<span class="vid-btn" aria-hidden="true">${play}</span></button><h3>${E(v.title || label(v))}</h3><p class="vid-meta">${label(v)}${pl ? ` · <a href="https://www.youtube.com/playlist?list=${E(v.id)}" target="_blank" rel="noopener">open on YouTube</a>` : ""}</p></article>`;
     }).join("");
   }
   grid.addEventListener("click", (e) => {

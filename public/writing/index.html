@@ -108,7 +108,7 @@
   if (!writing_projects || writing_projects.length === 0) {
     list.innerHTML = `<p>Nothing here yet — the live database hasn't been seeded with these yet. Check back soon.</p>`;
   } else {
-    writing_projects.filter((w) => w && w.slug && w.title && w.status).forEach((w) => {
+    writing_projects.filter((w) => w && w.slug && w.title && w.status && !w.hidden).forEach((w) => {
       const div = document.createElement("div");
       div.className = "entry";
       div.innerHTML = `

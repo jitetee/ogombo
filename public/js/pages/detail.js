@@ -78,11 +78,16 @@
     const frame = item.preview_url && window.EO_DRIVE ? window.EO_DRIVE.preview(item.preview_url) : null;
     const isImg = item.preview_url && /^(\/|https?:\/\/[^ ]+\.(png|jpe?g|webp|gif)(\?|$))/i.test(item.preview_url) && !/drive\.google/.test(item.preview_url);
     const btns = [];
-    if (sampleHtml || frame || isImg) btns.push(`<button class="btn primary" id="bk-pv" type="button">${ico("eye")}Read a sample</button>`);
+    const readUrl = item.read_url || "";
+    const readFrame = readUrl && window.EO_DRIVE ? window.EO_DRIVE.preview(readUrl) : null;
+    if (readFrame) btns.push(`<button class="btn primary" id="bk-read" type="button">${ico("book-open")}Read online</button>`);
+    if (sampleHtml || frame || isImg) btns.push(`<button class="btn${readFrame ? "" : " primary"}" id="bk-pv" type="button">${ico("eye")}Read a sample</button>`);
     if (item.drive_url && window.EO_DRIVE) btns.push(`<a class="btn" href="${E(window.EO_DRIVE.download(item.drive_url))}" target="_blank" rel="noopener">Download</a>`);
-    else btns.push(`<a class="btn" href="/subscribe">${ico("bell")}Tell me when it's out</a>`);
+    else if (!readFrame) btns.push(`<a class="btn" href="/subscribe">${ico("bell")}Tell me when it's out</a>`);
     bits.push(`<div class="row-links" style="margin:1.2rem 0">${btns.join("")}</div><div id="bk-sample"></div>`);
     $("post-content").insertAdjacentHTML("beforeend", bits.join(""));
+    const rd = $("bk-read");
+    if (rd) { const open = () => { $("bk-sample").innerHTML = `<iframe src="${E(readFrame)}" title="${E(f.title)}" style="width:100%;height:80vh;border:1px solid var(--panel-border);border-radius:4px;background:#fff;margin-top:1rem" loading="lazy" allowfullscreen></iframe><p class="hint">Reading copy. Download is switched off.</p>`; rd.remove(); }; rd.addEventListener("click", open); if (location.hash === "#read") open(); }
     const pv = $("bk-pv");
     if (pv) pv.addEventListener("click", () => {
       $("bk-sample").innerHTML = (sampleHtml ? `<div class="crt-window"><div class="titlebar"><span class="label">sample</span></div><div class="body">${sampleHtml}</div></div>` : "")
