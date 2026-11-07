@@ -58,7 +58,17 @@ The reason to watch might sit in the destination, but the journey must also earn
 
 - The creator is biased: they have all the context. The viewer has none. Re-read every part and ask what a first-time viewer would not understand.
 - Tell the viewer what is going on at all times, what is at stake, what could go wrong.
-- Being clear and concise is not enough on its own. (Ka's pasted transcript ended here: "...There is three more things to communication." Add the rest under "Added later".)
+- Clear and concise is still not enough. A new idea is hard to grasp until it is tangible, like learning a game: a perfect explanation is a lot to take in. Three more things fix that:
+  1. **Analogy or example.** Turn the abstract idea into something vivid. (The speaker used the "learning a new game" analogy, then gave an example of using an analogy.)
+  2. **Get someone else to watch before posting.** Every time, they find a boring or confusing moment you cannot see.
+  3. **Visuals for everything you say.** Every single thing mentioned has something on screen that shows it. Pace can be quick because the visual carries the detail.
+- Direct the eye. If a scene has several things to look at, zoom or pan so the viewer sees exactly what you are talking about at that moment.
+
+### Variety is seasoning
+
+- A constant mood is boring (one seasoning). Shift the mood: excitement, then worry about a problem, then joy at a solution, then unease about an obstacle. The contrast makes each mood stronger and keeps the viewer alert.
+- Too much variety ruins the dish. If visuals or sounds change faster than the viewer can process, they absorb nothing.
+- Before adding any effect, ask what it does for the viewer and how much is needed.
 
 ## 5. Delivery
 
@@ -67,10 +77,15 @@ The reason to watch might sit in the destination, but the journey must also earn
 - Talk to one friend who is interested, not to an audience or a panel of critics.
 - The viewer feels what the voice feels.
 
-## 6. Packaging
+## 6. Packaging and the algorithm
 
+- The algorithm recommends videos predicted to be the most enjoyable for a viewer. Enjoyable for millions means recommended to millions.
+- Know the audience: what they are interested in and what experience they want on YouTube.
+- Study what has the most views in the niche. Find what the audience values in those videos, then deliver that value better than anyone else: clearer, more tangible, more visual.
+- Compare your video with the top ones. Notice what they do better, fix it, repeat until you match or beat them.
 - Title and thumbnail must make the topic feel interesting to the whole niche, and the intro must make people want the answer.
 - The first sentence is a green section. Do not open with the table of contents.
+- Do not trim a video down to only the "valuable" parts. The green sections (why this matters) are often more important than the lesson itself.
 
 ## 7. Checklist before a script is done
 
@@ -80,6 +95,10 @@ The reason to watch might sit in the destination, but the journey must also earn
 - [ ] Every scene says what is happening, why it matters, what could go wrong.
 - [ ] Parts with no curiosity are cut or shortened to one or two sentences.
 - [ ] A first-time viewer could follow every line.
+- [ ] Every abstract idea has an analogy or an example.
+- [ ] Every thing mentioned has a visual, and the eye is directed to the right part of it.
+- [ ] Mood shifts, but nothing changes faster than the viewer can process.
+- [ ] Someone else has watched it before posting.
 - [ ] Over 10 minutes for long videos.
 - [ ] At least 5 drawn items in every scene.
 - [ ] Thumbnail follows Part 1 (cream, narrator pointing, red marker lettering).
@@ -87,4 +106,4 @@ The reason to watch might sit in the destination, but the journey must also earn
 
 ## Added later
 
-(Ka's new instructions go here.)
+(Ka's new instructions go here. The pasted transcript ended mid-sentence, at "...blowing up with each and every". Add anything missing.)
