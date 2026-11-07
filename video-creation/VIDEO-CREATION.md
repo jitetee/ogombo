@@ -14,6 +14,16 @@ Ka adds to it over time. Newest additions go at the bottom under "Added later".
 - Do not mention the TVET PDF. Do not render the old series remake unless asked.
 - Audience: students, technicians, clinicians, medics and staff. Retro, plain wording, no filler.
 
+## 1b. Audio rendering (from Ka)
+
+The voice must sound like one unending conversation, like the pasted transcript, not chunks joined together.
+
+- Write narration as flowing speech. Sentences lead into each other with "but", "so", "therefore", "now", not stops and restarts. No one-line scenes that each end on a full stop and silence.
+- Render long passages in one go (whole sections, not sentence by sentence) so pitch and pace carry across sentences. Never render sentence by sentence.
+- Where clips must be joined, cut on the breath, overlap and crossfade 40 to 80 ms, trim leading and trailing silence, and match loudness and room tone. No dead gaps between sentences or between scenes. Pauses are short and deliberate (under about 0.4 s) and only before a key point.
+- A scene change must not restart the voice: the last words of one scene run into the first words of the next. Pace the drawing to the voice, not the voice to the drawing.
+- Check by ear: play 30 seconds across a scene boundary. If you can hear the join, redo it.
+
 ## 2. Script formula: green and purple
 
 Colour-code every script.
@@ -102,6 +112,7 @@ The reason to watch might sit in the destination, but the journey must also earn
 - [ ] Over 10 minutes for long videos.
 - [ ] At least 5 drawn items in every scene.
 - [ ] Thumbnail follows Part 1 (cream, narrator pointing, red marker lettering).
+- [ ] Audio is one continuous voice with no audible joins between sentences or scenes.
 - [ ] Facts match the card text. Nothing invented.
 
 ## Added later
