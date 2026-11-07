@@ -126,3 +126,8 @@ The hub also has a **Copy AI prompt** button with a ready-made version.
 ## Audio mixer
 
 On the Voice, audio and export page: voice volume, music volume (default 6 percent), music ducking under the voice, fades, sound-effect volume (whoosh between scenes, pop and ding on items) and extra audio layers with start time, stop time, volume and loop.
+
+## Extra drawing assets for any topic (not only medical)
+Besides the Tabler and Lucide line icons (thousands of general icons: tools, money, school, animals, travel, weather...), `/assets/whiteboard/glyphs/` has ~510 bolder line pictures from Health Icons (CC0): body organs and anatomy (heart, lungs, brain, kidneys, skeleton, spine, eye, ear...), objects, places, vehicles, people, food, exercise, graphs, symbols, emotions and shapes. They are PNG, so use them as image items:
+`{"type":"image","src":"/assets/whiteboard/glyphs/body/heart-organ.png","x":120,"y":200,"w":260,"reveal":"scan","cue":"heart"}`
+The list is in `/assets/whiteboard/glyphs/index.json` (category -> names).
