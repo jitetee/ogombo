@@ -236,6 +236,7 @@
     const k = s * (cfg.scale || 1.7) * (1 + 0.05 * lift); ctx.rotate((cfg.rot || 0) * Math.PI / 180); ctx.scale(k, k);
     ctx.shadowColor = "rgba(0,0,0," + (0.22 - 0.06 * lift) + ")"; ctx.shadowBlur = 14 + lift * 16; ctx.shadowOffsetY = 8 + lift * 16;
     ctx.drawImage(h, -cfg.tip[0], -cfg.tip[1]);
+    if (!cfg.noExtend && h.height > 8) { ctx.save(); ctx.translate(-cfg.tip[0], -cfg.tip[1] + h.height - 1); ctx.transform(1, 0, cfg.slope != null ? cfg.slope : 0.42, 1, 0, 0); ctx.drawImage(h, 0, h.height - 6, h.width, 6, 0, 0, h.width, 2400); ctx.restore(); }   // the arm keeps going off the bottom of the frame, so it never ends in mid-air
     ctx.restore();
   }
 
