@@ -1,6 +1,13 @@
 {
  "patches": [
   {
+   "id": "2026-11-07-one-book",
+   "file": "2026-11-07-one-book.json",
+   "name": "Writing page: show only A Life Becoming",
+   "date": "2026-11-07",
+   "notes": "Hides the other four books from the Writing page (they stay in the database; set hidden to blank to bring one back) and rewrites the page heading and intro for one book. After importing, open Admin -> Publish -> Content cards -> Books -> A Life Becoming and paste the Drive link into 'Read-online link'."
+  },
+  {
    "id": "2026-11-06-materials-inside-and-tests",
    "file": "2026-11-06-materials-inside-and-tests.json",
    "name": "Materials: What's inside lists, hide test items",

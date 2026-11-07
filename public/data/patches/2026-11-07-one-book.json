@@ -1,0 +1,56 @@
+{
+ "_patch": {
+  "id": "2026-11-07-one-book",
+  "name": "Writing page: show only A Life Becoming",
+  "date": "2026-11-07",
+  "notes": "Hides the other four books from the Writing page (they stay in the database; set hidden to blank to bring one back) and rewrites the page heading and intro for one book. After importing, open Admin -> Publish -> Content cards -> Books -> A Life Becoming and paste the Drive link into 'Read-online link'.",
+  "modes": {
+   "writing_projects": "merge",
+   "pages": "merge"
+  },
+  "changelog": [
+   {
+    "path": "writing_projects/notes-from-the-sterile-field/hidden",
+    "text": "Hidden from the Writing page"
+   },
+   {
+    "path": "writing_projects/the-theatre-companion/hidden",
+    "text": "Hidden from the Writing page"
+   },
+   {
+    "path": "writing_projects/the-smooth-sailing/hidden",
+    "text": "Hidden from the Writing page"
+   },
+   {
+    "path": "writing_projects/correction/hidden",
+    "text": "Hidden from the Writing page"
+   },
+   {
+    "path": "pages/writing",
+    "text": "Heading, intro and description for one book"
+   }
+  ]
+ },
+ "writing_projects": {
+  "notes-from-the-sterile-field": {
+   "hidden": true
+  },
+  "the-theatre-companion": {
+   "hidden": true
+  },
+  "the-smooth-sailing": {
+   "hidden": true
+  },
+  "correction": {
+   "hidden": true
+  }
+ },
+ "pages": {
+  "writing": {
+   "heading": "The book I'm writing.",
+   "kicker": "READING",
+   "intro": "One book, written slowly: A Life Becoming. Read it online here as it grows. It is for reading, not for downloading.",
+   "description": "A Life Becoming: a memoir in progress by Ezra Ogombo about faith, family and figuring himself out. Read it online."
+  }
+ }
+}
