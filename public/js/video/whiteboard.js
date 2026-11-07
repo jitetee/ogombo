@@ -228,34 +228,14 @@
   const estDur = (s) => { const w = String(s.narration || "").trim().split(/\s+/).filter(Boolean).length; return w ? Math.max(1.5, w / 2.6) : 0; };
 
   // ---------- hand ----------
-  // Default hand = the narrator's own arm + marker (baked from /assets/narrators/write-pen-side.png). A project can replace it
-  // with a photo (P.hand = {src, tip:[x,y] in image pixels, rot (deg the arm is turned), scale}).
-  const DEFAULT_HAND = { src: "/assets/whiteboard/hand-narrator.png", tip: [4.3, 111.2], rot: 48.5, scale: 1.7 };
+  // No hand is drawn by default. A project can opt in with a photo (P.hand = {src, tip:[x,y] in image pixels, rot (deg the arm is turned), scale, eraser?}).
   function drawHand(ctx, x, y, s, mode, A, ang, lift) {
-    lift = lift || 0;
-    ctx.save(); ctx.translate(x, y);
-    let h = A && A.handImg, cfg = (A && A.handCfg) || DEFAULT_HAND;
-    if (mode === "eraser" && A && A.eraserImg && cfg.eraser) { h = A.eraserImg; cfg = Object.assign({}, cfg, { tip: cfg.eraser.tip, rot: cfg.eraser.rot || 0, noBlock: true }); }
-    if (h) {
-      const k = s * (cfg.scale || 1.7) * (1 + 0.05 * lift); ctx.rotate((cfg.rot || 0) * Math.PI / 180); ctx.scale(k, k);
-      ctx.shadowColor = "rgba(0,0,0," + (0.22 - 0.06 * lift) + ")"; ctx.shadowBlur = 14 + lift * 16; ctx.shadowOffsetY = 8 + lift * 16;
-      ctx.drawImage(h, -cfg.tip[0], -cfg.tip[1]);
-      ctx.shadowColor = "transparent";
-      if (mode === "eraser" && !cfg.noBlock) { ctx.fillStyle = "#f4f4f1"; ctx.strokeStyle = "#8a8f94"; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(-6, -cfg.tip[1] + 78, 78, 46, 8); ctx.fill(); ctx.stroke(); ctx.fillStyle = "#3b82c4"; ctx.fillRect(44, -cfg.tip[1] + 78, 20, 46); }
-      ctx.restore(); return;
-    }
-    ctx.scale(s * 0.62, s * 0.62); ctx.rotate(ang || 0);
-    const skin = "#f2c9a6", shade = "#d9a77f", line = "#a8754f";
-    ctx.lineJoin = "round"; ctx.lineCap = "round";
-    ctx.beginPath(); ctx.moveTo(60, -40); ctx.bezierCurveTo(120, -70, 230, -20, 330, 70); ctx.lineTo(420, 190); ctx.lineTo(250, 250); ctx.bezierCurveTo(170, 200, 110, 120, 60, 60); ctx.closePath();
-    ctx.fillStyle = skin; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = line; ctx.stroke();
-    if (mode === "pen") {
-      ctx.save(); ctx.rotate(-0.62); ctx.fillStyle = "#6b7077"; ctx.strokeStyle = "#2c2f33"; ctx.lineWidth = 3; ctx.beginPath(); ctx.roundRect(8, -10, 210, 20, 7); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = "#1c1c1c"; ctx.beginPath(); ctx.moveTo(8, -9); ctx.lineTo(-6, -3); ctx.lineTo(-6, 3); ctx.lineTo(8, 9); ctx.closePath(); ctx.fill(); ctx.fillStyle = "#cfd3d8"; ctx.fillRect(150, -10, 14, 20); ctx.restore();
-    } else { ctx.save(); ctx.rotate(-0.25); ctx.fillStyle = "#f4f4f1"; ctx.strokeStyle = "#8a8f94"; ctx.lineWidth = 3; ctx.beginPath(); ctx.roundRect(-10, -34, 130, 68, 12); ctx.fill(); ctx.stroke(); ctx.fillStyle = "#3b82c4"; ctx.fillRect(70, -34, 40, 68); ctx.restore(); }
-    ctx.fillStyle = skin; ctx.strokeStyle = line; ctx.lineWidth = 3;
-    const fg = (cx, cy, rx, ry, a) => { ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, a, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); };
-    fg(78, 2, 52, 22, -0.45); fg(104, 30, 48, 20, -0.35); fg(66, -22, 40, 17, -0.75); fg(124, 58, 40, 17, -0.2);
+    let h = A && A.handImg, cfg = A && A.handCfg; if (!cfg || !h) return;
+    lift = lift || 0; ctx.save(); ctx.translate(x, y);
+    if (mode === "eraser" && A.eraserImg && cfg.eraser) { h = A.eraserImg; cfg = Object.assign({}, cfg, { tip: cfg.eraser.tip, rot: cfg.eraser.rot || 0, noBlock: true }); }
+    const k = s * (cfg.scale || 1.7) * (1 + 0.05 * lift); ctx.rotate((cfg.rot || 0) * Math.PI / 180); ctx.scale(k, k);
+    ctx.shadowColor = "rgba(0,0,0," + (0.22 - 0.06 * lift) + ")"; ctx.shadowBlur = 14 + lift * 16; ctx.shadowOffsetY = 8 + lift * 16;
+    ctx.drawImage(h, -cfg.tip[0], -cfg.tip[1]);
     ctx.restore();
   }
 
@@ -352,7 +332,7 @@
     const op = (extra && extra.onprog) || (() => {}); let step = 0; const tot = 3 + P.scenes.reduce((n, s) => n + s.items.filter((it) => it.type === "narrator" || it.type === "image").length, 0); const tick = (m) => op(Math.min(1, ++step / tot), m);
     op(0, "Loading icons and fonts..."); const [icons, lucide] = await Promise.all([loadIcons(), needLucide ? loadLucide() : Promise.resolve({}), loadFonts()]); tick("Loading pictures..."); const imgs = (extra && extra.imgs) || {};
     for (const s of P.scenes) for (const it of s.items) { const src = it.type === "narrator" ? "/assets/narrators/" + (it.pose || "neutral") + ".png" : it.type === "image" ? it.src : null; if (src && !imgs[src]) imgs[src] = await loadImg(src); if (src) tick("Loading pictures..."); }
-    const hc = P.hand && P.hand.src ? P.hand : DEFAULT_HAND, handImg = await loadImg(hc.src), logoImg = P.logo ? await loadImg(P.logo) : null, eraserImg = hc.eraser && hc.eraser.src ? await loadImg(hc.eraser.src) : null;
+    const hc = P.hand && P.hand.src ? P.hand : null, handImg = hc ? await loadImg(hc.src) : null, logoImg = P.logo ? await loadImg(P.logo) : null, eraserImg = hc && hc.eraser && hc.eraser.src ? await loadImg(hc.eraser.src) : null;
     tick("Ready"); return Object.assign({ icons, lucide, imgs, aud: [], handImg, handCfg: hc, logoImg, eraserImg }, extra || {}, { imgs });
   }
 
@@ -379,5 +359,5 @@
     if (err) throw err; mux.finalize(); opts.onProgress && opts.onProgress(1); return new Blob([target.buffer], { type: "video/mp4" });
   }
 
-  window.EO_WB = { FORMATS, FONTS, POSES, newProject, newScene, newId, size, timeline, layoutScene, draw, build: built, drawHand, loadAssets, loadIcons, loadLucide, loadFonts, loadImg, DEFAULT_HAND, exportMP4, estDur, itemDur, figurePaths };
+  window.EO_WB = { FORMATS, FONTS, POSES, newProject, newScene, newId, size, timeline, layoutScene, draw, build: built, drawHand, loadAssets, loadIcons, loadLucide, loadFonts, loadImg, exportMP4, estDur, itemDur, figurePaths };
 })();
